@@ -71,7 +71,7 @@ type  ECCCipher struct {
 	X    string
 	Y    string
 	M    string
-	L          uint
+	L    uint
 	C    string
 }
 

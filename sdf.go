@@ -11,12 +11,13 @@ package sdf
 #include <string.h>
 #include <unistd.h>
 #include <sansec/swsds.h>
+#include <core/type.h>
 
 SGD_HANDLE hDeviceHandle;
 SGD_HANDLE hSessionHandle;
 
-typedef SGD_HANDLE*  SGD_HANDLE_PRT;
-typedef SGD_UCHAR*   SGD_UCHAR_PRT;
+typedef unsigned char     SGD_UCHAR;
+typedef unsigned char*    SGD_UCHAR_PRT;
 
 
 #ifdef _WIN32
@@ -538,49 +539,54 @@ SGD_RV CalculateMAC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_HANDLE hK
 }
 
 
-SGD_RV CreateFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize)
+SGD_RV CreateFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 );
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_CreateFile");
-	return (*fptr)(hSessionHandle, *pucFileName, uiNameLen, uiFileSize);
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
 #else
+
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_CreateFile");
-	return (*fptr)(hSessionHandle, *pucFileName, uiNameLen, uiFileSize);
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
 
 #endif
 }
-SGD_RV ReadFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR_PRT *pucBuffer)
+SGD_RV ReadFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR_PRT *pucBuffer)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 *,SGD_UCHAR *);
+	*pucBuffer = calloc(*puiReadLength, sizeof(SGD_UCHAR));
+	if (*pucBuffer == NULL) {
+		return SGD_FALSE;
+	}
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ReadFile");
-	return (*fptr)(hSessionHandle, *pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ReadFile");
-	return (*fptr)(hSessionHandle, *pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
 #endif
 }
-SGD_RV WriteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR_PRT *pucBuffer)
+SGD_RV WriteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR_PRT pucBuffer)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 ,SGD_UCHAR *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_WriteFile");
-	return (*fptr)(hSessionHandle, *pucFileName, uiNameLen, uiOffset, uiWriteLength, *pucBuffer);
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_WriteFile");
-	return (*fptr)(hSessionHandle, *pucFileName, uiNameLen, uiOffset, uiWriteLength, *pucBuffer);
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
 #endif
 }
-SGD_RV DeleteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT *pucFileName,SGD_UINT32 uiNameLen)
+SGD_RV DeleteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 );
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_DeleteFile");
-	return (*fptr)(hSessionHandle, *pucFileName, uiNameLen);
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_DeleteFile");
-	return (*fptr)(hSessionHandle, *pucFileName, uiNameLen);
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
 #endif
 }
 
@@ -1018,7 +1024,18 @@ type SessionHandleType  C.SGD_HANDLE
 type KeyHandleType    C.SGD_HANDLE
 type AgreementHandleType C.SGD_HANDLE
 
-//78
+var stubData = []byte{0}
+// cMessage returns the pointer/length pair corresponding to data.
+func CMessage(data []byte) (dataPtr C.SGD_UCHAR_PRT) {
+	l := len(data)
+	if l == 0 {
+		// &data[0] is forbidden in this case, so use a nontrivial array instead.
+		data = stubData
+	}
+	return C.SGD_UCHAR_PRT(unsafe.Pointer(&data[0]))
+}
+
+
 
 func (c *Ctx)SDFOpenDevice(deviceHandle  DeviceHandleType) (DeviceHandleType,error){
     var err C.SGD_RV
@@ -1156,7 +1173,7 @@ func (c *Ctx)SDFGenerateKeyPair_RSA(sessionHandle SessionHandleType,uiKeyBits ui
 		E: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucPublicKey.e[0]), 256)), " "),
 	}
 	privatekey :=core.RSArefPrivateKey{
-		Bits: uint(pucPublicKey.bits),
+		Bits: uint(pucPrivateKey.bits),
 		M: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucPrivateKey.m[0]), 256)), " "),
 		E: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucPrivateKey.e[0]), 256)), " "),
 		D: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucPrivateKey.d[0]), 256)), " "),
@@ -1633,50 +1650,40 @@ func (c *Ctx)SDFCalculateMAC(sessionHandle SessionHandleType,hKeyHandle KeyHandl
 
 
 
-func (c *Ctx)SDFCreateFile(sessionHandle SessionHandleType,uiNameLen uint,uiFileSize uint)([]byte,error){
+func (c *Ctx)SDFCreateFile(sessionHandle SessionHandleType,fileName []byte,uiFileSize uint)error{
 	var err C.SGD_RV
-	var pucFileName C.SGD_UCHAR_PRT
-	err = C.CreateFile(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucFileName,C.SGD_UINT32(uiNameLen),C.SGD_UINT32(uiFileSize))
-	fileName:= C.GoBytes(unsafe.Pointer(pucFileName), C.int(uiNameLen))
-	C.free(unsafe.Pointer(pucFileName))
-	return fileName,ToError(err)
+	pM:=CMessage(fileName)
+	err = C.CreateFile(c.libHandle,C.SGD_HANDLE(sessionHandle),pM,C.SGD_UINT32(len(fileName)),C.SGD_UINT32(uiFileSize))
+	return ToError(err)
 
 }
 
-func (c *Ctx)SDFReadFile(sessionHandle SessionHandleType,uiNameLen uint,uiOffset uint)([]byte,[]byte,error){
+func (c *Ctx)SDFReadFile(sessionHandle SessionHandleType,fileName []byte,uiOffset uint)([]byte,error){
 	var err C.SGD_RV
-	var pucFileName C.SGD_UCHAR_PRT
+	pM:=CMessage(fileName)
 	var puiReadLength C.SGD_UINT32
 	var pucBuffer C.SGD_UCHAR_PRT
-	err = C.ReadFile(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucFileName,C.SGD_UINT32(uiNameLen),C.SGD_UINT32(uiOffset),&puiReadLength,&pucBuffer)
-	fileName:= C.GoBytes(unsafe.Pointer(pucFileName), C.int(uiNameLen))
-	C.free(unsafe.Pointer(pucFileName))
+	err = C.ReadFile(c.libHandle,C.SGD_HANDLE(sessionHandle),pM,C.SGD_UINT32(len(fileName)),C.SGD_UINT32(uiOffset),&puiReadLength,&pucBuffer)
 	buffer:= C.GoBytes(unsafe.Pointer(pucBuffer), C.int(puiReadLength))
 	C.free(unsafe.Pointer(pucBuffer))
-	return fileName,buffer,ToError(err)
+	return buffer,ToError(err)
 }
 
 
-func (c *Ctx)SDFWriteFile(sessionHandle SessionHandleType,uiNameLen uint,uiOffset uint,uiWriteLength uint)([]byte,[]byte,error){
+func (c *Ctx)SDFWriteFile(sessionHandle SessionHandleType,fileName []byte,uiOffset uint ,pucBuffer []byte)error{
 	var err C.SGD_RV
-	var pucFileName C.SGD_UCHAR_PRT
-	var pucBuffer C.SGD_UCHAR_PRT
-	err = C.WriteFile(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucFileName,C.SGD_UINT32(uiNameLen),C.SGD_UINT32(uiOffset),C.SGD_UINT32(uiWriteLength),&pucBuffer)
-	fileName:= C.GoBytes(unsafe.Pointer(pucFileName), C.int(uiNameLen))
-	C.free(unsafe.Pointer(pucFileName))
-	buffer:= C.GoBytes(unsafe.Pointer(pucBuffer), C.int(uiWriteLength))
-	C.free(unsafe.Pointer(pucBuffer))
-	return fileName,buffer,ToError(err)
+	pM:=CMessage(fileName)
+	buf:=CMessage(pucBuffer)
+	err = C.WriteFile(c.libHandle,C.SGD_HANDLE(sessionHandle),pM,C.SGD_UINT32(len(fileName)),C.SGD_UINT32(uiOffset),C.SGD_UINT32(len(pucBuffer)),buf)
+	return ToError(err)
 }
 
 
-func (c *Ctx)SDFDeleteFile(sessionHandle SessionHandleType,uiNameLen uint)([]byte,error){
+func (c *Ctx)SDFDeleteFile(sessionHandle SessionHandleType,fileName []byte)(error){
 	var err C.SGD_RV
-	var pucFileName C.SGD_UCHAR_PRT
-	err = C.DeleteFile(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucFileName,C.SGD_UINT32(uiNameLen))
-	fileName:= C.GoBytes(unsafe.Pointer(pucFileName), C.int(uiNameLen))
-	C.free(unsafe.Pointer(pucFileName))
-	return fileName,ToError(err)
+	pM:=CMessage([]byte("yzw"))
+	err = C.DeleteFile(c.libHandle,C.SGD_HANDLE(sessionHandle),pM,C.SGD_UINT32(len(fileName)))
+	return ToError(err)
 }
 
 
