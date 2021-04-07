@@ -11,10 +11,10 @@
 	extern "C"{
 #endif
 
-/*RSA���ģ������*/
+/*RSA最大模长定义*/
 #define SGD_RSA_MAX_BITS    4096
 
-/*�������Ͷ���*/
+/*数据类型定义*/
 typedef char				SGD_CHAR;
 typedef char				SGD_INT8;
 typedef short				SGD_INT16;
@@ -30,7 +30,7 @@ typedef void*				SGD_OBJ;
 typedef int					SGD_BOOL;
 typedef void*				SGD_HANDLE;
 
-/*�豸��Ϣ*/
+/*设备信息*/
 typedef struct DeviceInfo_st{
 	unsigned char IssuerName[40];
 	unsigned char DeviceName[16];
@@ -43,19 +43,19 @@ typedef struct DeviceInfo_st{
 	unsigned int  BufferSize;
 }DEVICEINFO;
 
-/*�豸������Ϣ--�Զ�����չ*/
+
 typedef struct st_DeviceRunStatus{
-	unsigned int onboot;		//�����Ƿ񿪻�������
-	unsigned int service;		//��ǰ����״̬��0-δ������1-��������>1״̬�쳣
-	unsigned int concurrency;	//��ǰ������
-	unsigned int memtotal;		//�ڴ��С
-	unsigned int memfree;		//�ڴ����
-	unsigned int cpu;			//CPUռ���ʣ�������С���㲿��
+	unsigned int onboot;		//服务是否开机自启动
+	unsigned int service;		//当前服务状态，0-未启动，1-已启动，>1状态异常
+	unsigned int concurrency;	//当前并发数
+	unsigned int memtotal;      //内存大小
+	unsigned int memfree;		//内存空闲
+	unsigned int cpu;			//CPU占用率，不包含小数点部分
 	unsigned int reserve1;
 	unsigned int reserve2;
 }DEVICE_RUN_STATUS;
 
-/*RSA��Կ*/
+/*RSA密钥*/
 #define LiteRSAref_MAX_BITS    2048
 #define LiteRSAref_MAX_LEN     ((LiteRSAref_MAX_BITS + 7) / 8)
 #define LiteRSAref_MAX_PBITS   ((LiteRSAref_MAX_BITS + 1) / 2)
@@ -120,7 +120,7 @@ typedef struct RSArefPublicKeyLite_st  RSArefPublicKey;
 typedef struct RSArefPrivateKeyLite_st  RSArefPrivateKey;
 #endif
 
-/*ECC��Կ*/
+
 #define ECCref_MAX_BITS			512 
 #define ECCref_MAX_LEN			((ECCref_MAX_BITS+7) / 8)
 #define ECCref_MAX_CIPHER_LEN	136
@@ -138,7 +138,7 @@ typedef struct ECCrefPrivateKey_st
     unsigned char K[ECCref_MAX_LEN];
 } ECCrefPrivateKey;
 
-/*ECC ����*/
+
 typedef struct ECCCipher_st
 {
 	unsigned char x[ECCref_MAX_LEN]; 
@@ -149,7 +149,7 @@ typedef struct ECCCipher_st
 } ECCCipher;
 
 
-/*ECC ǩ��*/
+
 typedef struct ECCSignature_st
 {
 	unsigned char r[ECCref_MAX_LEN];	
@@ -227,11 +227,11 @@ typedef struct SM9refKeyPackage_st
 	unsigned char y[SM9ref_MAX_LEN];
 } SM9refKeyPackage;
 
-/*��������*/
+/*常量定义*/
 #define SGD_TRUE		0x00000001
 #define SGD_FALSE		0x00000000
 
-/*�Գ������㷨��ʶ*/
+/*算法标识*/
 #define SGD_SM1_ECB		0x00000101
 #define SGD_SM1_CBC		0x00000102
 #define SGD_SM1_CFB		0x00000104
@@ -267,7 +267,7 @@ typedef struct SM9refKeyPackage_st
 #define SGD_AES_MAC		0x00002010
 #define SGD_AES_CTR		0x00002020
 
-/*�Գ������㷨��ʶ*/
+
 #define SGD_RSA			0x00010000
 #define SGD_RSA_SIGN	0x00010100
 #define SGD_RSA_ENC		0x00010200
@@ -277,11 +277,11 @@ typedef struct SM9refKeyPackage_st
 #define SGD_SM2_2		0x00020400
 #define SGD_SM2_3		0x00020800
 
-#define SGD_SM9         0x00100000   //SM9�㷨
-#define SGD_SM9_1       0x00100100   //SM9ǩ���㷨
-#define SGD_SM9_2       0x00100200   //SM9��Կ�����㷨
-#define SGD_SM9_3       0x00100400   //SM9��Կ��װ�㷨
-#define SGD_SM9_4       0x00100800   //SM9�����㷨
+#define SGD_SM9         0x00100000
+#define SGD_SM9_1       0x00100100
+#define SGD_SM9_2       0x00100200
+#define SGD_SM9_3       0x00100400
+#define SGD_SM9_4       0x00100800
 
 #define SGD_SM3			0x00000001
 #define SGD_SHA1		0x00000002
@@ -292,159 +292,229 @@ typedef struct SM9refKeyPackage_st
 #define SGD_MD5			0x00000080
 
 
-/*��׼�����붨��*/
-#define SDR_OK				0x0						   /*�ɹ�*/
+
+#define SDR_OK				0x0
 #define SDR_BASE			0x01000000
-#define SDR_UNKNOWERR				(SDR_BASE + 0x00000001)			/*δ֪����*/
-#define SDR_NOTSUPPORT				(SDR_BASE + 0x00000002)			/*��֧��*/
-#define SDR_COMMFAIL				(SDR_BASE + 0x00000003)			/*ͨ�Ŵ���*/
-#define SDR_HARDFAIL				(SDR_BASE + 0x00000004)			/*Ӳ������*/
-#define SDR_OPENDEVICE				(SDR_BASE + 0x00000005)			/*���豸����*/
-#define SDR_OPENSESSION				(SDR_BASE + 0x00000006)			/*�򿪻Ự�������*/
-#define SDR_PARDENY					(SDR_BASE + 0x00000007)			/*Ȩ�޲�����*/
-#define SDR_KEYNOTEXIST				(SDR_BASE + 0x00000008)			/*��Կ������*/
-#define SDR_ALGNOTSUPPORT			(SDR_BASE + 0x00000009)			/*��֧�ֵ��㷨*/
-#define SDR_ALGMODNOTSUPPORT 		(SDR_BASE + 0x0000000A)			/*��֧�ֵ��㷨ģʽ*/
-#define SDR_PKOPERR					(SDR_BASE + 0x0000000B)			/*��Կ�������*/
-#define SDR_SKOPERR					(SDR_BASE + 0x0000000C)			/*˽Կ�������*/
-#define SDR_SIGNERR					(SDR_BASE + 0x0000000D)			/*ǩ������*/
-#define SDR_VERIFYERR				(SDR_BASE + 0x0000000E)			/*��֤����*/
-#define SDR_SYMOPERR				(SDR_BASE + 0x0000000F)			/*�Գ��������*/
-#define SDR_STEPERR					(SDR_BASE + 0x00000010)			/*�������*/
-#define SDR_FILESIZEERR				(SDR_BASE + 0x00000011)			/*�ļ���С����*/
-#define SDR_FILENOEXIST				(SDR_BASE + 0x00000012)			/*�ļ�������*/
-#define SDR_FILEOFSERR				(SDR_BASE + 0x00000013)			/*�ļ�����ƫ��������*/
-#define SDR_KEYTYPEERR				(SDR_BASE + 0x00000014)			/*��Կ���ʹ���*/
-#define SDR_KEYERR					(SDR_BASE + 0x00000015)			/*��Կ����*/
+#define SDR_UNKNOWERR				(SDR_BASE + 0x00000001)
+#define SDR_NOTSUPPORT				(SDR_BASE + 0x00000002)
+#define SDR_COMMFAIL				(SDR_BASE + 0x00000003)
+#define SDR_HARDFAIL				(SDR_BASE + 0x00000004)
+#define SDR_OPENDEVICE				(SDR_BASE + 0x00000005)
+#define SDR_OPENSESSION				(SDR_BASE + 0x00000006)
+#define SDR_PARDENY					(SDR_BASE + 0x00000007)
+#define SDR_KEYNOTEXIST				(SDR_BASE + 0x00000008)
+#define SDR_ALGNOTSUPPORT			(SDR_BASE + 0x00000009)
+#define SDR_ALGMODNOTSUPPORT 		(SDR_BASE + 0x0000000A)
+#define SDR_PKOPERR					(SDR_BASE + 0x0000000B)
+#define SDR_SKOPERR					(SDR_BASE + 0x0000000C)
+#define SDR_SIGNERR					(SDR_BASE + 0x0000000D)
+#define SDR_VERIFYERR				(SDR_BASE + 0x0000000E)
+#define SDR_SYMOPERR				(SDR_BASE + 0x0000000F)
+#define SDR_STEPERR					(SDR_BASE + 0x00000010)
+#define SDR_FILESIZEERR				(SDR_BASE + 0x00000011)
+#define SDR_FILENOEXIST				(SDR_BASE + 0x00000012)
+#define SDR_FILEOFSERR				(SDR_BASE + 0x00000013)
+#define SDR_KEYTYPEERR				(SDR_BASE + 0x00000014)
+#define SDR_KEYERR					(SDR_BASE + 0x00000015)
 
-/*��չ������*/
-#define SWR_BASE				(SDR_BASE + 0x00010000)	/*�Զ�����������ֵ*/
-#define SWR_INVALID_USER		(SWR_BASE + 0x00000001)	/*��Ч���û���*/
-#define SWR_INVALID_AUTHENCODE	(SWR_BASE + 0x00000002)	/*��Ч����Ȩ��*/
-#define SWR_PROTOCOL_VER_ERR	(SWR_BASE + 0x00000003)	/*��֧�ֵ�Э��汾*/
-#define SWR_INVALID_COMMAND		(SWR_BASE + 0x00000004)	/*�����������*/
-#define SWR_INVALID_PACKAGE		(SWR_BASE + 0x00000005)	/*��������ݰ���ʽ*/
-#define SWR_INVALID_PARAMETERS	(SWR_BASE + 0x00000005)	/*��������*/
-#define SWR_FILE_ALREADY_EXIST	(SWR_BASE + 0x00000006)	/*�Ѵ���ͬ���ļ�*/
-#define SWR_SOCKET_ERR_BASE		(SWR_BASE + 0x00000100)	/*���ڼ���Ƿ���SOCKET����*/
-#define SWR_SOCKET_TIMEOUT		(SWR_BASE + 0x00000100)	/*��ʱ����*/
-#define SWR_CONNECT_ERR			(SWR_BASE + 0x00000101)	/*���ӷ���������*/
-#define SWR_SET_SOCKOPT_ERR		(SWR_BASE + 0x00000102)	/*����Socket��������*/
-#define SWR_SOCKET_SEND_ERR		(SWR_BASE + 0x00000104)	/*����LOGINRequest����*/
-#define SWR_SOCKET_RECV_ERR		(SWR_BASE + 0x00000105)	/*����LOGINRequest����*/
-#define SWR_SOCKET_RECV_0		(SWR_BASE + 0x00000106)	/*����LOGINRequest����*/
-#define SWR_NO_AVAILABLE_HSM	(SWR_BASE + 0x00000201)	/*û�п��õļ��ܻ�*/
-#define SWR_NO_AVAILABLE_CSM	(SWR_BASE + 0x00000202)	/*���ܻ���û�п��õļ���ģ��*/
-#define SWR_CONFIG_ERR			(SWR_BASE + 0x00000301)	/*�����ļ�����*/
-#define SWR_CARD_BASE           (SDR_BASE + 0x00020000)		 /*���뿨������*/
-#define SDR_BUFFER_TOO_SMALL	(SWR_CARD_BASE + 0x00000101) /*���ղ����Ļ�����̫С*/
-#define SDR_DATA_PAD			(SWR_CARD_BASE + 0x00000102) /*����û�а���ȷ��ʽ��䣬����ܵõ����������ݲ���������ʽ*/
-#define SDR_DATA_SIZE			(SWR_CARD_BASE + 0x00000103) /*���Ļ����ĳ��Ȳ�������Ӧ���㷨Ҫ��*/
-#define SDR_CRYPTO_NOT_INIT		(SWR_CARD_BASE + 0x00000104) /*�������*/
-#define SWR_MANAGEMENT_DENY		(SWR_CARD_BASE + 0x00001001)	//����Ȩ�޲�����
-#define SWR_OPERATION_DENY		(SWR_CARD_BASE + 0x00001002)	//����Ȩ�޲�����
-#define SWR_DEVICE_STATUS_ERR   (SWR_CARD_BASE + 0x00001003)	//��ǰ�豸״̬���������в���
-#define SWR_LOGIN_ERR           1     (SWR_CARD_BASE + 0x00001011)	//��¼ʧ��
-#define SWR_USERID_ERR          (SWR_CARD_BASE + 0x00001012)	//�û�ID��Ŀ/�������
-#define SWR_PARAMENT_ERR         (SWR_CARD_BASE + 0x00001013)	//��������
-#define SWR_KEYTYPEERR			(SWR_CARD_BASE + 0x00000020)	//��Կ���ʹ���
 
-/*�豸�����ຯ��*/
+#define SWR_BASE				(SDR_BASE + 0x00010000)
+#define SWR_INVALID_USER		(SWR_BASE + 0x00000001)
+#define SWR_INVALID_AUTHENCODE	(SWR_BASE + 0x00000002)
+#define SWR_PROTOCOL_VER_ERR	(SWR_BASE + 0x00000003)
+#define SWR_INVALID_COMMAND		(SWR_BASE + 0x00000004)
+#define SWR_INVALID_PACKAGE		(SWR_BASE + 0x00000005)
+#define SWR_INVALID_PARAMETERS	(SWR_BASE + 0x00000005)
+#define SWR_FILE_ALREADY_EXIST	(SWR_BASE + 0x00000006)
+#define SWR_SOCKET_ERR_BASE		(SWR_BASE + 0x00000100)
+#define SWR_SOCKET_TIMEOUT		(SWR_BASE + 0x00000100)
+#define SWR_CONNECT_ERR			(SWR_BASE + 0x00000101)
+#define SWR_SET_SOCKOPT_ERR		(SWR_BASE + 0x00000102)
+#define SWR_SOCKET_SEND_ERR		(SWR_BASE + 0x00000104)
+#define SWR_SOCKET_RECV_ERR		(SWR_BASE + 0x00000105)
+#define SWR_SOCKET_RECV_0		(SWR_BASE + 0x00000106)
+#define SWR_NO_AVAILABLE_HSM	(SWR_BASE + 0x00000201)
+#define SWR_NO_AVAILABLE_CSM	(SWR_BASE + 0x00000202)
+#define SWR_CONFIG_ERR			(SWR_BASE + 0x00000301)
+#define SWR_CARD_BASE           (SDR_BASE + 0x00020000)
+#define SDR_BUFFER_TOO_SMALL	(SWR_CARD_BASE + 0x00000101)
+#define SDR_DATA_PAD			(SWR_CARD_BASE + 0x00000102)
+#define SDR_DATA_SIZE			(SWR_CARD_BASE + 0x00000103)
+#define SDR_CRYPTO_NOT_INIT		(SWR_CARD_BASE + 0x00000104)
+#define SWR_MANAGEMENT_DENY		(SWR_CARD_BASE + 0x00001001)
+#define SWR_OPERATION_DENY		(SWR_CARD_BASE + 0x00001002)
+#define SWR_DEVICE_STATUS_ERR   (SWR_CARD_BASE + 0x00001003)
+#define SWR_LOGIN_ERR           1     (SWR_CARD_BASE + 0x00001011)
+#define SWR_USERID_ERR          (SWR_CARD_BASE + 0x00001012)
+#define SWR_PARAMENT_ERR         (SWR_CARD_BASE + 0x00001013)
+#define SWR_KEYTYPEERR			(SWR_CARD_BASE + 0x00000020)
+
+//设备管理类函数
+//1. 打开设备
 SGD_RV SDF_OpenDevice(SGD_HANDLE *phDeviceHandle);
+//2. 关闭设备
 SGD_RV SDF_CloseDevice(SGD_HANDLE hDeviceHandle);
+//3. 创建会话
 SGD_RV SDF_OpenSession(SGD_HANDLE hDeviceHandle, SGD_HANDLE *phSessionHandle);
+//4. 关闭会话
 SGD_RV SDF_CloseSession(SGD_HANDLE hSessionHandle);
+//5. 获取设备信息
 SGD_RV SDF_GetDeviceInfo(SGD_HANDLE hSessionHandle, DEVICEINFO *pstDeviceInfo);
+//6. 产生随机数
 SGD_RV SDF_GenerateRandom(SGD_HANDLE hSessionHandle, SGD_UINT32  uiLength, SGD_UCHAR *pucRandom);
+//7. 获取私钥使用权限
 SGD_RV SDF_GetPrivateKeyAccessRight(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex,SGD_UCHAR *pucPassword, SGD_UINT32  uiPwdLength);
+//8. 释放私钥使用权限
 SGD_RV SDF_ReleasePrivateKeyAccessRight(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex);
 
-/*��Կ�����ຯ��*/
+//密钥管理类函数
+//9. 导出ＲＳＡ签名公钥
 SGD_RV SDF_ExportSignPublicKey_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey);
+//10. 导出ＲＳＡ加密公钥
 SGD_RV SDF_ExportEncPublicKey_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey);
+//11. 产生ＲＳＡ非对称密钥对并输出
 SGD_RV SDF_GenerateKeyPair_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyBits,RSArefPublicKey *pucPublicKey,RSArefPrivateKey *pucPrivateKey); //ok
+//12. 生成会话密钥并用内部ＲＳＡ公钥加密输出
 SGD_RV SDF_GenerateKeyWithIPK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiIPKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR *pucKey,SGD_UINT32 *puiKeyLength,SGD_HANDLE *phKeyHandle);
+//13. 生成会话密钥并用外部ＲＳＡ公钥加密输出
 SGD_RV SDF_GenerateKeyWithEPK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,RSArefPublicKey *pucPublicKey,SGD_UCHAR *pucKey,SGD_UINT32 *puiKeyLength,SGD_HANDLE *phKeyHandle);
+//14. 导入会话密钥并用内部ＲＳＡ私钥解密
 SGD_RV SDF_ImportKeyWithISK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,SGD_UCHAR *pucKey,SGD_UINT32 uiKeyLength,SGD_HANDLE *phKeyHandle);
+//15. 基于ＲＳＡ算法的数字信封转换
 SGD_RV SDF_ExchangeDigitEnvelopeBaseOnRSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey,SGD_UCHAR *pucDEInput,SGD_UINT32  uiDELength,SGD_UCHAR *pucDEOutput,SGD_UINT32  *puiDELength);
+//16. 导出ＥＣＣ签名公钥
 SGD_RV SDF_ExportSignPublicKey_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,ECCrefPublicKey *pucPublicKey);
+//17. 导出ＥＣＣ加密公钥
 SGD_RV SDF_ExportEncPublicKey_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,ECCrefPublicKey *pucPublicKey);
+//18. 产生ＥＣＣ非对称密钥对并输出
 SGD_RV SDF_GenerateKeyPair_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiAlgID,SGD_UINT32  uiKeyBits,ECCrefPublicKey *pucPublicKey,ECCrefPrivateKey *pucPrivateKey);
+//19. 生成会话密钥并用内部ＥＣＣ公钥加密输出
 SGD_RV SDF_GenerateKeyWithIPK_ECC (SGD_HANDLE hSessionHandle, SGD_UINT32 uiIPKIndex,SGD_UINT32 uiKeyBits,ECCCipher *pucKey,SGD_HANDLE *phKeyHandle);
+//20. 生成会话密钥并用外部ＥＣＣ公钥加密输出
 SGD_RV SDF_GenerateKeyWithEPK_ECC (SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,SGD_UINT32  uiAlgID,ECCrefPublicKey *pucPublicKey,ECCCipher *pucKey,SGD_HANDLE *phKeyHandle);
+//21. 导入会话密钥并用内部ＥＣＣ私钥解密
 SGD_RV SDF_ImportKeyWithISK_ECC (SGD_HANDLE hSessionHandle,SGD_UINT32 uiISKIndex,ECCCipher *pucKey,SGD_HANDLE *phKeyHandle);
+//22. 生成密钥协商参数并输出
 SGD_RV SDF_GenerateAgreementDataWithECC (SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR *pucSponsorID,SGD_UINT32 uiSponsorIDLength,ECCrefPublicKey  *pucSponsorPublicKey,ECCrefPublicKey  *pucSponsorTmpPublicKey,SGD_HANDLE *phAgreementHandle);
+//23. 计算会话密钥
 SGD_RV SDF_GenerateKeyWithECC (SGD_HANDLE hSessionHandle, SGD_UCHAR *pucResponseID,SGD_UINT32 uiResponseIDLength,ECCrefPublicKey *pucResponsePublicKey,ECCrefPublicKey *pucResponseTmpPublicKey,SGD_HANDLE hAgreementHandle,SGD_HANDLE *phKeyHandle);
+//24. 产生协商数据并计算会话密钥
 SGD_RV SDF_GenerateAgreementDataAndKeyWithECC (SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR *pucResponseID,SGD_UINT32 uiResponseIDLength,SGD_UCHAR *pucSponsorID,SGD_UINT32 uiSponsorIDLength,ECCrefPublicKey *pucSponsorPublicKey,ECCrefPublicKey *pucSponsorTmpPublicKey,ECCrefPublicKey  *pucResponsePublicKey,	ECCrefPublicKey  *pucResponseTmpPublicKey,SGD_HANDLE *phKeyHandle);
+//25. 基于 ＥＣＣ算法的数字信封转换
 SGD_RV SDF_ExchangeDigitEnvelopeBaseOnECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,SGD_UINT32  uiAlgID,ECCrefPublicKey *pucPublicKey,ECCCipher *pucEncDataIn,ECCCipher *pucEncDataOut);
+//26. 生成会话密钥并用密钥加密密钥加密输出
 SGD_RV SDF_GenerateKeyWithKEK(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,SGD_UINT32  uiAlgID,SGD_UINT32 uiKEKIndex, SGD_UCHAR *pucKey, SGD_UINT32 *puiKeyLength, SGD_HANDLE *phKeyHandle);
+//27. 导入会话密钥并用密钥加密密钥解密
 SGD_RV SDF_ImportKeyWithKEK(SGD_HANDLE hSessionHandle, SGD_UINT32  uiAlgID,SGD_UINT32 uiKEKIndex, SGD_UCHAR *pucKey, SGD_UINT32 uiKeyLength, SGD_HANDLE *phKeyHandle);
+//28. 导入明文会话密钥
+SGD_RV SDF_ImportKey(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucKey, SGD_UINT32 uiKeyLength,SGD_HANDLE *phKeyHandle);
+//29. 销毁会话密钥
 SGD_RV SDF_DestroyKey(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle);
 
-/*�ǶԳ��㷨�����ຯ��*/
-/*RSA�㷨*/
+//非对称算法运算类函数
+//30. 外部公钥ＲＳＡ运算
 SGD_RV SDF_ExternalPublicKeyOperation_RSA(SGD_HANDLE hSessionHandle, RSArefPublicKey *pucPublicKey,SGD_UCHAR *pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR *pucDataOutput,SGD_UINT32  *puiOutputLength);
+//31. 外部私钥ＲＳＡ运算
+SGD_RV SDF_ExternalPrivateKeyOperation_RSA(SGD_HANDLE hSessionHandle, RSArefPrivateKey *pucPrivateKey,SGD_UCHAR *pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR *pucDataOutput,SGD_UINT32  *puiOutputLength);
+//32. 内部公钥ＲＳＡ运算
 SGD_RV SDF_InternalPublicKeyOperation_RSA(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR *pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR *pucDataOutput,SGD_UINT32  *puiOutputLength);
+//33. 内部私ＲＳＡ运算
 SGD_RV SDF_InternalPrivateKeyOperation_RSA(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR *pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR *pucDataOutput,SGD_UINT32  *puiOutputLength);
-/*ECC�㷨*/
+//34. 外部密钥ＥＣＣ签名
+SGD_RV SDF_ExternalSign_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPrivateKey *pucPrivateKey,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature);
+//35. 外部密钥ＥＣＣ验证
 SGD_RV SDF_ExternalVerify_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR *pucDataInput,SGD_UINT32  uiInputLength,ECCSignature *pucSignature);
+//36. 内部密钥ＥＣＣ签名
 SGD_RV SDF_InternalSign_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature);
+//37. 内部密钥ＥＣＣ验证
 SGD_RV SDF_InternalVerify_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature);
+//38. 外部密钥ＥＣＣ加密
 SGD_RV SDF_ExternalEncrypt_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength,ECCCipher *pucEncData);
+//39. 外部密钥ＥＣＣ解密
+SGD_RV SDF_ExternalDecrypt_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPrivateKey *pucPrivateKey,ECCCipher *pucEncData,SGD_UCHAR *pucData,SGD_UINT32  *puiDataLength);
 
-/*�Գ��㷨�����ຯ��*/
+//对称算法运算类函数
+//40. 对称加密
 SGD_RV SDF_Encrypt(SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR *pucIV,SGD_UCHAR *pucData,SGD_UINT32 uiDataLength,SGD_UCHAR *pucEncData,SGD_UINT32  *puiEncDataLength);
+//41. 对称解密
 SGD_RV SDF_Decrypt (SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR *pucIV,SGD_UCHAR *pucEncData,SGD_UINT32  uiEncDataLength,SGD_UCHAR *pucData,SGD_UINT32 *puiDataLength);
+//42. 计算ＭＡＣ
 SGD_RV SDF_CalculateMAC(SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR *pucIV,SGD_UCHAR *pucData,SGD_UINT32 uiDataLength,SGD_UCHAR *pucMAC,SGD_UINT32  *puiMACLength);
 
-/*�û��ļ������ຯ��*/
-SGD_RV SDF_CreateFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize);
-SGD_RV SDF_ReadFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR *pucBuffer);
-SGD_RV SDF_WriteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR *pucBuffer);
-SGD_RV SDF_DeleteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen);
-
-/*�Ӵ����㺯��*/
+//杂凑运算类函数
+//43. 杂凑运算初始化
 SGD_RV SDF_HashInit(SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR *pucID,SGD_UINT32 uiIDLength);
+//44. 多包杂凑运算
 SGD_RV SDF_HashUpdate(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength);
+//45. 杂凑运算结束
 SGD_RV SDF_HashFinal(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucHash,SGD_UINT32  *puiHashLength);
 
+//用户文件操作类函数
+//46. 创建文件
+SGD_RV SDF_CreateFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize);
+//47. 读取文件
+SGD_RV SDF_ReadFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR *pucBuffer);
+//48. 写文件
+SGD_RV SDF_WriteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR *pucBuffer);
+//49. 删除文件
+SGD_RV SDF_DeleteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen);
 
-/*��չ����*/
+//以下是扩展的函数，不是国密规范函数
+//50.
 SGD_RV SDF_GetSymmKeyHandle(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_HANDLE *phKeyHandle);
-SGD_RV SDF_ImportKey(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucKey, SGD_UINT32 uiKeyLength,SGD_HANDLE *phKeyHandle);
-SGD_RV SDF_ExternalPrivateKeyOperation_RSA(SGD_HANDLE hSessionHandle, RSArefPrivateKey *pucPrivateKey,SGD_UCHAR *pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR *pucDataOutput,SGD_UINT32  *puiOutputLength);
-SGD_RV SDF_ExternalSign_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPrivateKey *pucPrivateKey,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature);
-SGD_RV SDF_ExternalDecrypt_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPrivateKey *pucPrivateKey,ECCCipher *pucEncData,SGD_UCHAR *pucData,SGD_UINT32  *puiDataLength);
-SGD_RV SDF_InternalDecrypt_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UINT32 uiAlgID,ECCCipher *pucEncData,SGD_UCHAR *pucData,SGD_UINT32  *puiDataLength);
+//51. ECC方式的加密
 SGD_RV SDF_InternalEncrypt_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiISKIndex, SGD_UINT32 uiAlgID, SGD_UCHAR *pucData, SGD_UINT32  uiDataLength, ECCCipher *pucEncData);
-
-/*��չ�Ự��Կ��������*/
+//52. ECC方式的解密
+SGD_RV SDF_InternalDecrypt_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UINT32 uiAlgID,ECCCipher *pucEncData,SGD_UCHAR *pucData,SGD_UINT32  *puiDataLength);
+//53. EPK方式导出RSA密钥
 SGD_RV SDF_ExportKeyWithEPK_RSA(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, RSArefPublicKey *pucPublicKey, SGD_UCHAR *pucKey, SGD_UINT32 *puiKeyLength);
+//54. EPK方式导出ECC密钥
 SGD_RV SDF_ExportKeyWithEPK_ECC(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UINT32 uiAlgID, ECCrefPublicKey *pucPublicKey, ECCCipher *pucKey);
+//55. EPK方式导出密钥
 SGD_RV SDF_ExportKeyWithKEK(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UINT32 uiAlgID, SGD_UINT32 uiKEKIndex, SGD_UCHAR *pucKey, SGD_UINT32 *puiKeyLength);
 
-
-/*SM9����*/
+// SM9 算法函数集
+//56. 导出SM9签名主公钥
 SGD_RV SDF_ExportSignMasterPublicKey_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SM9refSignMasterPublicKey *pPublicKey);
+//57. 导出SM9加密主公钥
 SGD_RV SDF_ExportEncMasterPublicKey_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SM9refEncMasterPublicKey *pPublicKey);
+//58. 导出SM9签名主密钥对
 SGD_RV SDF_ExportSignMasterKeyPairG_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR *pPairG,SGD_UINT32 *puiPairGLen);
+//59. 导出SM9加密主密钥对
 SGD_RV SDF_ExportEncMasterKeyPairG_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR *pPairG,SGD_UINT32 *puiPairGLen);
+//60. 导入SM9使用者签名私钥
 SGD_RV SDF_ImportUserSignPrivateKey_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey);
+//61. 导入SM9使用者加密私钥
 SGD_RV SDF_ImportUserEncPrivateKey_SM9(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SM9refEncUserPrivateKey  *pUserPrivateKey);
+//62. 产生SM9使用者签名私钥
 SGD_RV SDF_GenerateSignUserPrivateKey_SM9(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_UCHAR hid, SGD_UCHAR *pucUserID, SGD_UINT32 uiUserIDLen, SM9refSignUserPrivateKey  *pUserPrivateKey);
+//63. 产生SM9使用者加密私钥
 SGD_RV SDF_GenerateEncUserPrivateKey_SM9(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32 uiUserIDLen,SM9refEncUserPrivateKey  *pUserPrivateKey);
+//64.SM9签名
 SGD_RV SDF_Sign_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR *pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature);
+//65. SM9签名扩展方法
 SGD_RV SDF_SignEx_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR *pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR *pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature);
+//66. SM9验证
 SGD_RV SDF_Verify_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR *pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature);
+//67. SM9验证扩展方法
 SGD_RV SDF_VerifyEx_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32 uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR *pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR *pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature);
+//68. SM9加密
 SGD_RV SDF_Encrypt_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR *pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher);
+//69. SM9加密扩展方法
 SGD_RV SDF_EncryptEx_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR *pPairG,SGD_UINT32  nPairGLen,SGD_UCHAR *pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher);
+//70. SM9解密
 SGD_RV SDF_Decrypt_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9Cipher * pCipher,SGD_UCHAR *pucPlainData,SGD_UINT32  *uiPlainDataLength);
+//71. SM9密钥封装
 SGD_RV SDF_Encap_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey  *pPublicKey,SGD_UINT32 uiKeyLen,SGD_UCHAR *pKey,SM9refKeyPackage *pKeyPackage);
+//72. SM9密钥解封
 SGD_RV SDF_Decap_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9refKeyPackage *pKeyPackage,SGD_UINT32  uiKeyLen,SGD_UCHAR *pucKey);
+//73.
 SGD_RV SDF_GenerateAgreementDataWithSM9(SGD_HANDLE hSessionHandle, SGD_UCHAR hid, SGD_UCHAR *pucResponseID, SGD_UINT32 uiResponseIDLength, SM9refEncMasterPublicKey  *pPublicKey, SM9refEncMasterPublicKey  *pucSponsorTmpPublicKey, SGD_HANDLE *phAgreementHandle);
+//74.
 SGD_RV SDF_GenerateAgreemetDataAndKeyWithSM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyLen,SGD_UCHAR hid,SGD_UCHAR * pucResponseID,SGD_UINT32 uiResponseIDLen,SGD_UCHAR * pucSponsorID,SGD_UINT32 uiSponsorIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pucResponsePrivateKey,SM9refEncMasterPublicKey *pucPublicKey,SM9refEncMasterPublicKey * pucSponsorTmpPublicKey,SM9refEncMasterPublicKey * pucResponseTmpPublicKey,SGD_UCHAR *pucHashSB,SGD_UINT32 *puiSBLen,SGD_UCHAR  *pucHashS2,SGD_UINT32 *puiS2Len,SGD_HANDLE *phKeyHandle);
+//75.
 SGD_RV SDF_GenerateKeyWithSM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyLen,SGD_UCHAR hid,SGD_UCHAR *pucSponsorID,SGD_UINT32 uiSponsorIDLen,SGD_UCHAR *pucResponseID,SGD_UINT32 uiResponseIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey   *pucSponsorPrivateKey,SM9refEncMasterPublicKey   *pucPublicKey,SM9refEncMasterPublicKey   *pucResponseTmpPublicKey,SGD_UCHAR *pucHashSB,SGD_UINT32 uiSBLen,SGD_UCHAR *pucHashSA,SGD_UINT32 *puiSALen,SGD_HANDLE hAgreementHandle,SGD_HANDLE *phKeyHandle);
+//76.
 SGD_RV SDF_GenerateKeyVerifySM9(SGD_HANDLE hSessionHandle, SGD_UCHAR *pHashS2, SGD_UINT32  uiS2Len, SGD_UCHAR *pHashSA, SGD_UINT32 uiSALen);
 
 #ifdef __cplusplus
