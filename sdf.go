@@ -876,103 +876,111 @@ SGD_RV SDFGenerateEncUserPrivateKey_SM9(struct LibHandle * h,SGD_HANDLE hSession
 	return (*fptr)(hSessionHandle,  uiKeyIndex,  hid, *pucUserID, uiUserIDLen,  pUserPrivateKey);
 #endif
 }
-SGD_RV SDFSign_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR_PRT *pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature)
+SGD_RV SDFSign_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR_PRT pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,SM9refSignUserPrivateKey  *,SM9refSignMasterPublicKey *,SGD_UCHAR *,SGD_UINT32 ,SM9Signature  *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Sign_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, *pucDataInput, uiDataInputLen,  pSignature);
+	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, pucDataInput, uiDataInputLen,  pSignature);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Sign_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, *pucDataInput, uiDataInputLen,  pSignature);
+	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, pucDataInput, uiDataInputLen,  pSignature);
 #endif
 }
-SGD_RV SDFSignEx_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR_PRT *pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR_PRT *pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature)
+SGD_RV SDFSignEx_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR_PRT pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR_PRT pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,SM9refSignUserPrivateKey  *,SM9refSignMasterPublicKey *,SGD_UCHAR *,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32 ,SM9Signature  *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_SignEx_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, *pPairG, uiPairGLen, *pucDataInput, uiDataInputLen,  pSignature);
+	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, pPairG, uiPairGLen, pucDataInput, uiDataInputLen,  pSignature);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_SignEx_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, *pPairG, uiPairGLen, *pucDataInput, uiDataInputLen,  pSignature);
+	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, pPairG, uiPairGLen, pucDataInput, uiDataInputLen,  pSignature);
 #endif
 }
-SGD_RV SDFVerify_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT *pucUserID,SGD_UINT32  uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR_PRT *pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature)
+SGD_RV SDFVerify_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR_PRT pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32  ,SM9refSignMasterPublicKey  *,SGD_UCHAR *,SGD_UINT32   ,SM9Signature  *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Verify_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID,  uiUserIDLen,  pMasterPublicKey, *pucData,   uiDataInputLen,  pSignature);
+	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen,  pMasterPublicKey, pucData,   uiDataInputLen,  pSignature);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Verify_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID,  uiUserIDLen,  pMasterPublicKey, *pucData,   uiDataInputLen,  pSignature);
+	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen,  pMasterPublicKey, pucData,   uiDataInputLen,  pSignature);
 #endif
 }
-SGD_RV SDFVerifyEx_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT *pucUserID,SGD_UINT32 uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR_PRT *pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR_PRT *pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature)
+SGD_RV SDFVerifyEx_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32 uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR_PRT pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR_PRT pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32 uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR *pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR *pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_VerifyEx_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID, uiUserIDLen,  pMasterPublicKey, *pPairG, uiPairGLen, *pucData,   uiDataInputLen,  pSignature);
+	return (*fptr)(hSessionHandle, hid, pucUserID, uiUserIDLen,  pMasterPublicKey, pPairG, uiPairGLen, pucData,   uiDataInputLen,  pSignature);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_VerifyEx_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID, uiUserIDLen,  pMasterPublicKey, *pPairG, uiPairGLen, *pucData,   uiDataInputLen,  pSignature);
+	return (*fptr)(hSessionHandle, hid, pucUserID, uiUserIDLen,  pMasterPublicKey, pPairG, uiPairGLen, pucData,   uiDataInputLen,  pSignature);
 #endif
 }
-SGD_RV SDFEncrypt_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT *pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR_PRT *pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher)
+SGD_RV SDFEncrypt_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR_PRT pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32  ,SM9refEncMasterPublicKey *,SGD_UCHAR *,SGD_UINT32   ,SM9Cipher *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Encrypt_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID,  uiUserIDLen, pPubluicKey, *pucData,   uiDataLength, pCipher);
+	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen, pPubluicKey, pucData,   uiDataLength, pCipher);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Encrypt_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID,  uiUserIDLen, pPubluicKey, *pucData,   uiDataLength, pCipher);
+	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen, pPubluicKey, pucData,   uiDataLength, pCipher);
 #endif
 }
-SGD_RV SDFEncryptEx_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT *pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR_PRT *pPairG,SGD_UINT32  nPairGLen,SGD_UCHAR_PRT *pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher)
+SGD_RV SDFEncryptEx_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR_PRT pPairG,SGD_UINT32  nPairGLen,SGD_UCHAR_PRT pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32  ,SM9refEncMasterPublicKey *,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32   ,SM9Cipher *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_EncryptEx_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID,  uiUserIDLen, pPubluicKey, *pPairG,  nPairGLen, *pucData,   uiDataLength, pCipher);
+	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen, pPubluicKey, pPairG,  nPairGLen, pucData,   uiDataLength, pCipher);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_EncryptEx_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID,  uiUserIDLen, pPubluicKey, *pPairG,  nPairGLen, *pucData,   uiDataLength, pCipher);
+	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen, pPubluicKey, pPairG,  nPairGLen, pucData,   uiDataLength, pCipher);
 #endif
 }
-SGD_RV SDFDecrypt_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT *pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9Cipher * pCipher,SGD_UCHAR_PRT *pucPlainData,SGD_UINT32  *uiPlainDataLength)
+SGD_RV SDFDecrypt_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9Cipher * pCipher,SGD_UCHAR_PRT *pucPlainData,SGD_UINT32  *uiPlainDataLength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32  ,SGD_UINT32 ,SM9refEncUserPrivateKey  *,SM9Cipher * ,SGD_UCHAR *,SGD_UINT32  *);
+	*pucPlainData = calloc(*uiPlainDataLength, sizeof(SGD_UCHAR));
+	if (*pucPlainData == NULL) {
+		return SGD_FALSE;
+	}
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Decrypt_SM9");
-	return (*fptr)(hSessionHandle, *pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey,  pCipher, *pucPlainData,  uiPlainDataLength);
+	return (*fptr)(hSessionHandle, pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey,  pCipher, *pucPlainData,  uiPlainDataLength);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Decrypt_SM9");
-	return (*fptr)(hSessionHandle, *pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey,  pCipher, *pucPlainData,  uiPlainDataLength);
+	return (*fptr)(hSessionHandle, pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey,  pCipher, *pucPlainData,  uiPlainDataLength);
 #endif
 }
-SGD_RV SDFEncap_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT *pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey  *pPublicKey,SGD_UINT32 uiKeyLen,SGD_UCHAR_PRT *pKey,SM9refKeyPackage *pKeyPackage)
+SGD_RV SDFEncap_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey  *pPublicKey,SGD_UINT32 uiKeyLen,SGD_UCHAR_PRT pKey,SM9refKeyPackage *pKeyPackage)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32  ,SM9refEncMasterPublicKey  *,SGD_UINT32 ,SGD_UCHAR *,SM9refKeyPackage *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Encap_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID,  uiUserIDLen,  pPublicKey, uiKeyLen, *pKey, pKeyPackage);
+	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen,  pPublicKey, uiKeyLen, pKey, pKeyPackage);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Encap_SM9");
-	return (*fptr)(hSessionHandle, hid, *pucUserID,  uiUserIDLen,  pPublicKey, uiKeyLen, *pKey, pKeyPackage);
+	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen,  pPublicKey, uiKeyLen, pKey, pKeyPackage);
 #endif
 }
-SGD_RV SDFDecap_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT *pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9refKeyPackage *pKeyPackage,SGD_UINT32  uiKeyLen,SGD_UCHAR_PRT *pucKey)
+SGD_RV SDFDecap_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9refKeyPackage *pKeyPackage,SGD_UINT32  uiKeyLen,SGD_UCHAR_PRT *pucKey)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32  ,SGD_UINT32 ,SM9refEncUserPrivateKey  *,SM9refKeyPackage *,SGD_UINT32  ,SGD_UCHAR *);
+	*pucKey = calloc(uiKeyLen, sizeof(SGD_UCHAR));
+	if (*pucKey == NULL) {
+		return SGD_FALSE;
+	}
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Decap_SM9");
-	return (*fptr)(hSessionHandle, *pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey, pKeyPackage,  uiKeyLen, *pucKey);
+	return (*fptr)(hSessionHandle, pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey, pKeyPackage,  uiKeyLen, *pucKey);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Decap_SM9");
-	return (*fptr)(hSessionHandle, *pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey, pKeyPackage,  uiKeyLen, *pucKey);
+	return (*fptr)(hSessionHandle, pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey, pKeyPackage,  uiKeyLen, *pucKey);
 #endif
 }
 SGD_RV SDFGenerateAgreementDataWithSM9(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UCHAR hid, SGD_UCHAR_PRT *pucResponseID, SGD_UINT32 uiResponseIDLength, SM9refEncMasterPublicKey  *pPublicKey, SM9refEncMasterPublicKey  *pucSponsorTmpPublicKey, SGD_HANDLE *phAgreementHandle)
@@ -1008,15 +1016,15 @@ SGD_RV SDFGenerateKeyWithSM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_
 	return (*fptr)(hSessionHandle, uiKeyLen, hid, *pucSponsorID, uiSponsorIDLen, *pucResponseID, uiResponseIDLen, uiKeyIndex,   pucSponsorPrivateKey,   pucPublicKey,   pucResponseTmpPublicKey, *pucHashSB, uiSBLen, *pucHashSA, puiSALen, hAgreementHandle, phKeyHandle);
 #endif
 }
-SGD_RV SDFGenerateKeyVerifySM9(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UCHAR_PRT *pHashS2, SGD_UINT32  uiS2Len, SGD_UCHAR_PRT *pHashSA, SGD_UINT32 uiSALen)
+SGD_RV SDFGenerateKeyVerifySM9(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UCHAR_PRT pHashS2, SGD_UINT32  uiS2Len, SGD_UCHAR_PRT pHashSA, SGD_UINT32 uiSALen)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UCHAR *, SGD_UINT32  , SGD_UCHAR *, SGD_UINT32 );
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateKeyVerifySM9");
-	return (*fptr)(hSessionHandle,  *pHashS2,   uiS2Len,  *pHashSA,  uiSALen);
+	return (*fptr)(hSessionHandle,  pHashS2,   uiS2Len,  pHashSA,  uiSALen);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateKeyVerifySM9");
-	return (*fptr)(hSessionHandle,  *pHashS2,   uiS2Len,  *pHashSA,  uiSALen);
+	return (*fptr)(hSessionHandle,  pHashS2,   uiS2Len,  pHashSA,  uiSALen);
 #endif
 }
 */
@@ -1097,8 +1105,17 @@ func ConvertToECCCipherGo(pucKey C.ECCCipher)(key core.ECCCipher){
 		L: uint(pucKey.L),
 		C: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucKey.C[0]), C.int(pucKey.L))), " "),
 	}
-
 	return key
+}
+
+func ConvertToECCSignatureC(signature core.ECCSignature)(pSignature C.ECCSignature){
+	for i:=0;i< len(signature.R);i++{
+		pSignature.r[i]=C.SGD_UCHAR(signature.R[i])
+	}
+	for i:=0;i< len(signature.S);i++{
+		pSignature.s[i]=C.SGD_UCHAR(signature.S[i])
+	}
+	return pSignature
 }
 
 func ConvertToECCSignatureGo(pucSignature C.ECCSignature)(signature core.ECCSignature){
@@ -1108,6 +1125,25 @@ func ConvertToECCSignatureGo(pucSignature C.ECCSignature)(signature core.ECCSign
 	}
 	return signature
 }
+
+func ConvertToSM9refSignMasterPublicKeyC(signMasterPublicKey core.SM9refSignMasterPublicKey)(pSignMasterPublicKey C.SM9refSignMasterPublicKey){
+
+	pSignMasterPublicKey.bits = C.SGD_UINT32(signMasterPublicKey.Bits)
+	for i:=0;i< len(signMasterPublicKey.Xa);i++{
+		pSignMasterPublicKey.xa[i]=C.SGD_UCHAR(signMasterPublicKey.Xa[i])
+	}
+	for i:=0;i< len(signMasterPublicKey.Xb);i++{
+		pSignMasterPublicKey.xb[i]=C.SGD_UCHAR(signMasterPublicKey.Xb[i])
+	}
+	for i:=0;i< len(signMasterPublicKey.Ya);i++{
+		pSignMasterPublicKey.ya[i]=C.SGD_UCHAR(signMasterPublicKey.Ya[i])
+	}
+	for i:=0;i< len(signMasterPublicKey.Yb);i++{
+		pSignMasterPublicKey.yb[i]=C.SGD_UCHAR(signMasterPublicKey.Yb[i])
+	}
+	return pSignMasterPublicKey
+}
+
 
 func ConvertToSM9refSignMasterPublicKeyGo(pSignMasterPublicKey C.SM9refSignMasterPublicKey)(signMasterPublicKey core.SM9refSignMasterPublicKey){
 	signMasterPublicKey =core.SM9refSignMasterPublicKey{
@@ -1120,6 +1156,17 @@ func ConvertToSM9refSignMasterPublicKeyGo(pSignMasterPublicKey C.SM9refSignMaste
 	return signMasterPublicKey
 }
 
+func ConvertToSM9refEncMasterPublicKeyC(encMasterPublicKey core.SM9refEncMasterPublicKey)(pEncMasterPublicKey C.SM9refEncMasterPublicKey){
+	pEncMasterPublicKey.bits = C.SGD_UINT32(encMasterPublicKey.Bits)
+	for i:=0;i< len(encMasterPublicKey.X);i++{
+		pEncMasterPublicKey.x[i]=C.SGD_UCHAR(encMasterPublicKey.X[i])
+	}
+	for i:=0;i< len(encMasterPublicKey.Y);i++{
+		pEncMasterPublicKey.y[i]=C.SGD_UCHAR(encMasterPublicKey.Y[i])
+	}
+	return pEncMasterPublicKey
+}
+
 func ConvertToSM9refEncMasterPublicKeyGo(pEncMasterPublicKey C.SM9refEncMasterPublicKey)(encMasterPublicKey core.SM9refEncMasterPublicKey){
 	encMasterPublicKey =core.SM9refEncMasterPublicKey{
 		Bits: uint(pEncMasterPublicKey.bits),
@@ -1129,6 +1176,22 @@ func ConvertToSM9refEncMasterPublicKeyGo(pEncMasterPublicKey C.SM9refEncMasterPu
 	return encMasterPublicKey
 }
 
+func ConvertToSM9refEncUserPrivateKeyC(encUserPrivateKey core.SM9refEncUserPrivateKey)(pEncUserPrivateKey C.SM9refEncUserPrivateKey){
+	pEncUserPrivateKey.bits = C.SGD_UINT32(encUserPrivateKey.Bits)
+	for i:=0;i< len(encUserPrivateKey.Xa);i++{
+		pEncUserPrivateKey.xa[i]=C.SGD_UCHAR(encUserPrivateKey.Xa[i])
+	}
+	for i:=0;i< len(encUserPrivateKey.Xb);i++{
+		pEncUserPrivateKey.xb[i]=C.SGD_UCHAR(encUserPrivateKey.Xb[i])
+	}
+	for i:=0;i< len(encUserPrivateKey.Ya);i++{
+		pEncUserPrivateKey.ya[i]=C.SGD_UCHAR(encUserPrivateKey.Ya[i])
+	}
+	for i:=0;i< len(encUserPrivateKey.Yb);i++{
+		pEncUserPrivateKey.yb[i]=C.SGD_UCHAR(encUserPrivateKey.Yb[i])
+	}
+	return pEncUserPrivateKey
+}
 func ConvertToSM9refEncUserPrivateKeyGo(pEncUserPrivateKey C.SM9refEncUserPrivateKey)(encUserPrivateKey core.SM9refEncUserPrivateKey){
 	encUserPrivateKey = core.SM9refEncUserPrivateKey{
 		Bits: uint(pEncUserPrivateKey.bits),
@@ -1140,6 +1203,17 @@ func ConvertToSM9refEncUserPrivateKeyGo(pEncUserPrivateKey C.SM9refEncUserPrivat
 	return encUserPrivateKey
 }
 
+func ConvertToSM9refSignUserPrivateKeyC(signUserPrivateKey core.SM9refSignUserPrivateKey)(pSignUserPrivateKey C.SM9refSignUserPrivateKey){
+	pSignUserPrivateKey.bits = C.SGD_UINT32(signUserPrivateKey.Bits)
+	for i:=0;i< len(signUserPrivateKey.X);i++{
+		pSignUserPrivateKey.x[i]=C.SGD_UCHAR(signUserPrivateKey.X[i])
+	}
+	for i:=0;i< len(signUserPrivateKey.Y);i++{
+		pSignUserPrivateKey.y[i]=C.SGD_UCHAR(signUserPrivateKey.Y[i])
+	}
+	return pSignUserPrivateKey
+}
+
 func ConvertToSM9refSignUserPrivateKeyGo(pSignUserPrivateKey C.SM9refSignUserPrivateKey)(signUserPrivateKey core.SM9refSignUserPrivateKey){
 	signUserPrivateKey=core.SM9refSignUserPrivateKey{
 		Bits: uint(pSignUserPrivateKey.bits),
@@ -1148,15 +1222,47 @@ func ConvertToSM9refSignUserPrivateKeyGo(pSignUserPrivateKey C.SM9refSignUserPri
 	}
 	return signUserPrivateKey
 }
+
+func ConvertToSM9CipherC(cipher core.SM9Cipher)(pCipher C.SM9Cipher){
+	for i:=0;i< len(cipher.X);i++{
+		pCipher.x[i]=C.SGD_UCHAR(cipher.X[i])
+	}
+	for i:=0;i< len(cipher.Y);i++{
+		pCipher.y[i]=C.SGD_UCHAR(cipher.Y[i])
+	}
+	for i:=0;i< len(cipher.H);i++{
+		pCipher.h[i]=C.SGD_UCHAR(cipher.H[i])
+	}
+	pCipher.L = C.SGD_UINT32(cipher.L)
+	for i:=0;i< len(cipher.C);i++{
+		pCipher.C[i]=C.SGD_UCHAR(cipher.C[i])
+	}
+
+	return pCipher
+}
+
 func ConvertToSM9CipherGo(pCipher C.SM9Cipher)(cipher core.SM9Cipher){
 	cipher=core.SM9Cipher{
 		X: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pCipher.x[0]), 256)), " "),
 		Y: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pCipher.y[0]), 256)), " "),
 		H: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pCipher.h[0]), 256)), " "),
 		L: uint(pCipher.L),
-		C: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pCipher.C[0]), 256)), " "),
+		C: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pCipher.C[0]),  C.int(pCipher.L))), " "),
 	}
 	return cipher
+}
+
+func ConvertToSM9SignatureC(signature core.SM9Signature)(pSignature C.SM9Signature){
+	for i:=0;i< len(signature.X);i++{
+		pSignature.x[i]=C.SGD_UCHAR(signature.X[i])
+	}
+	for i:=0;i< len(signature.Y);i++{
+		pSignature.y[i]=C.SGD_UCHAR(signature.Y[i])
+	}
+	for i:=0;i< len(signature.H);i++{
+		pSignature.h[i]=C.SGD_UCHAR(signature.H[i])
+	}
+	return pSignature
 }
 
 func ConvertToSM9SignatureGo(pSignature C.SM9Signature)(signature core.SM9Signature){
@@ -1166,6 +1272,16 @@ func ConvertToSM9SignatureGo(pSignature C.SM9Signature)(signature core.SM9Signat
 		Y: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignature.y[0]), 256)), " "),
 	}
 	return signature
+}
+
+func ConvertToSM9refKeyPackageC(keyPackage core.SM9refKeyPackage)(pKeyPackage C.SM9refKeyPackage){
+	for i:=0;i< len(keyPackage.X);i++{
+		pKeyPackage.x[i]=C.SGD_UCHAR(keyPackage.X[i])
+	}
+	for i:=0;i< len(keyPackage.Y);i++{
+		pKeyPackage.y[i]=C.SGD_UCHAR(keyPackage.Y[i])
+	}
+  	return pKeyPackage
 }
 
 func ConvertToSM9refKeyPackageGo(pKeyPackage C.SM9refKeyPackage)(keyPackage core.SM9refKeyPackage){
@@ -1819,11 +1935,13 @@ func (c *Ctx)SDFDeleteFile(sessionHandle SessionHandleType,fileName []byte)(err 
 	return err
 }
 //50.
-func (c *Ctx)SDFGetSymmKeyHandle(sessionHandle SessionHandleType,uiKeyIndex uint)(KeyHandleType,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFGetSymmKeyHandle(sessionHandle SessionHandleType,uiKeyIndex uint)(keyHandle KeyHandleType,err error){
+	var err1 C.SGD_RV
 	var phKeyHandle C.SGD_HANDLE
-	err = C.SDFGetSymmKeyHandle(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&phKeyHandle)
-	return KeyHandleType(phKeyHandle),ToError(err)
+	err1 = C.SDFGetSymmKeyHandle(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&phKeyHandle)
+	keyHandle = KeyHandleType(phKeyHandle)
+	err = ToError(err1)
+	return keyHandle,err
 }
 //51. ECC方式的加密
 func (c *Ctx)SDFInternalEncrypt_ECC(sessionHandle SessionHandleType,uiISKIndex uint,uiAlgID uint,pucData []byte,uiDataLength uint)(encData core.ECCCipher,err error){
@@ -1863,279 +1981,231 @@ func (c *Ctx)SDFInternalDecrypt_ECC(sessionHandle SessionHandleType,uiISKIndex u
 }
 
 //53. EPK方式导出RSA密钥
-func (c *Ctx)SDFExportKeyWithEPK_RSA(sessionHandle SessionHandleType,hKeyHandle KeyHandleType)(core.RSArefPublicKey,[]byte,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFExportKeyWithEPK_RSA(sessionHandle SessionHandleType,hKeyHandle KeyHandleType)(publicKey core.RSArefPublicKey,key []byte,err error){
+	var err1 C.SGD_RV
 	var pucPublicKey C.RSArefPublicKey
 	var pucKey C.SGD_UCHAR_PRT
 	var puiKeyLength C.SGD_UINT32
-	err = C.SDFExportKeyWithEPK_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_HANDLE(hKeyHandle),&pucPublicKey,&pucKey,&puiKeyLength)
-	publicKey := ConvertToRSArefPublicKeyGo(pucPublicKey)
-	key:= C.GoBytes(unsafe.Pointer(pucKey), C.int(puiKeyLength))
+	err1 = C.SDFExportKeyWithEPK_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_HANDLE(hKeyHandle),&pucPublicKey,&pucKey,&puiKeyLength)
+	publicKey = ConvertToRSArefPublicKeyGo(pucPublicKey)
+	key = C.GoBytes(unsafe.Pointer(pucKey), C.int(puiKeyLength))
 	C.free(unsafe.Pointer(pucKey))
-	return publicKey,key,ToError(err)
+	err = ToError(err1)
+	return publicKey,key,err
 }
 
 //54. EPK方式导出ECC密钥
-func (c *Ctx)SDFExportKeyWithEPK_ECC(sessionHandle SessionHandleType,hKeyHandle KeyHandleType,uiAlgID uint)(core.ECCrefPublicKey,core.ECCCipher,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFExportKeyWithEPK_ECC(sessionHandle SessionHandleType,hKeyHandle KeyHandleType,uiAlgID uint)(publicKey core.ECCrefPublicKey,key core.ECCCipher,err error){
+	var err1 C.SGD_RV
 	var pucPublicKey C.ECCrefPublicKey
 	var pucKey C.ECCCipher
-	err = C.SDFExportKeyWithEPK_ECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_HANDLE(hKeyHandle),C.SGD_UINT32(uiAlgID),&pucPublicKey,&pucKey)
-	publicKey := ConvertToECCrefPublicKeyGo(pucPublicKey)
-	key :=ConvertToECCCipherGo(pucKey)
-
-	return publicKey,key,ToError(err)
+	err1 = C.SDFExportKeyWithEPK_ECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_HANDLE(hKeyHandle),C.SGD_UINT32(uiAlgID),&pucPublicKey,&pucKey)
+	publicKey = ConvertToECCrefPublicKeyGo(pucPublicKey)
+	key =ConvertToECCCipherGo(pucKey)
+	err = ToError(err1)
+	return publicKey,key,err
 }
 //55. EPK方式导出密钥
-func (c *Ctx)SDFExportKeyWithKEK(sessionHandle SessionHandleType,hKeyHandle KeyHandleType,uiAlgID uint,uiKEKIndex uint)([]byte,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFExportKeyWithKEK(sessionHandle SessionHandleType,hKeyHandle KeyHandleType,uiAlgID uint,uiKEKIndex uint)(key []byte,err error){
+	var err1 C.SGD_RV
 	var pucKey C.SGD_UCHAR_PRT
 	var puiKeyLength C.SGD_UINT32
-	err = C.SDFExportKeyWithKEK(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_HANDLE(hKeyHandle),C.SGD_UINT32(uiAlgID),C.SGD_UINT32(uiKEKIndex),&pucKey,&puiKeyLength)
-	key:= C.GoBytes(unsafe.Pointer(pucKey), C.int(puiKeyLength))
+	err1 = C.SDFExportKeyWithKEK(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_HANDLE(hKeyHandle),C.SGD_UINT32(uiAlgID),C.SGD_UINT32(uiKEKIndex),&pucKey,&puiKeyLength)
+	key = C.GoBytes(unsafe.Pointer(pucKey), C.int(puiKeyLength))
 	C.free(unsafe.Pointer(pucKey))
-	return key,ToError(err)
+	err = ToError(err1)
+	return key,err
 }
 //56. 导出SM9签名主公钥
-func (c *Ctx)SDFExportSignMasterPublicKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(core.SM9refSignMasterPublicKey,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFExportSignMasterPublicKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(publicKey core.SM9refSignMasterPublicKey,err error){
+	var err1 C.SGD_RV
 	var pPublicKey C.SM9refSignMasterPublicKey
-	err = C.SDFExportSignMasterPublicKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pPublicKey)
-	publicKey := ConvertToSM9refSignMasterPublicKeyGo(pPublicKey)
-	return publicKey,ToError(err)
+	err1 = C.SDFExportSignMasterPublicKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pPublicKey)
+	publicKey = ConvertToSM9refSignMasterPublicKeyGo(pPublicKey)
+	err = ToError(err1)
+	return publicKey,err
 }
 //57. 导出SM9加密主公钥
-func (c *Ctx)SDFExportEncMasterPublicKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(core.SM9refEncMasterPublicKey,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFExportEncMasterPublicKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(publicKey core.SM9refEncMasterPublicKey,err error){
+	var err1 C.SGD_RV
 	var pEncMasterPublicKey C.SM9refEncMasterPublicKey
-	err = C.SDFExportEncMasterPublicKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pEncMasterPublicKey)
-	publicKey := ConvertToSM9refEncMasterPublicKeyGo(pEncMasterPublicKey)
-	return publicKey,ToError(err)
+	err1 = C.SDFExportEncMasterPublicKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pEncMasterPublicKey)
+	publicKey = ConvertToSM9refEncMasterPublicKeyGo(pEncMasterPublicKey)
+	err = ToError(err1)
+	return publicKey,err
 }
 
 //58. 导出SM9签名主密钥对
-func (c *Ctx)SDFExportSignMasterKeyPairG_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)([]byte,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFExportSignMasterKeyPairG_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(pairG []byte,err error){
+	var err1 C.SGD_RV
 	var pPairG C.SGD_UCHAR_PRT
 	var puiPairGLen C.SGD_UINT32
-	err = C.SDFExportSignMasterKeyPairG_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pPairG,&puiPairGLen)
-	pairG:= C.GoBytes(unsafe.Pointer(pPairG), C.int(puiPairGLen))
+	err1 = C.SDFExportSignMasterKeyPairG_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pPairG,&puiPairGLen)
+	pairG = C.GoBytes(unsafe.Pointer(pPairG), C.int(puiPairGLen))
 	C.free(unsafe.Pointer(pPairG))
-	return pairG,ToError(err)
+	err = ToError(err1)
+	return pairG,err
 }
 
 //59. 导出SM9加密主密钥对
-func (c *Ctx)SDFExportEncMasterKeyPairG_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)([]byte,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFExportEncMasterKeyPairG_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(pairG []byte,err error){
+	var err1 C.SGD_RV
 	var pPairG C.SGD_UCHAR_PRT
 	var puiPairGLen C.SGD_UINT32
-	err = C.SDFExportEncMasterKeyPairG_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pPairG,&puiPairGLen)
-	pairG:= C.GoBytes(unsafe.Pointer(pPairG), C.int(puiPairGLen))
+	err1 = C.SDFExportEncMasterKeyPairG_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pPairG,&puiPairGLen)
+	pairG= C.GoBytes(unsafe.Pointer(pPairG), C.int(puiPairGLen))
 	C.free(unsafe.Pointer(pPairG))
-	return pairG,ToError(err)
+	err = ToError(err1)
+	return pairG,err
 }
 //60. 导入SM9使用者签名私钥
-func (c *Ctx)SDFImportUserSignPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(core.SM9refSignUserPrivateKey,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFImportUserSignPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(privateKey core.SM9refSignUserPrivateKey,err error){
+	var err1 C.SGD_RV
 	var pUserPrivateKey C.SM9refSignUserPrivateKey
-	err = C.SDFImportUserSignPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey)
-	privateKey:=ConvertToSM9refSignUserPrivateKeyGo(pUserPrivateKey)
-	return privateKey,ToError(err)
+	err1 = C.SDFImportUserSignPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey)
+	privateKey =ConvertToSM9refSignUserPrivateKeyGo(pUserPrivateKey)
+	err = ToError(err1)
+	return privateKey,err
 }
 
 //61. 导入SM9使用者加密私钥
-func (c *Ctx)SDFImportUserEncPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(core.SM9refEncUserPrivateKey,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFImportUserEncPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(privateKey core.SM9refEncUserPrivateKey,err error){
+	var err1 C.SGD_RV
 	var pUserPrivateKey C.SM9refEncUserPrivateKey
-	err = C.SDFImportUserEncPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey)
-	privateKey := ConvertToSM9refEncUserPrivateKeyGo(pUserPrivateKey)
-	return privateKey,ToError(err)
+	err1 = C.SDFImportUserEncPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey)
+	privateKey = ConvertToSM9refEncUserPrivateKeyGo(pUserPrivateKey)
+	err = ToError(err1)
+	return privateKey,err
 }
 //62. 产生SM9使用者签名私钥
-func (c *Ctx)SDFGenerateSignUserPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(core.SM9refSignUserPrivateKey,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFGenerateSignUserPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(privateKey core.SM9refSignUserPrivateKey,err error){
+	var err1 C.SGD_RV
 	var hid C.SGD_UCHAR
 	var pucUserID C.SGD_UCHAR_PRT
 	var uiUserIDLen C.SGD_UINT32
 	var pUserPrivateKey C.SM9refSignUserPrivateKey
-	err = C.SDFGenerateSignUserPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pUserPrivateKey)
-	privateKey:=ConvertToSM9refSignUserPrivateKeyGo(pUserPrivateKey)
-	return privateKey,ToError(err)
+	err1 = C.SDFGenerateSignUserPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pUserPrivateKey)
+	privateKey =ConvertToSM9refSignUserPrivateKeyGo(pUserPrivateKey)
+	err = ToError(err1)
+	return privateKey,err
 }
 
 //63. 产生SM9使用者加密私钥
-func (c *Ctx)SDFGenerateEncUserPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint,uiUserIDLen uint)(core.SM9refEncUserPrivateKey,[]byte,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFGenerateEncUserPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint,uiUserIDLen uint)(privateKey core.SM9refEncUserPrivateKey,userID []byte,err error){
+	var err1 C.SGD_RV
 	var hid C.SGD_UCHAR
 	var pucUserID C.SGD_UCHAR_PRT
 	var pUserPrivateKey C.SM9refEncUserPrivateKey
-	err = C.SDFGenerateEncUserPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pUserPrivateKey)
-	privateKey := ConvertToSM9refEncUserPrivateKeyGo(pUserPrivateKey)
-	userID:= C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
+	err1 = C.SDFGenerateEncUserPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pUserPrivateKey)
+	privateKey = ConvertToSM9refEncUserPrivateKeyGo(pUserPrivateKey)
+	userID = C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
 	C.free(unsafe.Pointer(pucUserID))
-	return privateKey,userID,ToError(err)
+	err = ToError(err1)
+	return privateKey,userID,err
 }
 
 //64.SM9签名
-func (c *Ctx)SDFSign_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(core.SM9refSignUserPrivateKey,core.SM9refSignMasterPublicKey,[]byte,core.SM9Signature,error){
-	var err C.SGD_RV
-	var pUserPrivateKey C.SM9refSignUserPrivateKey
-	var pMasterPublicKey C.SM9refSignMasterPublicKey
-	var pucDataInput C.SGD_UCHAR_PRT
-	var uiDataInputLen C.SGD_UINT32
+func (c *Ctx)SDFSign_SM9(sessionHandle SessionHandleType,uiKeyIndex uint,userPrivateKey core.SM9refSignUserPrivateKey,masterPublicKey core.SM9refSignMasterPublicKey,dataInput []byte,dataInputLen uint)(sm9Signature core.SM9Signature,err error){
+	var err1 C.SGD_RV
+	pUserPrivateKey:=ConvertToSM9refSignUserPrivateKeyC(userPrivateKey)
+	pMasterPublicKey:=ConvertToSM9refSignMasterPublicKeyC(masterPublicKey)
 	var pSignature C.SM9Signature
-	err = C.SDFSign_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pMasterPublicKey,&pucDataInput,uiDataInputLen,&pSignature)
-	privateKey:=ConvertToSM9refSignUserPrivateKeyGo(pUserPrivateKey)
-	publicKey := ConvertToSM9refSignMasterPublicKeyGo(pMasterPublicKey)
-	sign := ConvertToSM9SignatureGo(pSignature)
-	dataInput:= C.GoBytes(unsafe.Pointer(pucDataInput), C.int(uiDataInputLen))
-	C.free(unsafe.Pointer(pucDataInput))
-	return privateKey,publicKey,dataInput,sign,ToError(err)
+	err1 = C.SDFSign_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pMasterPublicKey,CMessage(dataInput),C.SGD_UINT32(dataInputLen),&pSignature)
+	sm9Signature = ConvertToSM9SignatureGo(pSignature)
+	err = ToError(err1)
+	return sm9Signature,err
 }
 //65. SM9签名扩展方法
-func (c *Ctx)SDFSignEx_SM9(sessionHandle SessionHandleType,uiKeyIndex uint,uiPairGLen uint,uiDataInputLen uint)(core.SM9refSignUserPrivateKey,core.SM9refSignMasterPublicKey,[]byte,[]byte,core.SM9Signature,error){
-	var err C.SGD_RV
-	var pUserPrivateKey C.SM9refSignUserPrivateKey
-	var pMasterPublicKey C.SM9refSignMasterPublicKey
-	var pPairG C.SGD_UCHAR_PRT
-	var pucDataInput C.SGD_UCHAR_PRT
+func (c *Ctx)SDFSignEx_SM9(sessionHandle SessionHandleType,uiKeyIndex uint,userPrivateKey core.SM9refSignUserPrivateKey,signMasterPublicKey core.SM9refSignMasterPublicKey,pairG []byte,pairGLen uint,dataInput []byte,dataInputLen uint)(signature core.SM9Signature,err error){
+	var err1 C.SGD_RV
+	pUserPrivateKey:=ConvertToSM9refSignUserPrivateKeyC(userPrivateKey)
+	pMasterPublicKey:=ConvertToSM9refSignMasterPublicKeyC(signMasterPublicKey)
 	var pSignature C.SM9Signature
-	err = C.SDFSignEx_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pMasterPublicKey,&pPairG,C.SGD_UINT32(uiPairGLen),&pucDataInput,C.SGD_UINT32(uiDataInputLen),&pSignature)
-	privateKey:=ConvertToSM9refSignUserPrivateKeyGo(pUserPrivateKey)
-	publicKey := ConvertToSM9refSignMasterPublicKeyGo(pMasterPublicKey)
-	sign := ConvertToSM9SignatureGo(pSignature)
-	pairGLen:= C.GoBytes(unsafe.Pointer(pPairG), C.int(uiPairGLen))
-	C.free(unsafe.Pointer(pPairG))
-	dataInput:= C.GoBytes(unsafe.Pointer(pucDataInput), C.int(uiDataInputLen))
-	C.free(unsafe.Pointer(pucDataInput))
-	return privateKey,publicKey,dataInput,pairGLen,sign,ToError(err)
+	err1 = C.SDFSignEx_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pMasterPublicKey,CMessage(pairG),C.SGD_UINT32(pairGLen),CMessage(dataInput),C.SGD_UINT32(dataInputLen),&pSignature)
+	signature = ConvertToSM9SignatureGo(pSignature)
+	err = ToError(err1)
+	return signature,err
 }
 
 //66. SM9验证
-func (c *Ctx)SDFVerify_SM9(sessionHandle SessionHandleType,uiUserIDLen uint,uiDataInputLen uint)(core.SM9refSignMasterPublicKey,[]byte,[]byte,core.SM9Signature,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFVerify_SM9(sessionHandle SessionHandleType,userId []byte,userIDLen uint,masterPublicKey core.SM9refSignMasterPublicKey,data []byte,dataInputLen uint,signature core.SM9Signature)(err error){
+	var err1 C.SGD_RV
 	var hid C.SGD_UCHAR
-	var pucUserID C.SGD_UCHAR_PRT
-	var pMasterPublicKey C.SM9refSignMasterPublicKey
-	var pucData C.SGD_UCHAR_PRT
-	var pSignature C.SM9Signature
-	err = C.SDFVerify_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pMasterPublicKey,&pucData,C.SGD_UINT32(uiDataInputLen),&pSignature)
-	publicKey := ConvertToSM9refSignMasterPublicKeyGo(pMasterPublicKey)
-	sign := ConvertToSM9SignatureGo(pSignature)
-	userIDLen:= C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
-	C.free(unsafe.Pointer(pucUserID))
-	data := C.GoBytes(unsafe.Pointer(pucData), C.int(uiDataInputLen))
-	C.free(unsafe.Pointer(pucUserID))
-	return publicKey,userIDLen,data,sign,ToError(err)
+	pMasterPublicKey:=ConvertToSM9refSignMasterPublicKeyC(masterPublicKey)
+	pSignature:=ConvertToSM9SignatureC(signature)
+	err1 = C.SDFVerify_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userId),C.SGD_UINT32(userIDLen),&pMasterPublicKey,CMessage(data),C.SGD_UINT32(dataInputLen),&pSignature)
+	err = ToError(err1)
+	return err
 }
 //67. SM9验证扩展方法
-func (c *Ctx)SDFVerifyEx_SM9(sessionHandle SessionHandleType,uiUserIDLen uint,uiPairGLen uint,uiDataInputLen uint)(core.SM9refSignMasterPublicKey,[]byte,[]byte,[]byte,core.SM9Signature,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFVerifyEx_SM9(sessionHandle SessionHandleType,userId []byte,userIDLen uint,masterPublicKey core.SM9refSignMasterPublicKey,pairG []byte,pairGLen uint,data []byte,dataInputLen uint,signature core.SM9Signature)(err error){
+	var err1 C.SGD_RV
 	var hid C.SGD_UCHAR
-	var pucUserID C.SGD_UCHAR_PRT
-	var pMasterPublicKey C.SM9refSignMasterPublicKey
-	var pPairG C.SGD_UCHAR_PRT
-	var pucData C.SGD_UCHAR_PRT
-	var pSignature C.SM9Signature
-	err = C.SDFVerifyEx_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pMasterPublicKey,&pPairG,C.SGD_UINT32(uiPairGLen),&pucData,C.SGD_UINT32(uiDataInputLen),&pSignature)
-	publicKey := ConvertToSM9refSignMasterPublicKeyGo(pMasterPublicKey)
-	sign := ConvertToSM9SignatureGo(pSignature)
-	userIDLen:= C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
-	C.free(unsafe.Pointer(pucUserID))
-	pairG:= C.GoBytes(unsafe.Pointer(pPairG), C.int(uiPairGLen))
-	C.free(unsafe.Pointer(pPairG))
-	data := C.GoBytes(unsafe.Pointer(pucData), C.int(uiDataInputLen))
-	C.free(unsafe.Pointer(pucUserID))
-	return publicKey,userIDLen,pairG,data,sign,ToError(err)
+	pMasterPublicKey:=ConvertToSM9refSignMasterPublicKeyC(masterPublicKey)
+	pSignature:=ConvertToSM9SignatureC(signature)
+	err1 = C.SDFVerifyEx_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userId),C.SGD_UINT32(userIDLen),&pMasterPublicKey,CMessage(pairG),C.SGD_UINT32(pairGLen),CMessage(data),C.SGD_UINT32(dataInputLen),&pSignature)
+	err = ToError(err1)
+	return err
 }
 
 //68. SM9加密
-func (c *Ctx)SDFEncrypt_SM9(sessionHandle SessionHandleType,uiUserIDLen uint,uiDataInputLen uint,uiPairGLen uint)(core.SM9refEncMasterPublicKey,[]byte,[]byte,core.SM9Cipher,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFEncrypt_SM9(sessionHandle SessionHandleType,userID []byte,userIDLength uint,uiDataInputLen uint,publicKey core.SM9refEncMasterPublicKey,data []byte, dataLength uint)(cipher core.SM9Cipher,err error){
+	var err1 C.SGD_RV
 	var hid C.SGD_UCHAR
-	var pucUserID C.SGD_UCHAR_PRT
-	var pEncMasterPublicKey C.SM9refEncMasterPublicKey
-	var pucData C.SGD_UCHAR_PRT
+	pEncMasterPublicKey := ConvertToSM9refEncMasterPublicKeyC(publicKey)
 	var pCipher C.SM9Cipher
-	err = C.SDFEncrypt_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pEncMasterPublicKey,&pucData,C.SGD_UINT32(uiDataInputLen),&pCipher)
-	publicKey := ConvertToSM9refEncMasterPublicKeyGo(pEncMasterPublicKey)
-	cipher := ConvertToSM9CipherGo(pCipher)
-	userIDLen:= C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
-	C.free(unsafe.Pointer(pucUserID))
-	data := C.GoBytes(unsafe.Pointer(pucData), C.int(uiDataInputLen))
-	C.free(unsafe.Pointer(pucUserID))
-	return publicKey,userIDLen,data,cipher,ToError(err)
+	err1 = C.SDFEncrypt_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userID),C.SGD_UINT32(userIDLength),&pEncMasterPublicKey,CMessage(data),C.SGD_UINT32(dataLength),&pCipher)
+	cipher = ConvertToSM9CipherGo(pCipher)
+	err = ToError(err1)
+	return cipher,err
 }
 
 //69. SM9加密扩展方法
-func (c *Ctx)SDFEncryptEx_SM9(sessionHandle SessionHandleType,uiUserIDLen uint,uiDataInputLen uint,nPairGLen uint)(core.SM9refEncMasterPublicKey,[]byte,[]byte,[]byte,core.SM9Cipher,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFEncryptEx_SM9(sessionHandle SessionHandleType,userID []byte,userIDLength uint,uiDataInputLen uint,publicKey core.SM9refEncMasterPublicKey,pairG []byte,nPairGLen uint,data []byte, dataLength uint)(cipher core.SM9Cipher,err error){
+	var err1 C.SGD_RV
 	var hid C.SGD_UCHAR
-	var pucUserID C.SGD_UCHAR_PRT
-	var pEncMasterPublicKey C.SM9refEncMasterPublicKey
-	var pPairG C.SGD_UCHAR_PRT
-	var pucData C.SGD_UCHAR_PRT
+	pEncMasterPublicKey := ConvertToSM9refEncMasterPublicKeyC(publicKey)
 	var pCipher C.SM9Cipher
-	err = C.SDFEncryptEx_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pEncMasterPublicKey,&pPairG,C.SGD_UINT32(nPairGLen),&pucData,C.SGD_UINT32(uiDataInputLen),&pCipher)
-	publicKey := ConvertToSM9refEncMasterPublicKeyGo(pEncMasterPublicKey)
-	cipher := ConvertToSM9CipherGo(pCipher)
-	userID:= C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
-	C.free(unsafe.Pointer(pucUserID))
-	pairG := C.GoBytes(unsafe.Pointer(pPairG), C.int(nPairGLen))
-	C.free(unsafe.Pointer(pPairG))
-	data := C.GoBytes(unsafe.Pointer(pucData), C.int(uiDataInputLen))
-	C.free(unsafe.Pointer(pucData))
-	return publicKey,userID,pairG,data,cipher,ToError(err)
+	err1 = C.SDFEncryptEx_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userID),C.SGD_UINT32(userIDLength),&pEncMasterPublicKey,CMessage(pairG),C.SGD_UINT32(nPairGLen),CMessage(data),C.SGD_UINT32(dataLength),&pCipher)
+	cipher = ConvertToSM9CipherGo(pCipher)
+	err = ToError(err1)
+	return cipher,err
 }
 //70. SM9解密
-func (c *Ctx)SDFDecrypt_SM9(sessionHandle SessionHandleType,uiUserIDLen uint,uiKeyIndex uint)([]byte,core.SM9refEncUserPrivateKey,core.SM9Cipher,[]byte,error){
-	var err C.SGD_RV
-	var pucUserID C.SGD_UCHAR_PRT
-	var pUserPrivateKey C.SM9refEncUserPrivateKey
-	var pCipher C.SM9Cipher
+func (c *Ctx)SDFDecrypt_SM9(sessionHandle SessionHandleType,userID []byte,userIDLength uint,uiKeyIndex uint,privateKey core.SM9refEncUserPrivateKey,ciper core.SM9Cipher)(plainData []byte,err error){
+	var err1 C.SGD_RV
+	pUserPrivateKey := ConvertToSM9refEncUserPrivateKeyC(privateKey)
+	pCipher := ConvertToSM9CipherC(ciper)
 	var pucPlainData C.SGD_UCHAR_PRT
 	var uiPlainDataLength C.SGD_UINT32
-	err = C.SDFDecrypt_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucUserID,C.SGD_UINT32(uiUserIDLen),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pCipher,&pucPlainData,&uiPlainDataLength)
-	userPrivateKey := ConvertToSM9refEncUserPrivateKeyGo(pUserPrivateKey)
-	cipher := ConvertToSM9CipherGo(pCipher)
-	userID:= C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
-	C.free(unsafe.Pointer(pucUserID))
-    plainData:= C.GoBytes(unsafe.Pointer(pucPlainData), C.int(uiPlainDataLength))
+	err1 = C.SDFDecrypt_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(userID),C.SGD_UINT32(userIDLength),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pCipher,&pucPlainData,&uiPlainDataLength)
+    plainData = C.GoBytes(unsafe.Pointer(pucPlainData), C.int(uiPlainDataLength))
 	C.free(unsafe.Pointer(pucPlainData))
-	return userID,userPrivateKey,cipher,plainData,ToError(err)
+    err = ToError(err1)
+	return plainData,err
 }
 //71. SM9密钥封装
-func (c *Ctx)SDFEncap_SM9(sessionHandle SessionHandleType,uiUserIDLen uint,uiKeyLen uint)([]byte,core.SM9refEncMasterPublicKey,[]byte,core.SM9refKeyPackage,error){
-	var err C.SGD_RV
+func (c *Ctx)SDFEncap_SM9(sessionHandle SessionHandleType,userId []byte,uiUserIDLen uint,publicKey core.SM9refEncMasterPublicKey,uiKeyLen uint,key []byte)(keyPackage core.SM9refKeyPackage,err error){
+	var err1 C.SGD_RV
 	var hid C.SGD_UCHAR
-	var pucUserID C.SGD_UCHAR_PRT
-	var pEncMasterPublicKey C.SM9refEncMasterPublicKey
-	var pKey C.SGD_UCHAR_PRT
+	pEncMasterPublicKey:=ConvertToSM9refEncMasterPublicKeyC(publicKey)
 	var pKeyPackage C.SM9refKeyPackage
-	err = C.SDFEncap_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pEncMasterPublicKey,C.SGD_UINT32(uiKeyLen),&pKey,&pKeyPackage)
-	publicKey := ConvertToSM9refEncMasterPublicKeyGo(pEncMasterPublicKey)
-	keyPackage:=ConvertToSM9refKeyPackageGo(pKeyPackage)
-	userID:= C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
-	C.free(unsafe.Pointer(pucUserID))
-	key:= C.GoBytes(unsafe.Pointer(pKey), C.int(uiKeyLen))
-	C.free(unsafe.Pointer(pKey))
-	return userID,publicKey,key,keyPackage,ToError(err)
+	err1 = C.SDFEncap_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userId),C.SGD_UINT32(uiUserIDLen),&pEncMasterPublicKey,C.SGD_UINT32(uiKeyLen),CMessage(key),&pKeyPackage)
+	keyPackage =ConvertToSM9refKeyPackageGo(pKeyPackage)
+	err = ToError(err1)
+	return keyPackage,err
 }
 //72. SM9密钥解封
-func (c *Ctx)SDFDecap_SM9(sessionHandle SessionHandleType,uiUserIDLen uint,uiKeyIndex uint,uiKeyLen uint)([]byte,core.SM9refEncUserPrivateKey,core.SM9refKeyPackage,[]byte,error){
-	var err C.SGD_RV
-	var pucUserID C.SGD_UCHAR_PRT
-	var pUserPrivateKey C.SM9refEncUserPrivateKey
-	var pKeyPackage C.SM9refKeyPackage
+func (c *Ctx)SDFDecap_SM9(sessionHandle SessionHandleType,uiUserIDLen uint,uiKeyIndex uint,uiKeyLen uint,userId []byte,userPrivateKey core.SM9refEncUserPrivateKey,sm9refKeyPackage core.SM9refKeyPackage)(key []byte,err error){
+	var err1 C.SGD_RV
+	pUserPrivateKey:=ConvertToSM9refEncUserPrivateKeyC(userPrivateKey)
+	pKeyPackage:=ConvertToSM9refKeyPackageC(sm9refKeyPackage)
 	var pucKey C.SGD_UCHAR_PRT
-	err = C.SDFDecap_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucUserID,C.SGD_UINT32(uiUserIDLen),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pKeyPackage,C.SGD_UINT32(uiKeyLen),&pucKey)
-	privateKey := ConvertToSM9refEncUserPrivateKeyGo(pUserPrivateKey)
-	keyPackage:=ConvertToSM9refKeyPackageGo(pKeyPackage)
-	userID:= C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
-	C.free(unsafe.Pointer(pucUserID))
-	key:= C.GoBytes(unsafe.Pointer(pucKey), C.int(uiKeyLen))
+	err1 = C.SDFDecap_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(userId),C.SGD_UINT32(uiUserIDLen),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pKeyPackage,C.SGD_UINT32(uiKeyLen),&pucKey)
+	key= C.GoBytes(unsafe.Pointer(pucKey), C.int(uiKeyLen))
 	C.free(unsafe.Pointer(pucKey))
-	return userID,privateKey,keyPackage,key,ToError(err)
+	err = ToError(err1)
+	return key,err
 }
 
 
@@ -2212,14 +2282,9 @@ func (c *Ctx)SDFGenerateKeyWithSM9(sessionHandle SessionHandleType,uiKeyLen uint
 	return sponsorID,responseID,privateKey,publicKey,responseTmpPublicKey,hashSB,hashSA,KeyHandleType(phKeyHandle),ToError(err)
 }
 
-func (c *Ctx)SDFGenerateKeyVerifySM9(sessionHandle SessionHandleType,uiS2Len uint,uiSALen uint)([]byte,[]byte,error){
-	var err C.SGD_RV
-	var pHashS2 C.SGD_UCHAR_PRT
-	var pHashSA C.SGD_UCHAR_PRT
-	err = C.SDFGenerateKeyVerifySM9(c.libHandle,C.SGD_HANDLE(sessionHandle),&pHashS2,C.SGD_UINT32(uiS2Len),&pHashSA,C.SGD_UINT32(uiSALen))
-	hashS2:= C.GoBytes(unsafe.Pointer(pHashS2), C.int(uiS2Len))
-	C.free(unsafe.Pointer(pHashS2))
-	hashSA:= C.GoBytes(unsafe.Pointer(pHashSA), C.int(uiSALen))
-	C.free(unsafe.Pointer(pHashSA))
-	return hashS2,hashSA,ToError(err)
+func (c *Ctx)SDFGenerateKeyVerifySM9(sessionHandle SessionHandleType,uiS2Len uint,uiSALen uint,hashS2 []byte,hashSA []byte)(err error){
+	var err1 C.SGD_RV
+	err1 = C.SDFGenerateKeyVerifySM9(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(hashS2),C.SGD_UINT32(uiS2Len),CMessage(hashSA),C.SGD_UINT32(uiSALen))
+	err = ToError(err1)
+	return err
 }
