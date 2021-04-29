@@ -1,0 +1,16 @@
+pool:
+  vmImage: 'ubuntu-18.04'
+
+strategy:
+  matrix:
+    LTS:
+      goVersion: '1.15'
+    latest:
+      goVersion: '1.16'
+
+steps:
+  - task: GoTool@0
+    inputs:
+      version: $(goVersion)
+  - script: go test -v ./... --bench=. -cover
+    displayName: go test recursive

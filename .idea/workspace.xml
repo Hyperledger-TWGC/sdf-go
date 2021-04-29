@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="35200626-a9ea-4559-8f2c-07a8645df115" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/azure-pipelines.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/util/log.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TEST.md" beforeDir="false" afterPath="$PROJECT_DIR$/TEST.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sansec/swsds.h" beforeDir="false" afterPath="$PROJECT_DIR$/sansec/swsds.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sdf.go" beforeDir="false" afterPath="$PROJECT_DIR$/sdf.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdf_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/sdf_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swsds.ini" beforeDir="false" afterPath="$PROJECT_DIR$/swsds.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swsds.log" beforeDir="false" afterPath="$PROJECT_DIR$/swsds.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -57,18 +65,7 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
-  <component name="RunManager" selected="Go Test.TestGenerateECCFunc in github.com/yzwskyspace/sdf">
-    <configuration name="TestBasicFunc in github.com/yzwskyspace/sdf (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="sdf" />
-      <working_directory value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/yzwskyspace/sdf" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestBasicFunc\E$" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Go Test.TestBasicFunc in github.com/yzwskyspace/sdf">
     <configuration name="TestBasicFunc in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="sdf" />
       <working_directory value="$PROJECT_DIR$" />
@@ -80,7 +77,7 @@
       <pattern value="^\QTestBasicFunc\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestECCFunc in github.com/yzwskyspace/sdf (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestExtECCEnc in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="sdf" />
       <working_directory value="$PROJECT_DIR$" />
       <framework value="gotest" />
@@ -88,7 +85,18 @@
       <package value="github.com/yzwskyspace/sdf" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestECCFunc\E$" />
+      <pattern value="^\QTestExtECCEnc\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestExtRSAOpt in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="sdf" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/yzwskyspace/sdf" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestExtRSAOpt\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestGenerateECCFunc in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -102,7 +110,7 @@
       <pattern value="^\QTestGenerateECCFunc\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestRSAFunc in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestIntRSAOps in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="sdf" />
       <working_directory value="$PROJECT_DIR$" />
       <framework value="gotest" />
@@ -110,16 +118,16 @@
       <package value="github.com/yzwskyspace/sdf" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestRSAFunc\E$" />
+      <pattern value="^\QTestIntRSAOps\E$" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestGenerateECCFunc in github.com/yzwskyspace/sdf" />
-        <item itemvalue="Go Test.TestBasicFunc in github.com/yzwskyspace/sdf (1)" />
         <item itemvalue="Go Test.TestBasicFunc in github.com/yzwskyspace/sdf" />
-        <item itemvalue="Go Test.TestRSAFunc in github.com/yzwskyspace/sdf" />
-        <item itemvalue="Go Test.TestECCFunc in github.com/yzwskyspace/sdf (1)" />
+        <item itemvalue="Go Test.TestExtECCEnc in github.com/yzwskyspace/sdf" />
+        <item itemvalue="Go Test.TestIntRSAOps in github.com/yzwskyspace/sdf" />
+        <item itemvalue="Go Test.TestExtRSAOpt in github.com/yzwskyspace/sdf" />
+        <item itemvalue="Go Test.TestGenerateECCFunc in github.com/yzwskyspace/sdf" />
       </list>
     </recent_temporary>
   </component>
@@ -138,85 +146,10 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/sdf.go</url>
-          <line>1720</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf_test.go</url>
-          <line>563</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf_test.go</url>
-          <line>568</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf_test.go</url>
-          <line>574</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf_test.go</url>
-          <line>556</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf.go</url>
-          <line>1915</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf_test.go</url>
-          <line>622</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf.go</url>
-          <line>1557</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf_test.go</url>
-          <line>392</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf.go</url>
-          <line>1547</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf_test.go</url>
-          <line>371</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf_test.go</url>
-          <line>304</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf.go</url>
-          <line>1401</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf.go</url>
-          <line>1377</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/sdf.go</url>
-          <line>1356</line>
-          <option name="timeStamp" value="40" />
+          <line>1180</line>
+          <option name="timeStamp" value="73" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="GoTestRunConfiguration">
-        <watch expression="*(*&quot;github.com/yzwskyspace/sdf._Ctype_uint&quot;)(824634884416)" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

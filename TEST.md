@@ -1,82 +1,57 @@
 # the progress of the development
 
-|  function   | is test ok |
-|  ----  | ----  |
-| SDF_OpenDevice  | ok |
-| SDF_CloseDevice  | ok |
-| SDF_OpenSession  | ok |
-| SDF_CloseSession  | ok |
-| SDF_GetDeviceInfo  | ok |
-| SDF_GenerateRandom  | ok |
-| SDF_GetPrivateKeyAccessRight  | no |
-| SDF_ReleasePrivateKeyAccessRight  | ok |
-| SDF_ExportSignPublicKey_RSA  | ok(wait for verification) |
-| SDF_ExportEncPublicKey_RSA  | ok(wait for verification) |
-| SDF_GenerateKeyPair_RSA  | ok |
-| SDF_GenerateKeyWithIPK_RSA  | ok |
-| SDF_GenerateKeyWithEPK_RSA  | ok |
-| SDF_ImportKeyWithISK_RSA  | no |
-| SDF_ExchangeDigitEnvelopeBaseOnRSA  | no |
-| SDF_ExportSignPublicKey_ECC  | ok(需要进一步测试) |
-| SDF_ExportEncPublicKey_ECC  | ok(需要进一步测试) |
-| SDF_GenerateKeyPair_ECC  | ok(需要进一步测试) |
-| SDF_GenerateKeyWithIPK_ECC  | ok |
-| SDF_GenerateKeyWithEPK_ECC  | ok(需要进一步测试) |
-| SDF_ImportKeyWithISK_ECC  | no |
-| SDF_GenerateAgreementDataWithECC  | no |
-| SDF_GenerateKeyWithECC  | no |
-| SDF_GenerateAgreementDataAndKeyWithECC  | no |
-| SDF_ExchangeDigitEnvelopeBaseOnECC  | no |
-| SDF_ImportKeyWithKEK  | no |
-| SDF_DestroyKey  | ok |
-| SDF_ExternalPublicKeyOperation_RSA  | no |
-| SDF_InternalPublicKeyOperation_RSA  | ok(指针未能释放)  |
-| SDF_InternalPrivateKeyOperation_RSA  | ok(指针未能释放) |
-| SDF_ExternalVerify_ECC  | no |
-| SDF_InternalSign_ECC  | ok(需要进一步测试)|
-| SDF_InternalVerify_ECC  | ok |
-| SDF_ExternalEncrypt_ECC  | no |
-| SDF_Encrypt  | ok(CBC验证不通过)  |　　　　
-| SDF_Decrypt  | ok |
-| SDF_CalculateMAC  | ok |
-| SDF_CreateFile  | ok |
-| SDF_ReadFile  | !（人类未解之谜） |
-| SDF_WriteFile  | !（人类未解之谜） |
-| SDF_DeleteFile  | ok |
-| SDF_HashInit  | ok(等待SM3规范测试) |
-| SDF_HashUpdate  | ok |
-| SDF_HashFinal  | ok |
-| SDF_GetSymmKeyHandle  | no |
-| SDF_ImportKey  | ok |
-| SDF_ExternalPrivateKeyOperation_RSA  | no |
-| SDF_ExternalSign_ECC  | no |
-| SDF_ExternalDecrypt_ECC  | no |
-| SDF_InternalDecrypt_ECC  | ok |
-| SDF_InternalEncrypt_ECC  | ok |
-| SDF_ExportKeyWithEPK_RSA  | no |
-| SDF_ExportKeyWithEPK_ECC  | no |
-| SDF_ExportKeyWithKEK  | no |
-| SDF_ExportSignMasterPublicKey_SM9  | no |
-| SDF_ExportEncMasterPublicKey_SM9  | no |
-| SDF_ExportSignMasterKeyPairG_SM9  | no |
-| SDF_ExportEncMasterKeyPairG_SM9  | no |
-| SDF_ImportUserSignPrivateKey_SM9  | no |
-| SDF_ImportUserEncPrivateKey_SM9  | no |
-| SDF_GenerateSignUserPrivateKey_SM9  | no |
-| SDF_GenerateEncUserPrivateKey_SM9  | no |
-| SDF_Sign_SM9  | no |
-| SDF_SignEx_SM9  | no |
-| SDF_Verify_SM9  | no |
-| SDF_VerifyEx_SM9  | no |
-| SDF_Encrypt_SM9  | no |
-| SDF_EncryptEx_SM9  | no |
-| SDF_Decrypt_SM9  | no |
-| SDF_Encap_SM9  | no |
-| SDF_Decap_SM9  | no |
-| SDF_GenerateAgreementDataWithSM9  | no |
-| SDF_GenerateAgreemetDataAndKeyWithSM9  | no |
-| SDF_GenerateKeyWithSM9  | no |
-| SDF_GenerateKeyVerifySM9  | no |
+|num |  function   | is test ok |
+|  ----  | ----  | ----  | 
+| 1 |SDF_OpenDevice  | yes |
+| 2 |SDF_CloseDevice  | yes |
+| 3 |SDF_OpenSession  | yes |
+| 4 |SDF_CloseSession  | yes |
+| 5 |SDF_GetDeviceInfo  | yes |
+| 6 |SDF_GenerateRandom  | yes |
+| 7 |SDF_GetPrivateKeyAccessRight  | no |  
+| 8 |SDF_ReleasePrivateKeyAccessRight  | yes | 
+| 9 |SDF_ExportSignPublicKey_RSA  | yes |
+| 10 |SDF_ExportEncPublicKey_RSA  | yes |
+| 11 |SDF_GenerateKeyPair_RSA  | yes |
+| 12 |SDF_GenerateKeyWithIPK_RSA  | no | 
+| 13 |SDF_GenerateKeyWithEPK_RSA  | no | 
+| 14 |SDF_ImportKeyWithISK_RSA  | no | !
+| 15 |SDF_ExchangeDigitEnvelopeBaseOnRSA  | no | 
+| 16 |SDF_ExportSignPublicKey_ECC  | yes |
+| 17 |SDF_ExportEncPublicKey_ECC  | yes |
+| 18 |SDF_GenerateKeyPair_ECC  | yes |
+| 19 |SDF_GenerateKeyWithIPK_ECC  | yes | 
+| 20 |SDF_GenerateKeyWithEPK_ECC  | yes | 
+| 21 |SDF_ImportKeyWithISK_ECC  | yes |  
+| 22 |SDF_GenerateAgreementDataWithECC  | no | 
+| 23 |SDF_GenerateKeyWithECC  | no | 
+| 24 |SDF_GenerateAgreementDataAndKeyWithECC  | no | 
+| 26 |SDF_ExchangeDigitEnvelopeBaseOnECC  | yes | 
+| 27 |SDF_ImportKeyWithKEK  | no |  
+| 28 |SDF_ImportKey  | yes |
+| 29 |SDF_DestroyKey  | yes |
+| 30 |SDF_ExternalPublicKeyOperation_RSA  | yes |  
+| 31 |SDF_ExternalPrivateKeyOperation_RSA  | yes |  有堆栈异常
+| 32 |SDF_InternalPublicKeyOperation_RSA  | yes  | 
+| 33 |SDF_InternalPrivateKeyOperation_RSA  | yes | 有堆栈异常
+| 34 |SDF_ExternalSign_ECC  | yes |
+| 35 |SDF_ExternalVerify_ECC  | yes |
+| 36 |SDF_InternalSign_ECC  | yes|
+| 37 |SDF_InternalVerify_ECC  | yes |
+| 38 |SDF_ExternalEncrypt_ECC  | yes |  
+| 39 |SDF_ExternalDecrypt_ECC  | yes |  
+| 40 |SDF_Encrypt  | yes(仅支持SGD_SMS4_ECB)  |　　　　
+| 41 |SDF_Decrypt  | yes(仅支持SGD_SMS4_ECB)  |
+| 42 |SDF_CalculateMAC  | yes |
+| 43 |SDF_HashInit  | yes|
+| 44 |SDF_HashUpdate  | yes |
+| 45 |SDF_HashFinal  | yes |
+| 46 |SDF_CreateFile  | yes |
+| 47 |SDF_ReadFile  |yes | 
+| 48 |SDF_WriteFile  | yes | 
+| 49 |SDF_DeleteFile  | yes |
+
+
 
 
 

@@ -102,15 +102,15 @@ typedef struct RSArefPrivateKeyEx_st
 	unsigned char coef[ExRSAref_MAX_PLEN];
 } RSArefPrivateKeyEx;
 
-#if defined(SGD_RSA_MAX_BITS) && (SGD_RSA_MAX_BITS > LiteRSAref_MAX_BITS)
-#define RSAref_MAX_BITS    ExRSAref_MAX_BITS
-#define RSAref_MAX_LEN     ExRSAref_MAX_LEN
-#define RSAref_MAX_PBITS   ExRSAref_MAX_PBITS
-#define RSAref_MAX_PLEN    ExRSAref_MAX_PLEN
-
-typedef struct RSArefPublicKeyEx_st  RSArefPublicKey;
-typedef struct RSArefPrivateKeyEx_st  RSArefPrivateKey;
-#else
+//#if defined(SGD_RSA_MAX_BITS) && (SGD_RSA_MAX_BITS > LiteRSAref_MAX_BITS)
+//#define RSAref_MAX_BITS    ExRSAref_MAX_BITS
+//#define RSAref_MAX_LEN     ExRSAref_MAX_LEN
+//#define RSAref_MAX_PBITS   ExRSAref_MAX_PBITS
+//#define RSAref_MAX_PLEN    ExRSAref_MAX_PLEN
+//
+//typedef struct RSArefPublicKeyEx_st  RSArefPublicKey;
+//typedef struct RSArefPrivateKeyEx_st  RSArefPrivateKey;
+//#else
 #define RSAref_MAX_BITS    LiteRSAref_MAX_BITS
 #define RSAref_MAX_LEN     LiteRSAref_MAX_LEN
 #define RSAref_MAX_PBITS   LiteRSAref_MAX_PBITS
@@ -118,7 +118,7 @@ typedef struct RSArefPrivateKeyEx_st  RSArefPrivateKey;
 
 typedef struct RSArefPublicKeyLite_st  RSArefPublicKey;
 typedef struct RSArefPrivateKeyLite_st  RSArefPrivateKey;
-#endif
+//#endif
 
 
 #define ECCref_MAX_BITS			512 
@@ -144,7 +144,7 @@ typedef struct ECCCipher_st
 	unsigned char x[ECCref_MAX_LEN]; 
 	unsigned char y[ECCref_MAX_LEN]; 
     unsigned char M[32];
-	unsigned int L; //C����Ч����
+	unsigned int L;
 	unsigned char C[ECCref_MAX_CIPHER_LEN];
 } ECCCipher;
 
@@ -157,75 +157,6 @@ typedef struct ECCSignature_st
 } ECCSignature;
 
 
-#define SM9ref_MAX_BITS			256 
-#define SM9ref_MAX_LEN			((SM9ref_MAX_BITS+7) / 8)
-
-
-typedef struct SM9refSignMasterPrivateKey_st
-{
-	unsigned int  bits;
-	unsigned char s[SM9ref_MAX_LEN];
-} SM9refSignMasterPrivateKey;
-
-typedef struct SM9refSignMasterPublicKey_st
-{
-	unsigned int  bits;
-	unsigned char xa[SM9ref_MAX_LEN];
-	unsigned char xb[SM9ref_MAX_LEN];
-	unsigned char ya[SM9ref_MAX_LEN];
-	unsigned char yb[SM9ref_MAX_LEN];
-} SM9refSignMasterPublicKey;
-
-typedef struct SM9refEncMasterPrivateKey_st
-{
-	unsigned int  bits;
-	unsigned char s[SM9ref_MAX_LEN];
-} SM9refEncMasterPrivateKey;
-
-typedef struct SM9refEncMasterPublicKey_st
-{
-	unsigned int  bits;
-	unsigned char x[SM9ref_MAX_LEN];
-	unsigned char y[SM9ref_MAX_LEN];
-} SM9refEncMasterPublicKey;
-
-typedef struct SM9refSignUserPrivateKey_st
-{
-	unsigned int  bits;
-	unsigned char x[SM9ref_MAX_LEN];
-	unsigned char y[SM9ref_MAX_LEN];
-} SM9refSignUserPrivateKey;
-
-typedef struct SM9refEncUserPrivateKey_st
-{
-	unsigned int  bits;
-	unsigned char xa[SM9ref_MAX_LEN];
-	unsigned char xb[SM9ref_MAX_LEN];
-	unsigned char ya[SM9ref_MAX_LEN];
-	unsigned char yb[SM9ref_MAX_LEN];
-} SM9refEncUserPrivateKey;
-
-typedef struct SM9Signature_st
-{
-	unsigned char h[SM9ref_MAX_LEN];
-	unsigned char x[SM9ref_MAX_LEN];
-	unsigned char y[SM9ref_MAX_LEN];
-} SM9Signature;
-
-typedef struct SM9Cipher_st
-{
-	unsigned char x[SM9ref_MAX_LEN];
-	unsigned char y[SM9ref_MAX_LEN];
-	unsigned char h[SM9ref_MAX_LEN];
-	unsigned int  L;
-	unsigned char C[1024];
-} SM9Cipher;
-
-typedef struct SM9refKeyPackage_st
-{
-	unsigned char x[SM9ref_MAX_LEN];
-	unsigned char y[SM9ref_MAX_LEN];
-} SM9refKeyPackage;
 
 /*常量定义*/
 #define SGD_TRUE		0x00000001
@@ -458,64 +389,6 @@ SGD_RV SDF_ReadFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 
 SGD_RV SDF_WriteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR *pucBuffer);
 //49. 删除文件
 SGD_RV SDF_DeleteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen);
-
-//以下是扩展的函数，不是国密规范函数
-//50.
-SGD_RV SDF_GetSymmKeyHandle(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_HANDLE *phKeyHandle);
-//51. ECC方式的加密
-SGD_RV SDF_InternalEncrypt_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiISKIndex, SGD_UINT32 uiAlgID, SGD_UCHAR *pucData, SGD_UINT32  uiDataLength, ECCCipher *pucEncData);
-//52. ECC方式的解密
-SGD_RV SDF_InternalDecrypt_ECC(SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UINT32 uiAlgID,ECCCipher *pucEncData,SGD_UCHAR *pucData,SGD_UINT32  *puiDataLength);
-//53. EPK方式导出RSA密钥
-SGD_RV SDF_ExportKeyWithEPK_RSA(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, RSArefPublicKey *pucPublicKey, SGD_UCHAR *pucKey, SGD_UINT32 *puiKeyLength);
-//54. EPK方式导出ECC密钥
-SGD_RV SDF_ExportKeyWithEPK_ECC(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UINT32 uiAlgID, ECCrefPublicKey *pucPublicKey, ECCCipher *pucKey);
-//55. EPK方式导出密钥
-SGD_RV SDF_ExportKeyWithKEK(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UINT32 uiAlgID, SGD_UINT32 uiKEKIndex, SGD_UCHAR *pucKey, SGD_UINT32 *puiKeyLength);
-
-// SM9 算法函数集
-//56. 导出SM9签名主公钥
-SGD_RV SDF_ExportSignMasterPublicKey_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SM9refSignMasterPublicKey *pPublicKey);
-//57. 导出SM9加密主公钥
-SGD_RV SDF_ExportEncMasterPublicKey_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SM9refEncMasterPublicKey *pPublicKey);
-//58. 导出SM9签名主密钥对
-SGD_RV SDF_ExportSignMasterKeyPairG_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR *pPairG,SGD_UINT32 *puiPairGLen);
-//59. 导出SM9加密主密钥对
-SGD_RV SDF_ExportEncMasterKeyPairG_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR *pPairG,SGD_UINT32 *puiPairGLen);
-//60. 导入SM9使用者签名私钥
-SGD_RV SDF_ImportUserSignPrivateKey_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey);
-//61. 导入SM9使用者加密私钥
-SGD_RV SDF_ImportUserEncPrivateKey_SM9(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SM9refEncUserPrivateKey  *pUserPrivateKey);
-//62. 产生SM9使用者签名私钥
-SGD_RV SDF_GenerateSignUserPrivateKey_SM9(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_UCHAR hid, SGD_UCHAR *pucUserID, SGD_UINT32 uiUserIDLen, SM9refSignUserPrivateKey  *pUserPrivateKey);
-//63. 产生SM9使用者加密私钥
-SGD_RV SDF_GenerateEncUserPrivateKey_SM9(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32 uiUserIDLen,SM9refEncUserPrivateKey  *pUserPrivateKey);
-//64.SM9签名
-SGD_RV SDF_Sign_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR *pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature);
-//65. SM9签名扩展方法
-SGD_RV SDF_SignEx_SM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR *pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR *pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature);
-//66. SM9验证
-SGD_RV SDF_Verify_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR *pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature);
-//67. SM9验证扩展方法
-SGD_RV SDF_VerifyEx_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32 uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR *pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR *pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature);
-//68. SM9加密
-SGD_RV SDF_Encrypt_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR *pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher);
-//69. SM9加密扩展方法
-SGD_RV SDF_EncryptEx_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR *pPairG,SGD_UINT32  nPairGLen,SGD_UCHAR *pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher);
-//70. SM9解密
-SGD_RV SDF_Decrypt_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9Cipher * pCipher,SGD_UCHAR *pucPlainData,SGD_UINT32  *uiPlainDataLength);
-//71. SM9密钥封装
-SGD_RV SDF_Encap_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey  *pPublicKey,SGD_UINT32 uiKeyLen,SGD_UCHAR *pKey,SM9refKeyPackage *pKeyPackage);
-//72. SM9密钥解封
-SGD_RV SDF_Decap_SM9(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9refKeyPackage *pKeyPackage,SGD_UINT32  uiKeyLen,SGD_UCHAR *pucKey);
-//73.
-SGD_RV SDF_GenerateAgreementDataWithSM9(SGD_HANDLE hSessionHandle, SGD_UCHAR hid, SGD_UCHAR *pucResponseID, SGD_UINT32 uiResponseIDLength, SM9refEncMasterPublicKey  *pPublicKey, SM9refEncMasterPublicKey  *pucSponsorTmpPublicKey, SGD_HANDLE *phAgreementHandle);
-//74.
-SGD_RV SDF_GenerateAgreemetDataAndKeyWithSM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyLen,SGD_UCHAR hid,SGD_UCHAR * pucResponseID,SGD_UINT32 uiResponseIDLen,SGD_UCHAR * pucSponsorID,SGD_UINT32 uiSponsorIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pucResponsePrivateKey,SM9refEncMasterPublicKey *pucPublicKey,SM9refEncMasterPublicKey * pucSponsorTmpPublicKey,SM9refEncMasterPublicKey * pucResponseTmpPublicKey,SGD_UCHAR *pucHashSB,SGD_UINT32 *puiSBLen,SGD_UCHAR  *pucHashS2,SGD_UINT32 *puiS2Len,SGD_HANDLE *phKeyHandle);
-//75.
-SGD_RV SDF_GenerateKeyWithSM9(SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyLen,SGD_UCHAR hid,SGD_UCHAR *pucSponsorID,SGD_UINT32 uiSponsorIDLen,SGD_UCHAR *pucResponseID,SGD_UINT32 uiResponseIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey   *pucSponsorPrivateKey,SM9refEncMasterPublicKey   *pucPublicKey,SM9refEncMasterPublicKey   *pucResponseTmpPublicKey,SGD_UCHAR *pucHashSB,SGD_UINT32 uiSBLen,SGD_UCHAR *pucHashSA,SGD_UINT32 *puiSALen,SGD_HANDLE hAgreementHandle,SGD_HANDLE *phKeyHandle);
-//76.
-SGD_RV SDF_GenerateKeyVerifySM9(SGD_HANDLE hSessionHandle, SGD_UCHAR *pHashS2, SGD_UINT32  uiS2Len, SGD_UCHAR *pHashSA, SGD_UINT32 uiSALen);
 
 #ifdef __cplusplus
 }

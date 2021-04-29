@@ -102,7 +102,7 @@ void Destroy(struct LibHandle *h)
 }
 
 #endif
-
+//1. 打开设备
 SGD_RV SDFOpenDevice(struct LibHandle * h,SGD_HANDLE *phDeviceHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE*);
@@ -114,7 +114,7 @@ SGD_RV SDFOpenDevice(struct LibHandle * h,SGD_HANDLE *phDeviceHandle)
 	return (*fptr)(phDeviceHandle);
 #endif
 }
-
+//2. 关闭设备
 SGD_RV SDFCloseDevice(struct LibHandle * h,SGD_HANDLE hDeviceHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE);
@@ -125,9 +125,8 @@ SGD_RV SDFCloseDevice(struct LibHandle * h,SGD_HANDLE hDeviceHandle)
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_CloseDevice");
 	return (*fptr)(hDeviceHandle);
 #endif
-
 }
-
+//3. 创建会话
 SGD_RV SDFOpenSession(struct LibHandle * h,SGD_HANDLE hDeviceHandle, SGD_HANDLE *phSessionHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_HANDLE *);
@@ -138,9 +137,8 @@ SGD_RV SDFOpenSession(struct LibHandle * h,SGD_HANDLE hDeviceHandle, SGD_HANDLE 
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_OpenSession");
 	return (*fptr)(hDeviceHandle,phSessionHandle);
 #endif
-
 }
-
+//4. 关闭会话
 SGD_RV SDFCloseSession(struct LibHandle * h,SGD_HANDLE hSessionHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE);
@@ -151,9 +149,8 @@ SGD_RV SDFCloseSession(struct LibHandle * h,SGD_HANDLE hSessionHandle)
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_CloseSession");
 	return (*fptr)(hSessionHandle);
 #endif
-
 }
-
+//5. 获取设备信息
 SGD_RV SDFGetDeviceInfo(struct LibHandle * h,SGD_HANDLE hSessionHandle, DEVICEINFO *pstDeviceInfo)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,DEVICEINFO *);
@@ -161,12 +158,11 @@ SGD_RV SDFGetDeviceInfo(struct LibHandle * h,SGD_HANDLE hSessionHandle, DEVICEIN
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GetDeviceInfo");
 	return (*fptr)(hSessionHandle,pstDeviceInfo);
 #else
-
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GetDeviceInfo");
 	return (*fptr)(hSessionHandle,pstDeviceInfo);
 #endif
 }
-
+//6. 产生随机数
 SGD_RV SDFGenerateRandom(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiLength, SGD_UCHAR_PRT *pucRandom)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,SGD_UCHAR*);
@@ -182,7 +178,7 @@ SGD_RV SDFGenerateRandom(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UIN
 	return (*fptr)(hSessionHandle,uiLength,*pucRandom);
 #endif
 }
-
+//7. 获取私钥使用权限
 SGD_RV SDFGetPrivateKeyAccessRight(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex,SGD_UCHAR_PRT pucPassword, SGD_UINT32  uiPwdLength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,SGD_UCHAR*,SGD_UINT32);
@@ -194,7 +190,7 @@ SGD_RV SDFGetPrivateKeyAccessRight(struct LibHandle * h,SGD_HANDLE hSessionHandl
 	return (*fptr)(hSessionHandle,uiKeyIndex,pucPassword,uiPwdLength);
 #endif
 }
-
+//8. 释放私钥使用权限
 SGD_RV SDFReleasePrivateKeyAccessRight(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32);
@@ -206,7 +202,7 @@ SGD_RV SDFReleasePrivateKeyAccessRight(struct LibHandle * h,SGD_HANDLE hSessionH
 	return (*fptr)(hSessionHandle,uiKeyIndex);
 #endif
 }
-
+//9. 导出ＲＳＡ签名公钥
 SGD_RV SDFExportSignPublicKey_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,RSArefPublicKey*);
@@ -218,6 +214,7 @@ SGD_RV SDFExportSignPublicKey_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle
 	return (*fptr)(hSessionHandle,uiKeyIndex,pucPublicKey);
 #endif
 }
+//10. 导出ＲＳＡ加密公钥
 SGD_RV SDFExportEncPublicKey_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,RSArefPublicKey*);
@@ -229,6 +226,7 @@ SGD_RV SDFExportEncPublicKey_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle,
 	return (*fptr)(hSessionHandle,uiKeyIndex,pucPublicKey);
 #endif
 }
+//11. 产生ＲＳＡ非对称密钥对并输出
 SGD_RV SDFGenerateKeyPair_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyBits,RSArefPublicKey *pucPublicKey,RSArefPrivateKey *pucPrivateKey)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,RSArefPublicKey*,RSArefPrivateKey*);
@@ -240,6 +238,7 @@ SGD_RV SDFGenerateKeyPair_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SG
 	return (*fptr)(hSessionHandle,uiKeyBits,pucPublicKey,pucPrivateKey);
 #endif
 }
+//12. 生成会话密钥并用内部ＲＳＡ公钥加密输出
 SGD_RV SDFGenerateKeyWithIPK_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiIPKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR_PRT *pucKey,SGD_UINT32 *puiKeyLength,SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,SGD_UINT32,SGD_UCHAR*,SGD_UINT32*,SGD_HANDLE*);
@@ -255,6 +254,7 @@ SGD_RV SDFGenerateKeyWithIPK_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle,
 	return (*fptr)(hSessionHandle,uiIPKIndex,uiKeyBits,*pucKey,puiKeyLength,phKeyHandle);
 #endif
 }
+//13. 生成会话密钥并用外部ＲＳＡ公钥加密输出
 SGD_RV SDFGenerateKeyWithEPK_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,RSArefPublicKey *pucPublicKey,SGD_UCHAR_PRT *pucKey,SGD_UINT32 *puiKeyLength,SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,RSArefPublicKey*,SGD_UCHAR*,SGD_UINT32*,SGD_HANDLE*);
@@ -270,29 +270,35 @@ SGD_RV SDFGenerateKeyWithEPK_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle,
 	return (*fptr)(hSessionHandle,uiKeyBits,pucPublicKey,*pucKey,puiKeyLength,phKeyHandle);
 #endif
 }
-
-SGD_RV SDFImportKeyWithISK_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,SGD_UCHAR_PRT *pucKey,SGD_UINT32 uiKeyLength,SGD_HANDLE *phKeyHandle)
+//14. 导入会话密钥并用内部ＲＳＡ私钥解密
+SGD_RV SDFImportKeyWithISK_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,SGD_UCHAR_PRT pucKey,SGD_UINT32 uiKeyLength,SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,SGD_UCHAR*,SGD_UINT32,SGD_HANDLE*);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ImportKeyWithISK_RSA");
-	return (*fptr)(hSessionHandle,uiISKIndex,*pucKey,uiKeyLength,phKeyHandle);
+	return (*fptr)(hSessionHandle,uiISKIndex,pucKey,uiKeyLength,phKeyHandle);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ImportKeyWithISK_RSA");
-	return (*fptr)(hSessionHandle,uiISKIndex,*pucKey,uiKeyLength,phKeyHandle);
+	return (*fptr)(hSessionHandle,uiISKIndex,pucKey,uiKeyLength,phKeyHandle);
 #endif
 }
-SGD_RV SDFExchangeDigitEnvelopeBaseOnRSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey,SGD_UCHAR_PRT *pucDEInput,SGD_UINT32  uiDELength,SGD_UCHAR_PRT *pucDEOutput,SGD_UINT32  *puiDELength)
+//15. 基于ＲＳＡ算法的数字信封转换
+SGD_RV SDFExchangeDigitEnvelopeBaseOnRSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey,SGD_UCHAR_PRT pucDEInput,SGD_UINT32  uiDELength,SGD_UCHAR_PRT *pucDEOutput,SGD_UINT32  *puiDELength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,RSArefPublicKey*,SGD_UCHAR*,SGD_UINT32,SGD_UCHAR*,SGD_UINT32*);
+	*pucDEOutput = calloc(*puiDELength, sizeof(SGD_UCHAR));
+	if (*pucDEOutput == NULL) {
+		return SGD_FALSE;
+	}
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExchangeDigitEnvelopeBaseOnRSA");
-	return (*fptr)(hSessionHandle,uiKeyIndex,pucPublicKey,*pucDEInput,uiDELength,*pucDEOutput,puiDELength);
+	return (*fptr)(hSessionHandle,uiKeyIndex,pucPublicKey,pucDEInput,uiDELength,*pucDEOutput,puiDELength);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExchangeDigitEnvelopeBaseOnRSA");
-	return (*fptr)(hSessionHandle,uiKeyIndex,pucPublicKey,*pucDEInput,uiDELength,*pucDEOutput,puiDELength);
+	return (*fptr)(hSessionHandle,uiKeyIndex,pucPublicKey,pucDEInput,uiDELength,*pucDEOutput,puiDELength);
 #endif
 }
+//16. 导出ＥＣＣ签名公钥
 SGD_RV SDFExportSignPublicKey_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,ECCrefPublicKey *pucPublicKey)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,ECCrefPublicKey*);
@@ -304,6 +310,7 @@ SGD_RV SDFExportSignPublicKey_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle
 	return (*fptr)(hSessionHandle,uiKeyIndex,pucPublicKey);
 #endif
 }
+//17. 导出ＥＣＣ加密公钥
 SGD_RV SDFExportEncPublicKey_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,ECCrefPublicKey *pucPublicKey)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,ECCrefPublicKey*);
@@ -315,6 +322,7 @@ SGD_RV SDFExportEncPublicKey_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,
 	return (*fptr)(hSessionHandle,uiKeyIndex,pucPublicKey);
 #endif
 }
+//18. 产生ＥＣＣ非对称密钥对并输出
 SGD_RV SDFGenerateKeyPair_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiAlgID,SGD_UINT32  uiKeyBits,ECCrefPublicKey *pucPublicKey,ECCrefPrivateKey *pucPrivateKey)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,SGD_UINT32,ECCrefPublicKey*,ECCrefPrivateKey*);
@@ -326,6 +334,7 @@ SGD_RV SDFGenerateKeyPair_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, SG
 	return (*fptr)(hSessionHandle,uiAlgID,uiKeyBits,pucPublicKey,pucPrivateKey);
 #endif
 }
+//19. 生成会话密钥并用内部ＥＣＣ公钥加密输出
 SGD_RV SDFGenerateKeyWithIPK_ECC (struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiIPKIndex,SGD_UINT32 uiKeyBits,ECCCipher *pucKey,SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,SGD_UINT32,ECCCipher*,SGD_HANDLE*);
@@ -337,6 +346,7 @@ SGD_RV SDFGenerateKeyWithIPK_ECC (struct LibHandle * h,SGD_HANDLE hSessionHandle
 	return (*fptr)(hSessionHandle,uiIPKIndex,uiKeyBits,pucKey,phKeyHandle);
 #endif
 }
+//20. 生成会话密钥并用外部ＥＣＣ公钥加密输出
 SGD_RV SDFGenerateKeyWithEPK_ECC (struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,SGD_UINT32  uiAlgID,ECCrefPublicKey *pucPublicKey,ECCCipher *pucKey,SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,SGD_UINT32,ECCrefPublicKey*,ECCCipher*,SGD_HANDLE*);
@@ -348,6 +358,7 @@ SGD_RV SDFGenerateKeyWithEPK_ECC (struct LibHandle * h,SGD_HANDLE hSessionHandle
 	return (*fptr)(hSessionHandle,uiKeyBits,uiAlgID,pucPublicKey,pucKey,phKeyHandle);
 #endif
 }
+//21. 导入会话密钥并用内部ＥＣＣ私钥解密
 SGD_RV SDFImportKeyWithISK_ECC (struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiISKIndex,ECCCipher *pucKey,SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UINT32,ECCCipher*,SGD_HANDLE*);
@@ -359,39 +370,43 @@ SGD_RV SDFImportKeyWithISK_ECC (struct LibHandle * h,SGD_HANDLE hSessionHandle,S
 	return (*fptr)(hSessionHandle,uiISKIndex,pucKey,phKeyHandle);
 #endif
 }
-SGD_RV SDFGenerateAgreementDataWithECC (struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR_PRT *pucSponsorID,SGD_UINT32 uiSponsorIDLength,ECCrefPublicKey  *pucSponsorPublicKey,ECCrefPublicKey  *pucSponsorTmpPublicKey,SGD_HANDLE *phAgreementHandle)
+//22. 生成密钥协商参数并输出
+SGD_RV SDFGenerateAgreementDataWithECC (struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR_PRT pucSponsorID,SGD_UINT32 uiSponsorIDLength,ECCrefPublicKey  *pucSponsorPublicKey,ECCrefPublicKey  *pucSponsorTmpPublicKey,SGD_HANDLE *phAgreementHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32 ,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32 ,ECCrefPublicKey  *,ECCrefPublicKey  *,SGD_HANDLE *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateAgreementDataWithECC");
-	return (*fptr)(hSessionHandle,  uiISKIndex, uiKeyBits, *pucSponsorID, uiSponsorIDLength,  pucSponsorPublicKey,  pucSponsorTmpPublicKey, phAgreementHandle);
+	return (*fptr)(hSessionHandle,  uiISKIndex, uiKeyBits, pucSponsorID, uiSponsorIDLength,  pucSponsorPublicKey,  pucSponsorTmpPublicKey, phAgreementHandle);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateAgreementDataWithECC");
-	return (*fptr)(hSessionHandle,  uiISKIndex, uiKeyBits, *pucSponsorID, uiSponsorIDLength,  pucSponsorPublicKey,  pucSponsorTmpPublicKey, phAgreementHandle);
+	return (*fptr)(hSessionHandle,  uiISKIndex, uiKeyBits, pucSponsorID, uiSponsorIDLength,  pucSponsorPublicKey,  pucSponsorTmpPublicKey, phAgreementHandle);
 #endif
 }
-SGD_RV SDFGenerateKeyWithECC (struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UCHAR_PRT *pucResponseID,SGD_UINT32 uiResponseIDLength,ECCrefPublicKey *pucResponsePublicKey,ECCrefPublicKey *pucResponseTmpPublicKey,SGD_HANDLE hAgreementHandle,SGD_HANDLE *phKeyHandle)
+//23. 计算会话密钥
+SGD_RV SDFGenerateKeyWithECC (struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UCHAR_PRT pucResponseID,SGD_UINT32 uiResponseIDLength,ECCrefPublicKey *pucResponsePublicKey,ECCrefPublicKey *pucResponseTmpPublicKey,SGD_HANDLE hAgreementHandle,SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE, SGD_UCHAR *,SGD_UINT32 ,ECCrefPublicKey *,ECCrefPublicKey *,SGD_HANDLE ,SGD_HANDLE *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateKeyWithECC");
-	return (*fptr)(hSessionHandle,*pucResponseID,uiResponseIDLength,pucResponsePublicKey,pucResponseTmpPublicKey,hAgreementHandle,phKeyHandle);
+	return (*fptr)(hSessionHandle,pucResponseID,uiResponseIDLength,pucResponsePublicKey,pucResponseTmpPublicKey,hAgreementHandle,phKeyHandle);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateKeyWithECC");
 	return (*fptr)(hSessionHandle,*pucResponseID,uiResponseIDLength,pucResponsePublicKey,pucResponseTmpPublicKey,hAgreementHandle,phKeyHandle);
 #endif
 }
-SGD_RV SDFGenerateAgreementDataAndKeyWithECC (struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR_PRT *pucResponseID,SGD_UINT32 uiResponseIDLength,SGD_UCHAR_PRT *pucSponsorID,SGD_UINT32 uiSponsorIDLength,ECCrefPublicKey *pucSponsorPublicKey,ECCrefPublicKey *pucSponsorTmpPublicKey,ECCrefPublicKey  *pucResponsePublicKey,	ECCrefPublicKey  *pucResponseTmpPublicKey,SGD_HANDLE *phKeyHandle)
+//24. 产生协商数据并计算会话密钥
+SGD_RV SDFGenerateAgreementDataAndKeyWithECC (struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR_PRT pucResponseID,SGD_UINT32 uiResponseIDLength,SGD_UCHAR_PRT pucSponsorID,SGD_UINT32 uiSponsorIDLength,ECCrefPublicKey *pucSponsorPublicKey,ECCrefPublicKey *pucSponsorTmpPublicKey,ECCrefPublicKey  *pucResponsePublicKey,	ECCrefPublicKey  *pucResponseTmpPublicKey,SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32 ,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32 ,ECCrefPublicKey *,ECCrefPublicKey *,ECCrefPublicKey  *,	ECCrefPublicKey  *,SGD_HANDLE *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateAgreementDataAndKeyWithECC");
-	return (*fptr)(hSessionHandle,  uiISKIndex, uiKeyBits, *pucResponseID, uiResponseIDLength, *pucSponsorID, uiSponsorIDLength, pucSponsorPublicKey, pucSponsorTmpPublicKey,  pucResponsePublicKey,	  pucResponseTmpPublicKey, phKeyHandle);
+	return (*fptr)(hSessionHandle,  uiISKIndex, uiKeyBits, pucResponseID, uiResponseIDLength, pucSponsorID, uiSponsorIDLength, pucSponsorPublicKey, pucSponsorTmpPublicKey,  pucResponsePublicKey,	  pucResponseTmpPublicKey, phKeyHandle);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateAgreementDataAndKeyWithECC");
-	return (*fptr)(hSessionHandle,  uiISKIndex, uiKeyBits, *pucResponseID, uiResponseIDLength, *pucSponsorID, uiSponsorIDLength, pucSponsorPublicKey, pucSponsorTmpPublicKey,  pucResponsePublicKey,	  pucResponseTmpPublicKey, phKeyHandle);
+	return (*fptr)(hSessionHandle,  uiISKIndex, uiKeyBits, pucResponseID, uiResponseIDLength, pucSponsorID, uiSponsorIDLength, pucSponsorPublicKey, pucSponsorTmpPublicKey,  pucResponsePublicKey,	  pucResponseTmpPublicKey, phKeyHandle);
 #endif
 }
+//25. 基于 ＥＣＣ算法的数字信封转换
 SGD_RV SDFExchangeDigitEnvelopeBaseOnECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,SGD_UINT32  uiAlgID,ECCrefPublicKey *pucPublicKey,ECCCipher *pucEncDataIn,ECCCipher *pucEncDataOut)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32  ,SGD_UINT32  ,ECCrefPublicKey *,ECCCipher *,ECCCipher *);
@@ -403,6 +418,7 @@ SGD_RV SDFExchangeDigitEnvelopeBaseOnECC(struct LibHandle * h,SGD_HANDLE hSessio
 	return (*fptr)(hSessionHandle,   uiKeyIndex,  uiAlgID, pucPublicKey, pucEncDataIn, pucEncDataOut);
 #endif
 }
+//26. 生成会话密钥并用密钥加密密钥加密输出
 SGD_RV SDFGenerateKeyWithKEK(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,SGD_UINT32  uiAlgID,SGD_UINT32 uiKEKIndex, SGD_UCHAR_PRT *pucKey, SGD_UINT32 *puiKeyLength, SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32 ,SGD_UINT32  ,SGD_UINT32 , SGD_UCHAR *, SGD_UINT32 *, SGD_HANDLE *);
@@ -414,17 +430,31 @@ SGD_RV SDFGenerateKeyWithKEK(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD
 	return (*fptr)(hSessionHandle,  uiKeyBits,  uiAlgID, uiKEKIndex,  *pucKey,  puiKeyLength,  phKeyHandle);
 #endif
 }
-SGD_RV SDFImportKeyWithKEK(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiAlgID,SGD_UINT32 uiKEKIndex, SGD_UCHAR_PRT *pucKey, SGD_UINT32 uiKeyLength, SGD_HANDLE *phKeyHandle)
+//27. 导入会话密钥并用密钥加密密钥解密
+SGD_RV SDFImportKeyWithKEK(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiAlgID,SGD_UINT32 uiKEKIndex, SGD_UCHAR_PRT pucKey, SGD_UINT32 uiKeyLength, SGD_HANDLE *phKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32  ,SGD_UINT32 , SGD_UCHAR *, SGD_UINT32 , SGD_HANDLE *);
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ImportKeyWithKEK");
-	return (*fptr)(hSessionHandle,  uiAlgID, uiKEKIndex,  *pucKey,  uiKeyLength,  phKeyHandle);
+	return (*fptr)(hSessionHandle,  uiAlgID, uiKEKIndex,  pucKey,  uiKeyLength,  phKeyHandle);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ImportKeyWithKEK");
-	return (*fptr)(hSessionHandle,  uiAlgID, uiKEKIndex,  *pucKey,  uiKeyLength,  phKeyHandle);
+	return (*fptr)(hSessionHandle,  uiAlgID, uiKEKIndex,  pucKey,  uiKeyLength,  phKeyHandle);
 #endif
 }
+//28. 导入明文会话密钥
+SGD_RV SDFImportKey(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UCHAR_PRT pucKey, SGD_UINT32 uiKeyLength,SGD_HANDLE *phKeyHandle)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UCHAR *, SGD_UINT32 ,SGD_HANDLE *);
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ImportKey");
+	return (*fptr)(hSessionHandle,  pucKey,  uiKeyLength, phKeyHandle);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ImportKey");
+	return (*fptr)(hSessionHandle,  pucKey,  uiKeyLength, phKeyHandle);
+#endif
+}
+//29. 销毁会话密钥
 SGD_RV SDFDestroyKey(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_HANDLE);
@@ -436,21 +466,39 @@ SGD_RV SDFDestroyKey(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_HANDLE 
 	return (*fptr)(hSessionHandle,  hKeyHandle);
 #endif
 }
-
-
-
-SGD_RV SDFExternalPublicKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, RSArefPublicKey *pucPublicKey,SGD_UCHAR_PRT *pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
+//30. 外部公钥ＲＳＡ运算
+SGD_RV SDFExternalPublicKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, RSArefPublicKey *pucPublicKey,SGD_UCHAR_PRT pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , RSArefPublicKey *,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  *);
+	*pucDataOutput = calloc(*puiOutputLength, sizeof(SGD_UCHAR));
+	if (*pucDataOutput == NULL) {
+		return SGD_FALSE;
+	}
 #ifdef _WIN32
 	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExternalPublicKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  pucPublicKey, *pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
+	return (*fptr)(hSessionHandle,  pucPublicKey, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExternalPublicKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  pucPublicKey, *pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
+	return (*fptr)(hSessionHandle,  pucPublicKey, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
 #endif
 }
-
+//31. 外部私钥ＲＳＡ运算
+SGD_RV SDFExternalPrivateKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, RSArefPrivateKey *pucPrivateKey,SGD_UCHAR_PRT pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE , RSArefPrivateKey *,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  *);
+	*pucDataOutput = calloc(*puiOutputLength, sizeof(SGD_UCHAR));
+	if (*pucDataOutput == NULL) {
+		return SGD_FALSE;
+	}
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExternalPrivateKeyOperation_RSA");
+	return (*fptr)(hSessionHandle,  pucPrivateKey, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExternalPrivateKeyOperation_RSA");
+	return (*fptr)(hSessionHandle,  pucPrivateKey, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
+#endif
+}
+//32. 内部公钥ＲＳＡ运算
 SGD_RV SDFInternalPublicKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR_PRT pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  *);
@@ -466,6 +514,7 @@ SGD_RV SDFInternalPublicKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessio
 	return (*fptr)(hSessionHandle,  uiKeyIndex, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
 #endif
 }
+//33. 内部私ＲＳＡ运算
 SGD_RV SDFInternalPrivateKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR_PRT pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  *);
@@ -481,224 +530,7 @@ SGD_RV SDFInternalPrivateKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessi
 	return (*fptr)(hSessionHandle,  uiKeyIndex, pucDataInput,uiInputLength,*pucDataOutput,puiOutputLength);
 #endif
 }
-
-SGD_RV SDFExternalVerify_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR_PRT *pucDataInput,SGD_UINT32  uiInputLength,ECCSignature *pucSignature)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,ECCrefPublicKey *,SGD_UCHAR *,SGD_UINT32  ,ECCSignature *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExternalVerify_ECC");
-	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, *pucDataInput,  uiInputLength, pucSignature);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExternalVerify_ECC");
-	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, *pucDataInput,  uiInputLength, pucSignature);
-#endif
-}
-SGD_RV SDFInternalSign_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  uiISKIndex,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_InternalSign_ECC");
-	return (*fptr)(hSessionHandle,  uiISKIndex, pucData,  uiDataLength, pucSignature);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_InternalSign_ECC");
-	return (*fptr)(hSessionHandle,  uiISKIndex, pucData,  uiDataLength, pucSignature);
-#endif
-}
-SGD_RV SDFInternalVerify_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  ,ECCSignature *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_InternalVerify_ECC");
-	return (*fptr)(hSessionHandle,  uiISKIndex, pucData,  uiDataLength, pucSignature);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_InternalVerify_ECC");
-	return (*fptr)(hSessionHandle,  uiISKIndex, pucData,  uiDataLength, pucSignature);
-#endif
-}
-SGD_RV SDFExternalEncrypt_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength,ECCCipher *pucEncData)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,ECCrefPublicKey *,SGD_UCHAR *,SGD_UINT32  ,ECCCipher *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExternalEncrypt_ECC");
-	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucData,  uiDataLength, pucEncData);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExternalEncrypt_ECC");
-	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucData,  uiDataLength, pucEncData);
-#endif
-}
-
-SGD_RV SDFEncrypt(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR_PRT pucIV,SGD_UCHAR_PRT pucData,SGD_UINT32 uiDataLength,SGD_UCHAR_PRT *pucEncData,SGD_UINT32  *puiEncDataLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_HANDLE ,SGD_UINT32 ,SGD_UCHAR *,SGD_UCHAR *,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32  *);
-    *pucEncData = calloc(*puiEncDataLength, sizeof(SGD_UCHAR));
-	if (*pucEncData == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Encrypt");
-	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucData, uiDataLength, *pucEncData,  puiEncDataLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Encrypt");
-	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucData, uiDataLength, *pucEncData,  puiEncDataLength);
-#endif
-}
-SGD_RV SDFDecrypt (struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR_PRT pucIV,SGD_UCHAR_PRT pucEncData,SGD_UINT32  uiEncDataLength,SGD_UCHAR_PRT *pucData,SGD_UINT32 *puiDataLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_HANDLE ,SGD_UINT32 ,SGD_UCHAR *,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32 *);
-    *pucData = calloc(*puiDataLength, sizeof(SGD_UCHAR));
-	if (*pucData == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Decrypt");
-	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucEncData,  uiEncDataLength, *pucData, puiDataLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Decrypt");
-	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucEncData,  uiEncDataLength, *pucData, puiDataLength);
-#endif
-}
-SGD_RV SDFCalculateMAC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR_PRT pucIV,SGD_UCHAR_PRT pucData,SGD_UINT32 uiDataLength,SGD_UCHAR_PRT *pucMAC,SGD_UINT32  *puiMACLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_HANDLE ,SGD_UINT32 ,SGD_UCHAR *,SGD_UCHAR *,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32  *);
-	*pucMAC = calloc(*puiMACLength, sizeof(SGD_UCHAR));
-	if (*pucMAC == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_CalculateMAC");
-	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucData, uiDataLength, *pucMAC,  puiMACLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_CalculateMAC");
-	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucData, uiDataLength, *pucMAC,  puiMACLength);
-#endif
-}
-
-
-SGD_RV SDFCreateFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 );
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_CreateFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
-#else
-
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_CreateFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
-
-#endif
-}
-SGD_RV SDFReadFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR_PRT *pucBuffer)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 *,SGD_UCHAR *);
-	*pucBuffer = calloc(*puiReadLength, sizeof(SGD_UCHAR));
-	if (*pucBuffer == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ReadFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ReadFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
-#endif
-}
-SGD_RV SDFWriteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR_PRT pucBuffer)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 ,SGD_UCHAR *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_WriteFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_WriteFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
-#endif
-}
-SGD_RV SDFDeleteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 );
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_DeleteFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_DeleteFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
-#endif
-}
-
-
-SGD_RV SDFHashInit(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR_PRT pucID,SGD_UINT32 uiIDLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,ECCrefPublicKey *,SGD_UCHAR *,SGD_UINT32 );
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_HashInit");
-	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucID, uiIDLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_HashInit");
-	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucID, uiIDLength);
-#endif
-}
-SGD_RV SDFHashUpdate(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32  );
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_HashUpdate");
-	return (*fptr)(hSessionHandle, pucData,  uiDataLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_HashUpdate");
-	return (*fptr)(hSessionHandle, pucData,  uiDataLength);
-#endif
-}
-SGD_RV SDFHashFinal(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT *pucHash,SGD_UINT32  *puiHashLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32  *);
-	*pucHash = calloc(*puiHashLength, sizeof(SGD_UCHAR));
-	if (*pucHash == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_HashFinal");
-	return (*fptr)(hSessionHandle, *pucHash,  puiHashLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_HashFinal");
-	return (*fptr)(hSessionHandle, *pucHash,  puiHashLength);
-#endif
-}
-
-
-
-SGD_RV SDFGetSymmKeyHandle(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_HANDLE *phKeyHandle)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32 , SGD_HANDLE *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GetSymmKeyHandle");
-	return (*fptr)(hSessionHandle,  uiKeyIndex,  phKeyHandle);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GetSymmKeyHandle");
-	return (*fptr)(hSessionHandle,  uiKeyIndex,  phKeyHandle);
-#endif
-}
-SGD_RV SDFImportKey(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UCHAR_PRT pucKey, SGD_UINT32 uiKeyLength,SGD_HANDLE *phKeyHandle)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UCHAR *, SGD_UINT32 ,SGD_HANDLE *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ImportKey");
-	return (*fptr)(hSessionHandle,  pucKey,  uiKeyLength, phKeyHandle);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ImportKey");
-	return (*fptr)(hSessionHandle,  pucKey,  uiKeyLength, phKeyHandle);
-#endif
-}
-SGD_RV SDFExternalPrivateKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, RSArefPrivateKey *pucPrivateKey,SGD_UCHAR_PRT *pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , RSArefPrivateKey *,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExternalPrivateKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  pucPrivateKey, *pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExternalPrivateKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  pucPrivateKey, *pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
-#endif
-}
+//34. 外部密钥ＥＣＣ签名
 SGD_RV SDFExternalSign_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPrivateKey *pucPrivateKey,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,ECCrefPrivateKey *,SGD_UCHAR *,SGD_UINT32  ,ECCSignature *);
@@ -710,6 +542,55 @@ SGD_RV SDFExternalSign_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UI
 	return (*fptr)(hSessionHandle, uiAlgID, pucPrivateKey, pucData,  uiDataLength, pucSignature);
 #endif
 }
+//35. 外部密钥ＥＣＣ验证
+SGD_RV SDFExternalVerify_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR_PRT pucDataInput,SGD_UINT32  uiInputLength,ECCSignature *pucSignature)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,ECCrefPublicKey *,SGD_UCHAR *,SGD_UINT32  ,ECCSignature *);
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExternalVerify_ECC");
+	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucDataInput,  uiInputLength, pucSignature);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExternalVerify_ECC");
+	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucDataInput,  uiInputLength, pucSignature);
+#endif
+}
+//36. 内部密钥ＥＣＣ签名
+SGD_RV SDFInternalSign_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  uiISKIndex,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature);
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_InternalSign_ECC");
+	return (*fptr)(hSessionHandle,  uiISKIndex, pucData,  uiDataLength, pucSignature);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_InternalSign_ECC");
+	return (*fptr)(hSessionHandle,  uiISKIndex, pucData,  uiDataLength, pucSignature);
+#endif
+}
+//37. 内部密钥ＥＣＣ验证
+SGD_RV SDFInternalVerify_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  ,ECCSignature *);
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_InternalVerify_ECC");
+	return (*fptr)(hSessionHandle,  uiISKIndex, pucData,  uiDataLength, pucSignature);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_InternalVerify_ECC");
+	return (*fptr)(hSessionHandle,  uiISKIndex, pucData,  uiDataLength, pucSignature);
+#endif
+}
+//38. 外部密钥ＥＣＣ加密
+SGD_RV SDFExternalEncrypt_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength,ECCCipher *pucEncData)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,ECCrefPublicKey *,SGD_UCHAR *,SGD_UINT32  ,ECCCipher *);
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExternalEncrypt_ECC");
+	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucData,  uiDataLength, pucEncData);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExternalEncrypt_ECC");
+	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucData,  uiDataLength, pucEncData);
+#endif
+}
+//39. 外部密钥ＥＣＣ解密
 SGD_RV SDFExternalDecrypt_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPrivateKey *pucPrivateKey,ECCCipher *pucEncData,SGD_UCHAR_PRT *pucData,SGD_UINT32  *puiDataLength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,ECCrefPrivateKey *,ECCCipher *,SGD_UCHAR *,SGD_UINT32  *);
@@ -725,6 +606,173 @@ SGD_RV SDFExternalDecrypt_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD
 	return (*fptr)(hSessionHandle, uiAlgID, pucPrivateKey, pucEncData, *pucData,  puiDataLength);
 #endif
 }
+//40. 对称加密
+SGD_RV SDFEncrypt(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR_PRT pucIV,SGD_UCHAR_PRT pucData,SGD_UINT32 uiDataLength,SGD_UCHAR_PRT *pucEncData,SGD_UINT32  *puiEncDataLength)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_HANDLE ,SGD_UINT32 ,SGD_UCHAR *,SGD_UCHAR *,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32  *);
+    *pucEncData = calloc(*puiEncDataLength, sizeof(SGD_UCHAR));
+	if (*pucEncData == NULL) {
+		return SGD_FALSE;
+	}
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Encrypt");
+	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucData, uiDataLength, *pucEncData,  puiEncDataLength);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Encrypt");
+	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucData, uiDataLength, *pucEncData,  puiEncDataLength);
+#endif
+}
+//41. 对称解密
+SGD_RV SDFDecrypt (struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR_PRT pucIV,SGD_UCHAR_PRT pucEncData,SGD_UINT32  uiEncDataLength,SGD_UCHAR_PRT *pucData,SGD_UINT32 *puiDataLength)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_HANDLE ,SGD_UINT32 ,SGD_UCHAR *,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32 *);
+    *pucData = calloc(*puiDataLength, sizeof(SGD_UCHAR));
+	if (*pucData == NULL) {
+		return SGD_FALSE;
+	}
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Decrypt");
+	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucEncData,  uiEncDataLength, *pucData, puiDataLength);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Decrypt");
+	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucEncData,  uiEncDataLength, *pucData, puiDataLength);
+#endif
+}
+//42. 计算ＭＡＣ
+SGD_RV SDFCalculateMAC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR_PRT pucIV,SGD_UCHAR_PRT pucData,SGD_UINT32 uiDataLength,SGD_UCHAR_PRT *pucMAC,SGD_UINT32  *puiMACLength)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_HANDLE ,SGD_UINT32 ,SGD_UCHAR *,SGD_UCHAR *,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32  *);
+	*pucMAC = calloc(*puiMACLength, sizeof(SGD_UCHAR));
+	if (*pucMAC == NULL) {
+		return SGD_FALSE;
+	}
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_CalculateMAC");
+	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucData, uiDataLength, *pucMAC,  puiMACLength);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_CalculateMAC");
+	return (*fptr)(hSessionHandle, hKeyHandle, uiAlgID, pucIV, pucData, uiDataLength, *pucMAC,  puiMACLength);
+#endif
+}
+//43. 杂凑运算初始化
+SGD_RV SDFHashInit(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR_PRT pucID,SGD_UINT32 uiIDLength)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,ECCrefPublicKey *,SGD_UCHAR *,SGD_UINT32 );
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_HashInit");
+	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucID, uiIDLength);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_HashInit");
+	return (*fptr)(hSessionHandle, uiAlgID, pucPublicKey, pucID, uiIDLength);
+#endif
+}
+//44. 多包杂凑运算
+SGD_RV SDFHashUpdate(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32  );
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_HashUpdate");
+	return (*fptr)(hSessionHandle, pucData,  uiDataLength);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_HashUpdate");
+	return (*fptr)(hSessionHandle, pucData,  uiDataLength);
+#endif
+}
+//45. 杂凑运算结束
+SGD_RV SDFHashFinal(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT *pucHash,SGD_UINT32  *puiHashLength)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32  *);
+	*pucHash = calloc(*puiHashLength, sizeof(SGD_UCHAR));
+	if (*pucHash == NULL) {
+		return SGD_FALSE;
+	}
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_HashFinal");
+	return (*fptr)(hSessionHandle, *pucHash,  puiHashLength);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_HashFinal");
+	return (*fptr)(hSessionHandle, *pucHash,  puiHashLength);
+#endif
+}
+//46. 创建文件
+SGD_RV SDFCreateFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 );
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_CreateFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
+#else
+
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_CreateFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
+
+#endif
+}
+//47. 读取文件
+SGD_RV SDFReadFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR_PRT *pucBuffer)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 *,SGD_UCHAR *);
+	*pucBuffer = calloc(*puiReadLength, sizeof(SGD_UCHAR));
+	if (*pucBuffer == NULL) {
+		return SGD_FALSE;
+	}
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ReadFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ReadFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
+#endif
+}
+//48. 写文件
+SGD_RV SDFWriteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR_PRT pucBuffer)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 ,SGD_UCHAR *);
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_WriteFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_WriteFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
+#endif
+}
+//49. 删除文件
+SGD_RV SDFDeleteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 );
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_DeleteFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_DeleteFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
+#endif
+}
+//50. 获取对称句柄
+SGD_RV SDFGetSymmKeyHandle(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_HANDLE *phKeyHandle)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32 , SGD_HANDLE *);
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GetSymmKeyHandle");
+	return (*fptr)(hSessionHandle,  uiKeyIndex,  phKeyHandle);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GetSymmKeyHandle");
+	return (*fptr)(hSessionHandle,  uiKeyIndex,  phKeyHandle);
+#endif
+}
+//51. ECC方式的加密
+SGD_RV SDFInternalEncrypt_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiISKIndex, SGD_UINT32 uiAlgID, SGD_UCHAR_PRT pucData, SGD_UINT32  uiDataLength, ECCCipher *pucEncData)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32  , SGD_UINT32 , SGD_UCHAR *, SGD_UINT32  , ECCCipher *);
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_InternalEncrypt_ECC");
+	return (*fptr)(hSessionHandle,   uiISKIndex,  uiAlgID,  pucData,   uiDataLength,  pucEncData);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_InternalEncrypt_ECC");
+	return (*fptr)(hSessionHandle,   uiISKIndex,  uiAlgID,  pucData,   uiDataLength,  pucEncData);
+#endif
+}
+//52. ECC方式的解密
 SGD_RV SDFInternalDecrypt_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiISKIndex,SGD_UINT32 uiAlgID,ECCCipher *pucEncData,SGD_UCHAR_PRT *pucData,SGD_UINT32  *puiDataLength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SGD_UINT32 ,ECCCipher *,SGD_UCHAR *,SGD_UINT32  *);
@@ -740,19 +788,7 @@ SGD_RV SDFInternalDecrypt_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD
 	return (*fptr)(hSessionHandle,  uiISKIndex, uiAlgID, pucEncData, *pucData,  puiDataLength);
 #endif
 }
-SGD_RV SDFInternalEncrypt_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32  uiISKIndex, SGD_UINT32 uiAlgID, SGD_UCHAR_PRT pucData, SGD_UINT32  uiDataLength, ECCCipher *pucEncData)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32  , SGD_UINT32 , SGD_UCHAR *, SGD_UINT32  , ECCCipher *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_InternalEncrypt_ECC");
-	return (*fptr)(hSessionHandle,   uiISKIndex,  uiAlgID,  pucData,   uiDataLength,  pucEncData);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_InternalEncrypt_ECC");
-	return (*fptr)(hSessionHandle,   uiISKIndex,  uiAlgID,  pucData,   uiDataLength,  pucEncData);
-#endif
-}
-
-
+//53. EPK方式导出RSA密钥
 SGD_RV SDFExportKeyWithEPK_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, RSArefPublicKey *pucPublicKey, SGD_UCHAR_PRT *pucKey, SGD_UINT32 *puiKeyLength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_HANDLE , RSArefPublicKey *, SGD_UCHAR *, SGD_UINT32 *);
@@ -764,6 +800,7 @@ SGD_RV SDFExportKeyWithEPK_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, S
 	return (*fptr)(hSessionHandle,  hKeyHandle,  pucPublicKey,  *pucKey,  puiKeyLength);
 #endif
 }
+//54. EPK方式导出ECC密钥
 SGD_RV SDFExportKeyWithEPK_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UINT32 uiAlgID, ECCrefPublicKey *pucPublicKey, ECCCipher *pucKey)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_HANDLE , SGD_UINT32 , ECCrefPublicKey *, ECCCipher *);
@@ -775,6 +812,7 @@ SGD_RV SDFExportKeyWithEPK_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, S
 	return (*fptr)(hSessionHandle,  hKeyHandle,  uiAlgID,  pucPublicKey,  pucKey);
 #endif
 }
+//55. EPK方式导出密钥
 SGD_RV SDFExportKeyWithKEK(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UINT32 uiAlgID, SGD_UINT32 uiKEKIndex, SGD_UCHAR_PRT *pucKey, SGD_UINT32 *puiKeyLength)
 {
     typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_HANDLE , SGD_UINT32 , SGD_UINT32 , SGD_UCHAR *, SGD_UINT32 *);
@@ -786,254 +824,15 @@ SGD_RV SDFExportKeyWithKEK(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_H
 	return (*fptr)(hSessionHandle,  hKeyHandle,  uiAlgID,  uiKEKIndex,  *pucKey,  puiKeyLength);
 #endif
 }
-
-
-SGD_RV SDFExportSignMasterPublicKey_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SM9refSignMasterPublicKey *pPublicKey)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SM9refSignMasterPublicKey *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExportSignMasterPublicKey_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, pPublicKey);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExportSignMasterPublicKey_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, pPublicKey);
-#endif
-}
-SGD_RV SDFExportEncMasterPublicKey_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SM9refEncMasterPublicKey *pPublicKey)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SM9refEncMasterPublicKey *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExportEncMasterPublicKey_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex, pPublicKey);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExportEncMasterPublicKey_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex, pPublicKey);
-#endif
-}
-SGD_RV SDFExportSignMasterKeyPairG_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR_PRT *pPairG,SGD_UINT32 *puiPairGLen)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32 *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExportSignMasterKeyPairG_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, *pPairG, puiPairGLen);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExportSignMasterKeyPairG_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, *pPairG, puiPairGLen);
-#endif
-}
-SGD_RV SDFExportEncMasterKeyPairG_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR_PRT *pPairG,SGD_UINT32 *puiPairGLen)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32 *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExportEncMasterKeyPairG_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, *pPairG, puiPairGLen);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExportEncMasterKeyPairG_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, *pPairG, puiPairGLen);
-#endif
-}
-SGD_RV SDFImportUserSignPrivateKey_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,SM9refSignUserPrivateKey  *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ImportUserSignPrivateKey_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ImportUserSignPrivateKey_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey);
-#endif
-}
-SGD_RV SDFImportUserEncPrivateKey_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SM9refEncUserPrivateKey  *pUserPrivateKey)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32 , SM9refEncUserPrivateKey  *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ImportUserEncPrivateKey_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex,   pUserPrivateKey);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ImportUserEncPrivateKey_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex,   pUserPrivateKey);
-#endif
-}
-SGD_RV SDFGenerateSignUserPrivateKey_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_UCHAR hid, SGD_UCHAR_PRT *pucUserID, SGD_UINT32 uiUserIDLen, SM9refSignUserPrivateKey  *pUserPrivateKey)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32 , SGD_UCHAR , SGD_UCHAR *, SGD_UINT32 , SM9refSignUserPrivateKey  *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateSignUserPrivateKey_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex,  hid,  *pucUserID,  uiUserIDLen,   pUserPrivateKey);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateSignUserPrivateKey_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex,  hid,  *pucUserID,  uiUserIDLen,   pUserPrivateKey);
-#endif
-}
-SGD_RV SDFGenerateEncUserPrivateKey_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_UCHAR hid,SGD_UCHAR_PRT *pucUserID,SGD_UINT32 uiUserIDLen,SM9refEncUserPrivateKey  *pUserPrivateKey)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UINT32 , SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32 ,SM9refEncUserPrivateKey  *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateEncUserPrivateKey_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex,  hid, *pucUserID, uiUserIDLen,  pUserPrivateKey);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateEncUserPrivateKey_SM9");
-	return (*fptr)(hSessionHandle,  uiKeyIndex,  hid, *pucUserID, uiUserIDLen,  pUserPrivateKey);
-#endif
-}
-SGD_RV SDFSign_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR_PRT pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,SM9refSignUserPrivateKey  *,SM9refSignMasterPublicKey *,SGD_UCHAR *,SGD_UINT32 ,SM9Signature  *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Sign_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, pucDataInput, uiDataInputLen,  pSignature);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Sign_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, pucDataInput, uiDataInputLen,  pSignature);
-#endif
-}
-SGD_RV SDFSignEx_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyIndex,SM9refSignUserPrivateKey  *pUserPrivateKey,SM9refSignMasterPublicKey *pMasterPublicKey,SGD_UCHAR_PRT pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR_PRT pucDataInput,SGD_UINT32 uiDataInputLen,SM9Signature  *pSignature)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,SM9refSignUserPrivateKey  *,SM9refSignMasterPublicKey *,SGD_UCHAR *,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32 ,SM9Signature  *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_SignEx_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, pPairG, uiPairGLen, pucDataInput, uiDataInputLen,  pSignature);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_SignEx_SM9");
-	return (*fptr)(hSessionHandle, uiKeyIndex,  pUserPrivateKey, pMasterPublicKey, pPairG, uiPairGLen, pucDataInput, uiDataInputLen,  pSignature);
-#endif
-}
-SGD_RV SDFVerify_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR_PRT pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32  ,SM9refSignMasterPublicKey  *,SGD_UCHAR *,SGD_UINT32   ,SM9Signature  *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Verify_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen,  pMasterPublicKey, pucData,   uiDataInputLen,  pSignature);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Verify_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen,  pMasterPublicKey, pucData,   uiDataInputLen,  pSignature);
-#endif
-}
-SGD_RV SDFVerifyEx_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32 uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR_PRT pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR_PRT pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR *pucUserID,SGD_UINT32 uiUserIDLen,SM9refSignMasterPublicKey  *pMasterPublicKey,SGD_UCHAR *pPairG,SGD_UINT32 uiPairGLen,SGD_UCHAR *pucData,SGD_UINT32   uiDataInputLen,SM9Signature  *pSignature);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_VerifyEx_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID, uiUserIDLen,  pMasterPublicKey, pPairG, uiPairGLen, pucData,   uiDataInputLen,  pSignature);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_VerifyEx_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID, uiUserIDLen,  pMasterPublicKey, pPairG, uiPairGLen, pucData,   uiDataInputLen,  pSignature);
-#endif
-}
-SGD_RV SDFEncrypt_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR_PRT pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32  ,SM9refEncMasterPublicKey *,SGD_UCHAR *,SGD_UINT32   ,SM9Cipher *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Encrypt_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen, pPubluicKey, pucData,   uiDataLength, pCipher);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Encrypt_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen, pPubluicKey, pucData,   uiDataLength, pCipher);
-#endif
-}
-SGD_RV SDFEncryptEx_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey *pPubluicKey,SGD_UCHAR_PRT pPairG,SGD_UINT32  nPairGLen,SGD_UCHAR_PRT pucData,SGD_UINT32   uiDataLength,SM9Cipher *pCipher)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32  ,SM9refEncMasterPublicKey *,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32   ,SM9Cipher *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_EncryptEx_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen, pPubluicKey, pPairG,  nPairGLen, pucData,   uiDataLength, pCipher);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_EncryptEx_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen, pPubluicKey, pPairG,  nPairGLen, pucData,   uiDataLength, pCipher);
-#endif
-}
-SGD_RV SDFDecrypt_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9Cipher * pCipher,SGD_UCHAR_PRT *pucPlainData,SGD_UINT32  *uiPlainDataLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32  ,SGD_UINT32 ,SM9refEncUserPrivateKey  *,SM9Cipher * ,SGD_UCHAR *,SGD_UINT32  *);
-	*pucPlainData = calloc(*uiPlainDataLength, sizeof(SGD_UCHAR));
-	if (*pucPlainData == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Decrypt_SM9");
-	return (*fptr)(hSessionHandle, pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey,  pCipher, *pucPlainData,  uiPlainDataLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Decrypt_SM9");
-	return (*fptr)(hSessionHandle, pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey,  pCipher, *pucPlainData,  uiPlainDataLength);
-#endif
-}
-SGD_RV SDFEncap_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR hid,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SM9refEncMasterPublicKey  *pPublicKey,SGD_UINT32 uiKeyLen,SGD_UCHAR_PRT pKey,SM9refKeyPackage *pKeyPackage)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32  ,SM9refEncMasterPublicKey  *,SGD_UINT32 ,SGD_UCHAR *,SM9refKeyPackage *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Encap_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen,  pPublicKey, uiKeyLen, pKey, pKeyPackage);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Encap_SM9");
-	return (*fptr)(hSessionHandle, hid, pucUserID,  uiUserIDLen,  pPublicKey, uiKeyLen, pKey, pKeyPackage);
-#endif
-}
-SGD_RV SDFDecap_SM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucUserID,SGD_UINT32  uiUserIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pUserPrivateKey,SM9refKeyPackage *pKeyPackage,SGD_UINT32  uiKeyLen,SGD_UCHAR_PRT *pucKey)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32  ,SGD_UINT32 ,SM9refEncUserPrivateKey  *,SM9refKeyPackage *,SGD_UINT32  ,SGD_UCHAR *);
-	*pucKey = calloc(uiKeyLen, sizeof(SGD_UCHAR));
-	if (*pucKey == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_Decap_SM9");
-	return (*fptr)(hSessionHandle, pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey, pKeyPackage,  uiKeyLen, *pucKey);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_Decap_SM9");
-	return (*fptr)(hSessionHandle, pucUserID,  uiUserIDLen, uiKeyIndex,  pUserPrivateKey, pKeyPackage,  uiKeyLen, *pucKey);
-#endif
-}
-SGD_RV SDFGenerateAgreementDataWithSM9(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UCHAR hid, SGD_UCHAR_PRT *pucResponseID, SGD_UINT32 uiResponseIDLength, SM9refEncMasterPublicKey  *pPublicKey, SM9refEncMasterPublicKey  *pucSponsorTmpPublicKey, SGD_HANDLE *phAgreementHandle)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UCHAR , SGD_UCHAR *, SGD_UINT32 , SM9refEncMasterPublicKey  *, SM9refEncMasterPublicKey  *, SGD_HANDLE *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateAgreementDataWithSM9");
-	return (*fptr)(hSessionHandle,  hid,  *pucResponseID,  uiResponseIDLength,   pPublicKey,   pucSponsorTmpPublicKey,  phAgreementHandle);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateAgreementDataWithSM9");
-	return (*fptr)(hSessionHandle,  hid,  *pucResponseID,  uiResponseIDLength,   pPublicKey,   pucSponsorTmpPublicKey,  phAgreementHandle);
-#endif
-}
-SGD_RV SDFGenerateAgreemetDataAndKeyWithSM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyLen,SGD_UCHAR hid,SGD_UCHAR_PRT * pucResponseID,SGD_UINT32 uiResponseIDLen,SGD_UCHAR_PRT * pucSponsorID,SGD_UINT32 uiSponsorIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey  *pucResponsePrivateKey,SM9refEncMasterPublicKey *pucPublicKey,SM9refEncMasterPublicKey * pucSponsorTmpPublicKey,SM9refEncMasterPublicKey * pucResponseTmpPublicKey,SGD_UCHAR_PRT *pucHashSB,SGD_UINT32 *puiSBLen,SGD_UCHAR_PRT  *pucHashS2,SGD_UINT32 *puiS2Len,SGD_HANDLE *phKeyHandle)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,SGD_UCHAR ,SGD_UCHAR * ,SGD_UINT32 ,SGD_UCHAR * ,SGD_UINT32 ,SGD_UINT32 ,SM9refEncUserPrivateKey  *,SM9refEncMasterPublicKey *,SM9refEncMasterPublicKey * ,SM9refEncMasterPublicKey * ,SGD_UCHAR *,SGD_UINT32 *,SGD_UCHAR  *,SGD_UINT32 *,SGD_HANDLE *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateAgreemetDataAndKeyWithSM9");
-	return (*fptr)(hSessionHandle, uiKeyLen, hid, *pucResponseID, uiResponseIDLen,  *pucSponsorID, uiSponsorIDLen, uiKeyIndex,  pucResponsePrivateKey, pucPublicKey,  pucSponsorTmpPublicKey,  pucResponseTmpPublicKey, *pucHashSB, puiSBLen,  *pucHashS2, puiS2Len, phKeyHandle);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateAgreemetDataAndKeyWithSM9");
-	return (*fptr)(hSessionHandle, uiKeyLen, hid, *pucResponseID, uiResponseIDLen,  *pucSponsorID, uiSponsorIDLen, uiKeyIndex,  pucResponsePrivateKey, pucPublicKey,  pucSponsorTmpPublicKey,  pucResponseTmpPublicKey, *pucHashSB, puiSBLen,  *pucHashS2, puiS2Len, phKeyHandle);
-#endif
-}
-SGD_RV SDFGenerateKeyWithSM9(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiKeyLen,SGD_UCHAR hid,SGD_UCHAR_PRT *pucSponsorID,SGD_UINT32 uiSponsorIDLen,SGD_UCHAR_PRT *pucResponseID,SGD_UINT32 uiResponseIDLen,SGD_UINT32 uiKeyIndex,SM9refEncUserPrivateKey   *pucSponsorPrivateKey,SM9refEncMasterPublicKey   *pucPublicKey,SM9refEncMasterPublicKey   *pucResponseTmpPublicKey,SGD_UCHAR_PRT *pucHashSB,SGD_UINT32 uiSBLen,SGD_UCHAR_PRT *pucHashSA,SGD_UINT32 *puiSALen,SGD_HANDLE hAgreementHandle,SGD_HANDLE *phKeyHandle)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32 ,SGD_UCHAR ,SGD_UCHAR *,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SM9refEncUserPrivateKey   *,SM9refEncMasterPublicKey   *,SM9refEncMasterPublicKey   *,SGD_UCHAR *,SGD_UINT32 ,SGD_UCHAR *,SGD_UINT32 *,SGD_HANDLE ,SGD_HANDLE *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateKeyWithSM9");
-	return (*fptr)(hSessionHandle, uiKeyLen, hid, *pucSponsorID, uiSponsorIDLen, *pucResponseID, uiResponseIDLen, uiKeyIndex,   pucSponsorPrivateKey,   pucPublicKey,   pucResponseTmpPublicKey, *pucHashSB, uiSBLen, *pucHashSA, puiSALen, hAgreementHandle, phKeyHandle);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateKeyWithSM9");
-	return (*fptr)(hSessionHandle, uiKeyLen, hid, *pucSponsorID, uiSponsorIDLen, *pucResponseID, uiResponseIDLen, uiKeyIndex,   pucSponsorPrivateKey,   pucPublicKey,   pucResponseTmpPublicKey, *pucHashSB, uiSBLen, *pucHashSA, puiSALen, hAgreementHandle, phKeyHandle);
-#endif
-}
-SGD_RV SDFGenerateKeyVerifySM9(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UCHAR_PRT pHashS2, SGD_UINT32  uiS2Len, SGD_UCHAR_PRT pHashSA, SGD_UINT32 uiSALen)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_UCHAR *, SGD_UINT32  , SGD_UCHAR *, SGD_UINT32 );
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_GenerateKeyVerifySM9");
-	return (*fptr)(hSessionHandle,  pHashS2,   uiS2Len,  pHashSA,  uiSALen);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateKeyVerifySM9");
-	return (*fptr)(hSessionHandle,  pHashS2,   uiS2Len,  pHashSA,  uiSALen);
-#endif
-}
 */
 import "C"
 import (
 	"fmt"
 	"github.com/yzwskyspace/sdf/core"
+	"github.com/yzwskyspace/sdf/util"
 	"os"
 	"strings"
+	"time"
 	"unsafe"
 )
 
@@ -1054,6 +853,38 @@ func ConvertToDeviceInfoGo(deviceInfo1 C.DEVICEINFO)(deviceInfo core.DeviceInfo)
 	deviceInfo.AsymAlgAbility[1]=uint(temp2[0])
 	return deviceInfo
 }
+
+func ConvertToRSArefPrivateKeyC(privateKey core.RSArefPrivateKey)(pucPrivateKey C.RSArefPrivateKey){
+	pucPrivateKey.bits=C.SGD_UINT32(privateKey.Bits)
+	for i:=0;i<len(privateKey.M);i++{
+		pucPrivateKey.m[i]=C.SGD_UCHAR(privateKey.M[i])
+	}
+	for i:=0;i<len(privateKey.E);i++{
+		pucPrivateKey.e[i]=C.SGD_UCHAR(privateKey.E[i])
+	}
+	for i:=0;i<len(privateKey.D);i++{
+		pucPrivateKey.d[i]=C.SGD_UCHAR(privateKey.D[i])
+	}
+	for i:=0;i<len(privateKey.Coef);i++{
+		pucPrivateKey.coef[i]=C.SGD_UCHAR(privateKey.Coef[i])
+	}
+
+	for i:=0;i<len(privateKey.Prime[0]);i++{
+		pucPrivateKey.prime[0][i]=C.SGD_UCHAR(privateKey.Prime[0][i])
+	}
+	for i:=0;i<len(privateKey.Prime[0]);i++{
+		pucPrivateKey.prime[1][i]=C.SGD_UCHAR(privateKey.Prime[1][i])
+	}
+
+	for i:=0;i<len(privateKey.Pexp[0]);i++{
+		pucPrivateKey.pexp[0][i]=C.SGD_UCHAR(privateKey.Pexp[0][i])
+	}
+	for i:=0;i<len(privateKey.Pexp[0]);i++{
+		pucPrivateKey.pexp[1][i]=C.SGD_UCHAR(privateKey.Pexp[1][i])
+	}
+	return pucPrivateKey
+}
+
 func ConvertToRSArefPrivateKeyGo(pucPrivateKey C.RSArefPrivateKey)(privateKey core.RSArefPrivateKey){
 	privateKey =core.RSArefPrivateKey{
 		Bits: uint(pucPrivateKey.bits),
@@ -1069,6 +900,17 @@ func ConvertToRSArefPrivateKeyGo(pucPrivateKey C.RSArefPrivateKey)(privateKey co
 	return privateKey
 }
 
+func ConvertToRSArefPublicKeyC(publicKey core.RSArefPublicKey)(pucPublicKey C.RSArefPublicKey){
+	pucPublicKey.bits=C.SGD_UINT32(publicKey.Bits)
+	for i:=0;i<len(publicKey.M);i++{
+		pucPublicKey.m[i]=C.SGD_UCHAR(publicKey.M[i])
+	}
+	for i:=0;i<len(publicKey.E);i++{
+		pucPublicKey.e[i]=C.SGD_UCHAR(publicKey.E[i])
+	}
+	return pucPublicKey
+}
+
 func ConvertToRSArefPublicKeyGo(pucPublicKey C.RSArefPublicKey)(publicKey core.RSArefPublicKey){
 	publicKey =core.RSArefPublicKey{
 		Bits: uint(pucPublicKey.bits),
@@ -1078,16 +920,35 @@ func ConvertToRSArefPublicKeyGo(pucPublicKey C.RSArefPublicKey)(publicKey core.R
 	return publicKey
 }
 
+func ConvertToECCrefPublicKeyC(publicKey core.ECCrefPublicKey)(pucPublicKey C.ECCrefPublicKey) {
 
+	pucPublicKey.bits=C.SGD_UINT32(publicKey.Bits)
+	for i:=0;i<len(publicKey.X);i++{
+		pucPublicKey.x[i]=C.SGD_UCHAR(publicKey.X[i])
+	}
+	for i:=0;i<len(publicKey.Y);i++{
+		pucPublicKey.y[i]=C.SGD_UCHAR(publicKey.Y[i])
+	}
+	return pucPublicKey
+}
 
 func  ConvertToECCrefPublicKeyGo(pucPublicKey C.ECCrefPublicKey)(publicKey core.ECCrefPublicKey){
 	publicKey =core.ECCrefPublicKey{
 		Bits: uint(pucPublicKey.bits),
-		X: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucPublicKey.x[0]), 32)), " "),
-		Y: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucPublicKey.y[0]), 32)), " "),
+		X: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucPublicKey.x[0]), 64)), " "),
+		Y: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucPublicKey.y[0]), 64)), " "),
 	}
 	return publicKey
 }
+
+func ConvertToECCrefPrivateKeyC(privateKey core.ECCrefPrivateKey)(pucPrivateKey C.ECCrefPrivateKey){
+	pucPrivateKey.bits=C.SGD_UINT32(privateKey.Bits)
+	for i:=0;i<len(privateKey.K);i++{
+		pucPrivateKey.K[i]=C.SGD_UCHAR(privateKey.K[i])
+	}
+	return pucPrivateKey
+}
+
 
 func ConvertToECCrefPrivateKeyGo(pucPrivateKey C.ECCrefPrivateKey)(privateKey core.ECCrefPrivateKey){
 	privateKey =core.ECCrefPrivateKey{
@@ -1097,6 +958,22 @@ func ConvertToECCrefPrivateKeyGo(pucPrivateKey C.ECCrefPrivateKey)(privateKey co
 	return privateKey
 }
 
+func ConvertToECCCipherC(encData core.ECCCipher)(pucEncData C.ECCCipher){
+	for i:=0;i<len(encData.X);i++{
+		pucEncData.x[i]=C.SGD_UCHAR(encData.X[i])
+	}
+	for i:=0;i<len(encData.Y);i++{
+		pucEncData.y[i]=C.SGD_UCHAR(encData.Y[i])
+	}
+	for i:=0;i<len(encData.M);i++{
+		pucEncData.M[i]=C.SGD_UCHAR(encData.M[i])
+	}
+	pucEncData.L=C.SGD_UINT32(encData.L)
+	for i:=0;i<len(encData.C);i++{
+		pucEncData.C[i]=C.SGD_UCHAR(encData.C[i])
+	}
+	return pucEncData
+}
 func ConvertToECCCipherGo(pucKey C.ECCCipher)(key core.ECCCipher){
 	key =core.ECCCipher{
 		X: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pucKey.x[0]), 64)), " "),
@@ -1126,171 +1003,7 @@ func ConvertToECCSignatureGo(pucSignature C.ECCSignature)(signature core.ECCSign
 	return signature
 }
 
-func ConvertToSM9refSignMasterPublicKeyC(signMasterPublicKey core.SM9refSignMasterPublicKey)(pSignMasterPublicKey C.SM9refSignMasterPublicKey){
 
-	pSignMasterPublicKey.bits = C.SGD_UINT32(signMasterPublicKey.Bits)
-	for i:=0;i< len(signMasterPublicKey.Xa);i++{
-		pSignMasterPublicKey.xa[i]=C.SGD_UCHAR(signMasterPublicKey.Xa[i])
-	}
-	for i:=0;i< len(signMasterPublicKey.Xb);i++{
-		pSignMasterPublicKey.xb[i]=C.SGD_UCHAR(signMasterPublicKey.Xb[i])
-	}
-	for i:=0;i< len(signMasterPublicKey.Ya);i++{
-		pSignMasterPublicKey.ya[i]=C.SGD_UCHAR(signMasterPublicKey.Ya[i])
-	}
-	for i:=0;i< len(signMasterPublicKey.Yb);i++{
-		pSignMasterPublicKey.yb[i]=C.SGD_UCHAR(signMasterPublicKey.Yb[i])
-	}
-	return pSignMasterPublicKey
-}
-
-
-func ConvertToSM9refSignMasterPublicKeyGo(pSignMasterPublicKey C.SM9refSignMasterPublicKey)(signMasterPublicKey core.SM9refSignMasterPublicKey){
-	signMasterPublicKey =core.SM9refSignMasterPublicKey{
-		Bits: uint(pSignMasterPublicKey.bits),
-		Xa: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignMasterPublicKey.xa[0]), 256)), " "),
-		Xb: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignMasterPublicKey.xb[0]), 256)), " "),
-		Ya: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignMasterPublicKey.ya[0]), 256)), " "),
-		Yb: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignMasterPublicKey.yb[0]), 256)), " "),
-	}
-	return signMasterPublicKey
-}
-
-func ConvertToSM9refEncMasterPublicKeyC(encMasterPublicKey core.SM9refEncMasterPublicKey)(pEncMasterPublicKey C.SM9refEncMasterPublicKey){
-	pEncMasterPublicKey.bits = C.SGD_UINT32(encMasterPublicKey.Bits)
-	for i:=0;i< len(encMasterPublicKey.X);i++{
-		pEncMasterPublicKey.x[i]=C.SGD_UCHAR(encMasterPublicKey.X[i])
-	}
-	for i:=0;i< len(encMasterPublicKey.Y);i++{
-		pEncMasterPublicKey.y[i]=C.SGD_UCHAR(encMasterPublicKey.Y[i])
-	}
-	return pEncMasterPublicKey
-}
-
-func ConvertToSM9refEncMasterPublicKeyGo(pEncMasterPublicKey C.SM9refEncMasterPublicKey)(encMasterPublicKey core.SM9refEncMasterPublicKey){
-	encMasterPublicKey =core.SM9refEncMasterPublicKey{
-		Bits: uint(pEncMasterPublicKey.bits),
-		X: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pEncMasterPublicKey.x[0]), 256)), " "),
-		Y: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pEncMasterPublicKey.y[0]), 256)), " "),
-	}
-	return encMasterPublicKey
-}
-
-func ConvertToSM9refEncUserPrivateKeyC(encUserPrivateKey core.SM9refEncUserPrivateKey)(pEncUserPrivateKey C.SM9refEncUserPrivateKey){
-	pEncUserPrivateKey.bits = C.SGD_UINT32(encUserPrivateKey.Bits)
-	for i:=0;i< len(encUserPrivateKey.Xa);i++{
-		pEncUserPrivateKey.xa[i]=C.SGD_UCHAR(encUserPrivateKey.Xa[i])
-	}
-	for i:=0;i< len(encUserPrivateKey.Xb);i++{
-		pEncUserPrivateKey.xb[i]=C.SGD_UCHAR(encUserPrivateKey.Xb[i])
-	}
-	for i:=0;i< len(encUserPrivateKey.Ya);i++{
-		pEncUserPrivateKey.ya[i]=C.SGD_UCHAR(encUserPrivateKey.Ya[i])
-	}
-	for i:=0;i< len(encUserPrivateKey.Yb);i++{
-		pEncUserPrivateKey.yb[i]=C.SGD_UCHAR(encUserPrivateKey.Yb[i])
-	}
-	return pEncUserPrivateKey
-}
-func ConvertToSM9refEncUserPrivateKeyGo(pEncUserPrivateKey C.SM9refEncUserPrivateKey)(encUserPrivateKey core.SM9refEncUserPrivateKey){
-	encUserPrivateKey = core.SM9refEncUserPrivateKey{
-		Bits: uint(pEncUserPrivateKey.bits),
-		Xa: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pEncUserPrivateKey.xa[0]), 256)), " "),
-		Xb: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pEncUserPrivateKey.xb[0]), 256)), " "),
-		Ya: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pEncUserPrivateKey.ya[0]), 256)), " "),
-		Yb: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pEncUserPrivateKey.yb[0]), 256)), " "),
-	}
-	return encUserPrivateKey
-}
-
-func ConvertToSM9refSignUserPrivateKeyC(signUserPrivateKey core.SM9refSignUserPrivateKey)(pSignUserPrivateKey C.SM9refSignUserPrivateKey){
-	pSignUserPrivateKey.bits = C.SGD_UINT32(signUserPrivateKey.Bits)
-	for i:=0;i< len(signUserPrivateKey.X);i++{
-		pSignUserPrivateKey.x[i]=C.SGD_UCHAR(signUserPrivateKey.X[i])
-	}
-	for i:=0;i< len(signUserPrivateKey.Y);i++{
-		pSignUserPrivateKey.y[i]=C.SGD_UCHAR(signUserPrivateKey.Y[i])
-	}
-	return pSignUserPrivateKey
-}
-
-func ConvertToSM9refSignUserPrivateKeyGo(pSignUserPrivateKey C.SM9refSignUserPrivateKey)(signUserPrivateKey core.SM9refSignUserPrivateKey){
-	signUserPrivateKey=core.SM9refSignUserPrivateKey{
-		Bits: uint(pSignUserPrivateKey.bits),
-		X: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignUserPrivateKey.x[0]), 256)), " "),
-		Y: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignUserPrivateKey.y[0]), 256)), " "),
-	}
-	return signUserPrivateKey
-}
-
-func ConvertToSM9CipherC(cipher core.SM9Cipher)(pCipher C.SM9Cipher){
-	for i:=0;i< len(cipher.X);i++{
-		pCipher.x[i]=C.SGD_UCHAR(cipher.X[i])
-	}
-	for i:=0;i< len(cipher.Y);i++{
-		pCipher.y[i]=C.SGD_UCHAR(cipher.Y[i])
-	}
-	for i:=0;i< len(cipher.H);i++{
-		pCipher.h[i]=C.SGD_UCHAR(cipher.H[i])
-	}
-	pCipher.L = C.SGD_UINT32(cipher.L)
-	for i:=0;i< len(cipher.C);i++{
-		pCipher.C[i]=C.SGD_UCHAR(cipher.C[i])
-	}
-
-	return pCipher
-}
-
-func ConvertToSM9CipherGo(pCipher C.SM9Cipher)(cipher core.SM9Cipher){
-	cipher=core.SM9Cipher{
-		X: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pCipher.x[0]), 256)), " "),
-		Y: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pCipher.y[0]), 256)), " "),
-		H: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pCipher.h[0]), 256)), " "),
-		L: uint(pCipher.L),
-		C: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pCipher.C[0]),  C.int(pCipher.L))), " "),
-	}
-	return cipher
-}
-
-func ConvertToSM9SignatureC(signature core.SM9Signature)(pSignature C.SM9Signature){
-	for i:=0;i< len(signature.X);i++{
-		pSignature.x[i]=C.SGD_UCHAR(signature.X[i])
-	}
-	for i:=0;i< len(signature.Y);i++{
-		pSignature.y[i]=C.SGD_UCHAR(signature.Y[i])
-	}
-	for i:=0;i< len(signature.H);i++{
-		pSignature.h[i]=C.SGD_UCHAR(signature.H[i])
-	}
-	return pSignature
-}
-
-func ConvertToSM9SignatureGo(pSignature C.SM9Signature)(signature core.SM9Signature){
-	signature = core.SM9Signature{
-		H: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignature.h[0]), 256)), " "),
-		X: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignature.x[0]), 256)), " "),
-		Y: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pSignature.y[0]), 256)), " "),
-	}
-	return signature
-}
-
-func ConvertToSM9refKeyPackageC(keyPackage core.SM9refKeyPackage)(pKeyPackage C.SM9refKeyPackage){
-	for i:=0;i< len(keyPackage.X);i++{
-		pKeyPackage.x[i]=C.SGD_UCHAR(keyPackage.X[i])
-	}
-	for i:=0;i< len(keyPackage.Y);i++{
-		pKeyPackage.y[i]=C.SGD_UCHAR(keyPackage.Y[i])
-	}
-  	return pKeyPackage
-}
-
-func ConvertToSM9refKeyPackageGo(pKeyPackage C.SM9refKeyPackage)(keyPackage core.SM9refKeyPackage){
-	keyPackage=core.SM9refKeyPackage{
-		X: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pKeyPackage.x[0]), 256)), " "),
-		Y: strings.TrimRight(string(C.GoBytes(unsafe.Pointer(&pKeyPackage.y[0]), 256)), " "),
-	}
-	return keyPackage
-}
 
 func New(libPath string) *Ctx{
 	if x:=os.Getenv("SDFHSM_CONF");x==""{
@@ -1350,23 +1063,46 @@ func CMessage(data []byte) (dataPtr C.SGD_UCHAR_PRT) {
 
 
 //1.打开设备
-func (c *Ctx)SDFOpenDevice(deviceHandle  DeviceHandleType) (deviceHandle2 DeviceHandleType,err error){
-    var err1 C.SGD_RV
-    var dH =C.SGD_HANDLE(deviceHandle)
+func (c *Ctx)SDFOpenDevice() (deviceHandle DeviceHandleType,err error){
+	var err1 C.SGD_RV
+	var dH C.SGD_HANDLE
 	err1 = C.SDFOpenDevice(c.libHandle,&dH)
 	err = ToError(err1)
-
-	deviceHandle2 = DeviceHandleType(dH)
-	if err!= nil {
-		return nil, err
+	deviceHandle = DeviceHandleType(dH)
+	if err == nil{
+		a:=fmt.Sprintf("0x%x",deviceHandle)
+		util.Log("open device: "+a+" <"+time.Now().String()+">\n")
+		return deviceHandle,err
+	}else {
+		return nil,err
 	}
-	return deviceHandle2,err
 }
+
+//func (c *Ctx)SDFOpenDevice(deviceHandle  DeviceHandleType) (deviceHandle2 DeviceHandleType,err error){
+//    var err1 C.SGD_RV
+//    var dH =C.SGD_HANDLE(deviceHandle)
+//	err1 = C.SDFOpenDevice(c.libHandle,&dH)
+//	err = ToError(err1)
+//	deviceHandle2 = DeviceHandleType(dH)
+//	if err == nil{
+//		a:=fmt.Sprintf("0x%x",deviceHandle2)
+//		util.Log("open device: "+a+" <"+time.Now().String()+">\n")
+//		return deviceHandle2,err
+//	}else {
+//		return nil,err
+//	}
+//
+//
+//}
 //2.关闭设备
 func (c *Ctx)SDFCloseDevice(deviceHandle  DeviceHandleType)(err error){
 	var err1 C.SGD_RV
 	err1 = C.SDFCloseDevice(c.libHandle,C.SGD_HANDLE(deviceHandle))
 	err = ToError(err1)
+	if err == nil{
+		a:=fmt.Sprintf("0x%x",deviceHandle)
+		util.Log("close device: "+a+" <"+time.Now().String()+">\n\n")
+	}
 	return err
 }
 //3.创建会话
@@ -1376,14 +1112,25 @@ func (c *Ctx)SDFOpenSession(deviceHandle  DeviceHandleType)  (sessionHandle Sess
 	err1 = C.SDFOpenSession(c.libHandle,C.SGD_HANDLE(deviceHandle),&s)
 	sessionHandle=SessionHandleType(s)
 	err=ToError(err1)
-	return sessionHandle,err
+	if err == nil{
+		a:=fmt.Sprintf("0x%x",sessionHandle)
+		util.Log("open session: "+a+" <"+time.Now().String()+">\n")
+		return sessionHandle,err
+	}else {
+		return nil,err
+	}
+
 }
 //4.关闭会话
 func (c *Ctx)SDFCloseSession(sessionHandle  SessionHandleType)(err error){
 	var err1 C.SGD_RV
 	err1 = C.SDFCloseSession(c.libHandle,C.SGD_HANDLE(sessionHandle))
 	err = ToError(err1)
-	return nil
+	if err == nil{
+		a:=fmt.Sprintf("0x%x",sessionHandle)
+		util.Log("close session: "+a+" <"+time.Now().String()+">\n")
+	}
+	return err
 }
 //5.获取设备信息
 func (c *Ctx)SDFGetDeviceInfo(sessionHandle  SessionHandleType) (deviceInfo core.DeviceInfo,err error){
@@ -1468,16 +1215,7 @@ func (c *Ctx)SDFGenerateKeyWithEPK_RSA(sessionHandle SessionHandleType,uiKeyBits
 	var pucKey C.SGD_UCHAR_PRT
 	var puiKeyLength C.SGD_UINT32
 	var phKeyHandle C.SGD_HANDLE
-	var pubKey C.RSArefPublicKey
-	pubKey.bits = C.SGD_UINT32(publicKey.Bits)
-
-	for i:=0;i<len(publicKey.M);i++{
-		pubKey.m[i]=C.SGD_UCHAR(publicKey.M[i])
-	}
-	for i:=0;i<len(publicKey.E);i++{
-		pubKey.e[i]=C.SGD_UCHAR(publicKey.E[i])
-	}
-
+	pubKey:=ConvertToRSArefPublicKeyC(publicKey)
 	err1 = C.SDFGenerateKeyWithEPK_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyBits),&pubKey,&pucKey,&puiKeyLength,&phKeyHandle)
 	key = C.GoBytes(unsafe.Pointer(pucKey), C.int(puiKeyLength))
 	keyLength = uint(puiKeyLength)
@@ -1487,29 +1225,25 @@ func (c *Ctx)SDFGenerateKeyWithEPK_RSA(sessionHandle SessionHandleType,uiKeyBits
 	return key,keyLength,keyHandle,err
 }
 //14.导入会话密钥并用内部 ＲＳＡ 私钥解密
-func (c *Ctx)SDFImportKeyWithISK_RSA(sessionHandle SessionHandleType,uiKeyBits uint,uiKeyLength uint)([]byte,KeyHandleType,error){
-	var err C.SGD_RV
-	var pucKey C.SGD_UCHAR_PRT
+func (c *Ctx)SDFImportKeyWithISK_RSA(sessionHandle SessionHandleType,uiKeyBits uint,key []byte,uiKeyLength uint)(keyHandle KeyHandleType,err error){
+	var err1 C.SGD_RV
 	var phKeyHandle C.SGD_HANDLE
-	err = C.SDFImportKeyWithISK_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyBits),&pucKey,C.SGD_UINT32(uiKeyLength),&phKeyHandle)
-	p := C.GoBytes(unsafe.Pointer(pucKey), C.int(uiKeyLength))
-	C.free(unsafe.Pointer(pucKey))
-	return p,KeyHandleType(phKeyHandle),ToError(err)
+	err1 = C.SDFImportKeyWithISK_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyBits),CMessage(key),C.SGD_UINT32(uiKeyLength),&phKeyHandle)
+	err = ToError(err1)
+	return keyHandle,err
 }
 //15.基于 ＲＳＡ 算法的数字信封转换
-func (c *Ctx)SDFExchangeDigitEnvelopeBaseOnRSA(sessionHandle SessionHandleType,uiKeyIndex uint,uiDELength uint)(core.RSArefPublicKey,[]byte,[]byte,error){
-	var err C.SGD_RV
-	var pucPublicKey C.RSArefPublicKey
-	var pucDEInput C.SGD_UCHAR_PRT
+func (c *Ctx)SDFExchangeDigitEnvelopeBaseOnRSA(sessionHandle SessionHandleType,keyIndex uint,publicKey core.RSArefPublicKey,deInput []byte,deLength uint)(deOutput []byte,deOutputLength uint,err error){
+	var err1 C.SGD_RV
 	var pucDEOutput C.SGD_UCHAR_PRT
 	var puiDELength C.SGD_UINT32
-	err = C.SDFExchangeDigitEnvelopeBaseOnRSA(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pucPublicKey,&pucDEInput,C.SGD_UINT32(uiDELength),&pucDEOutput,&puiDELength)
-	publicKey := ConvertToRSArefPublicKeyGo(pucPublicKey)
-	input := C.GoBytes(unsafe.Pointer(pucDEInput), C.int(uiDELength))
-	C.free(unsafe.Pointer(pucDEInput))
-	output := C.GoBytes(unsafe.Pointer(pucDEOutput), C.int(puiDELength))
-	C.free(unsafe.Pointer(pucDEOutput))
-	return publicKey,input,output,ToError(err)
+	pucPublicKey := ConvertToRSArefPublicKeyC(publicKey)
+	err1 = C.SDFExchangeDigitEnvelopeBaseOnRSA(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(keyIndex),&pucPublicKey,CMessage(deInput),C.SGD_UINT32(deLength),&pucDEOutput,&puiDELength)
+	deOutput = C.GoBytes(unsafe.Pointer(pucDEOutput), C.int(puiDELength))
+	//C.free(unsafe.Pointer(pucDEOutput))
+	deOutputLength = uint(puiDELength)
+	err = ToError(err1)
+	return deOutput,deOutputLength,err
 }
 //16.导出 ＥＣＣ签名公钥
 func (c *Ctx)SDFExportSignPublicKey_ECC(sessionHandle SessionHandleType,uiKeyIndex uint)(publicKey core.ECCrefPublicKey,err error){
@@ -1572,75 +1306,79 @@ func (c *Ctx)SDFGenerateKeyWithEPK_ECC(sessionHandle SessionHandleType,uiKeyBits
 	return key,keyHandle,err
 }
 //21.导入会话密钥并用内部 ＥＣＣ私钥解密
-func (c *Ctx)SDFImportKeyWithISK_ECC(sessionHandle SessionHandleType,uiISKIndex uint)(core.ECCCipher,KeyHandleType,error){
-	var err C.SGD_RV
-	var pucKey C.ECCCipher
+func (c *Ctx)SDFImportKeyWithISK_ECC(sessionHandle SessionHandleType,uiISKIndex uint,key core.ECCCipher)(keyHandle KeyHandleType,err error){
+	var err1 C.SGD_RV
 	var phKeyHandle C.SGD_HANDLE
-	err = C.SDFImportKeyWithISK_ECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiISKIndex),&pucKey,&phKeyHandle)
-	key := ConvertToECCCipherGo(pucKey)
-	return key,KeyHandleType(phKeyHandle),ToError(err)
+	pucKey := ConvertToECCCipherC(key)
+	err1 = C.SDFImportKeyWithISK_ECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiISKIndex),&pucKey,&phKeyHandle)
+	err = ToError(err1)
+	keyHandle = KeyHandleType(phKeyHandle)
+	return keyHandle,err
 }
 //22.生成密钥协商参数并输出
-func (c *Ctx)SDFGenerateAgreementDataWithECC(sessionHandle SessionHandleType,uiISKIndex uint,uiKeyBits uint,uiSponsorIDLength uint)([]byte,core.ECCrefPublicKey,core.ECCrefPublicKey,AgreementHandleType,error){
-	var err C.SGD_RV
-	var pucSponsorID C.SGD_UCHAR_PRT
+func (c *Ctx)SDFGenerateAgreementDataWithECC(sessionHandle SessionHandleType,uiISKIndex uint,uiKeyBits uint,sponsorID []byte,sponsorIDLength uint)(sponsorPublicKey core.ECCrefPublicKey,sponsorTmpPublicKey core.ECCrefPublicKey,agreementHandle AgreementHandleType,err error){
+	var err1 C.SGD_RV
 	var pucSponsorPublicKey C.ECCrefPublicKey
 	var pucSponsorTmpPublicKey C.ECCrefPublicKey
 	var phAgreementHandle C.SGD_HANDLE
-	err = C.SDFGenerateAgreementDataWithECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiISKIndex),C.SGD_UINT32(uiKeyBits),&pucSponsorID,C.SGD_UINT32(uiSponsorIDLength),&pucSponsorPublicKey,&pucSponsorTmpPublicKey,&phAgreementHandle)
-	sponsorPublicKey :=ConvertToECCrefPublicKeyGo(pucSponsorPublicKey)
-	sponsorTmpPublicKey :=ConvertToECCrefPublicKeyGo(pucSponsorTmpPublicKey)
-	sponsorID := C.GoBytes(unsafe.Pointer(pucSponsorID), C.int(uiSponsorIDLength))
-	C.free(unsafe.Pointer(pucSponsorID))
-	return sponsorID,sponsorPublicKey,sponsorTmpPublicKey,AgreementHandleType(phAgreementHandle),ToError(err)
+	err1 = C.SDFGenerateAgreementDataWithECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiISKIndex),C.SGD_UINT32(uiKeyBits),CMessage(sponsorID),C.SGD_UINT32(sponsorIDLength),&pucSponsorPublicKey,&pucSponsorTmpPublicKey,&phAgreementHandle)
+	sponsorPublicKey =ConvertToECCrefPublicKeyGo(pucSponsorPublicKey)
+	sponsorTmpPublicKey =ConvertToECCrefPublicKeyGo(pucSponsorTmpPublicKey)
+	agreementHandle = AgreementHandleType(phAgreementHandle)
+	err = ToError(err1)
+	return sponsorPublicKey,sponsorTmpPublicKey,agreementHandle,err
 }
 //23.计算会话密钥
-func (c *Ctx)SDFGenerateKeyWithECC(sessionHandle SessionHandleType,hAgreementHandle AgreementHandleType)([]byte,core.ECCrefPublicKey,core.ECCrefPublicKey,KeyHandleType,error){
-	var err C.SGD_RV
-	var pucResponseID C.SGD_UCHAR_PRT
-	var uiResponseIDLength C.SGD_UINT32
-	var pucResponsePublicKey C.ECCrefPublicKey
-	var pucResponseTmpPublicKey C.ECCrefPublicKey
+func (c *Ctx)SDFGenerateKeyWithECC(sessionHandle SessionHandleType,responseID []byte,responseIDLength uint,responsePublicKey core.ECCrefPublicKey,responseTmpPublicKey core.ECCrefPublicKey,hAgreementHandle AgreementHandleType)(keyHandle KeyHandleType,err error){
+	var err1 C.SGD_RV
+	pucResponsePublicKey :=ConvertToECCrefPublicKeyC(responsePublicKey)
+	pucResponseTmpPublicKey :=ConvertToECCrefPublicKeyC(responseTmpPublicKey)
 	var phKeyHandle C.SGD_HANDLE
-	err = C.SDFGenerateKeyWithECC(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucResponseID,uiResponseIDLength,&pucResponsePublicKey,&pucResponseTmpPublicKey,C.SGD_HANDLE(hAgreementHandle),&phKeyHandle)
-	responsePublicKey :=ConvertToECCrefPublicKeyGo(pucResponsePublicKey)
-	responseTmpPublicKey :=ConvertToECCrefPublicKeyGo(pucResponseTmpPublicKey)
-	responseID := C.GoBytes(unsafe.Pointer(pucResponseID), C.int(uiResponseIDLength))
-	C.free(unsafe.Pointer(pucResponseID))
-	return responseID,responsePublicKey,responseTmpPublicKey,KeyHandleType(phKeyHandle),ToError(err)
+	err1 = C.SDFGenerateKeyWithECC(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(responseID),C.SGD_UINT32(responseIDLength),&pucResponsePublicKey,&pucResponseTmpPublicKey,C.SGD_HANDLE(hAgreementHandle),&phKeyHandle)
+	keyHandle = KeyHandleType(phKeyHandle)
+	err=ToError(err1)
+	return keyHandle,err
 }
 //24.产生协商数据并计算会话密钥
-func (c *Ctx)SDFGenerateAgreementDataAndKeyWithECC(sessionHandle SessionHandleType,uiISKIndex uint,uiKeyBits uint,uiResponseIDLength uint,uiSponsorIDLength uint)([]byte,[]byte,core.ECCrefPublicKey,core.ECCrefPublicKey,core.ECCrefPublicKey,core.ECCrefPublicKey,KeyHandleType,error){
-	var err C.SGD_RV
-	var pucResponseID C.SGD_UCHAR_PRT
-	var pucSponsorID C.SGD_UCHAR_PRT
-	var pucSponsorPublicKey C.ECCrefPublicKey
-	var pucSponsorTmpPublicKey C.ECCrefPublicKey
+func (c *Ctx)SDFGenerateAgreementDataAndKeyWithECC(sessionHandle SessionHandleType,uiISKIndex uint,uiKeyBits uint,responseID []byte,responseIDLength uint,sponsorID []byte,sponsorIDLength uint,sponsorPublicKey core.ECCrefPublicKey,sponsorTmpPublicKey core.ECCrefPublicKey)(responsePublicKey core.ECCrefPublicKey,responseTmpPublicKey core.ECCrefPublicKey,keyHandle KeyHandleType,err error){
+	var err1 C.SGD_RV
+
+	//fmt.Println("eccSrcPubKey bits",sponsorPublicKey.Bits)
+	//fmt.Println("eccSrcPubKey X",[]byte(sponsorPublicKey.X))
+	//fmt.Println("eccSrcPubKey Y",[]byte(sponsorPublicKey.Y))
+	//fmt.Println("eccSrcTmpPubKey bits",sponsorTmpPublicKey.Bits)
+	//fmt.Println("eccSrcTmpPubKey X",[]byte(sponsorTmpPublicKey.X))
+	//fmt.Println("eccSrcTmpPubKey Y",[]byte(sponsorTmpPublicKey.Y))
+	pucSponsorPublicKey :=ConvertToECCrefPublicKeyC(sponsorPublicKey)
+	pucSponsorTmpPublicKey :=ConvertToECCrefPublicKeyC(sponsorTmpPublicKey)
+	//sponsorPublicKey1 :=ConvertToECCrefPublicKeyGo(pucSponsorPublicKey)
+	//sponsorTmpPublicKey1 :=ConvertToECCrefPublicKeyGo(pucSponsorTmpPublicKey)
+	//fmt.Println("eccSrcPubKey bits",sponsorPublicKey1.Bits)
+	//fmt.Println("eccSrcPubKey X",[]byte(sponsorPublicKey1.X))
+	//fmt.Println("eccSrcPubKey Y",[]byte(sponsorPublicKey1.Y))
+	//fmt.Println("eccSrcTmpPubKey bits",sponsorTmpPublicKey1.Bits)
+	//fmt.Println("eccSrcTmpPubKey X",[]byte(sponsorTmpPublicKey1.X))
+	//fmt.Println("eccSrcTmpPubKey Y",[]byte(sponsorTmpPublicKey1.Y))
 	var pucResponsePublicKey C.ECCrefPublicKey
 	var pucResponseTmpPublicKey C.ECCrefPublicKey
     var phKeyHandle C.SGD_HANDLE
-	err = C.SDFGenerateAgreementDataAndKeyWithECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiISKIndex),C.SGD_UINT32(uiKeyBits),&pucResponseID,C.SGD_UINT32(uiResponseIDLength),&pucSponsorID,C.SGD_UINT32(uiSponsorIDLength),&pucSponsorPublicKey,&pucSponsorTmpPublicKey,&pucResponsePublicKey,&pucResponseTmpPublicKey,&phKeyHandle)
-	sponsorPublicKey :=ConvertToECCrefPublicKeyGo(pucSponsorPublicKey)
-	sponsorTmpPublicKey :=ConvertToECCrefPublicKeyGo(pucSponsorTmpPublicKey)
-	responsePublicKey :=ConvertToECCrefPublicKeyGo(pucResponsePublicKey)
-	responseTmpPublicKey :=ConvertToECCrefPublicKeyGo(pucResponseTmpPublicKey)
-	responseID := C.GoBytes(unsafe.Pointer(pucResponseID), C.int(uiResponseIDLength))
-	C.free(unsafe.Pointer(pucResponseID))
-	sponsorID := C.GoBytes(unsafe.Pointer(pucSponsorID), C.int(uiSponsorIDLength))
-	C.free(unsafe.Pointer(pucSponsorID))
-	return responseID,sponsorID,sponsorPublicKey,sponsorTmpPublicKey,responsePublicKey,responseTmpPublicKey,KeyHandleType(phKeyHandle),ToError(err)
+	err1 = C.SDFGenerateAgreementDataAndKeyWithECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiISKIndex),C.SGD_UINT32(uiKeyBits),CMessage(responseID),C.SGD_UINT32(responseIDLength),CMessage(sponsorID),C.SGD_UINT32(sponsorIDLength),&pucSponsorPublicKey,&pucSponsorTmpPublicKey,&pucResponsePublicKey,&pucResponseTmpPublicKey,&phKeyHandle)
+	responsePublicKey =ConvertToECCrefPublicKeyGo(pucResponsePublicKey)
+	responseTmpPublicKey =ConvertToECCrefPublicKeyGo(pucResponseTmpPublicKey)
+	keyHandle = KeyHandleType(phKeyHandle)
+	err =ToError(err1)
+	return responsePublicKey,responseTmpPublicKey,keyHandle,err
 }
 //25.基于 ＥＣＣ算法的数字信封转换
-func (c *Ctx)SDFExchangeDigitEnvelopeBaseOnECC(sessionHandle SessionHandleType,uiKeyIndex uint,uiAlgID uint)(core.ECCrefPublicKey,core.ECCCipher,core.ECCCipher,error){
-	var err C.SGD_RV
-	var pucPublicKey C.ECCrefPublicKey
-	var pucEncDataIn C.ECCCipher
+func (c *Ctx)SDFExchangeDigitEnvelopeBaseOnECC(sessionHandle SessionHandleType,uiKeyIndex uint,uiAlgID uint,publicKey core.ECCrefPublicKey,encDataIn core.ECCCipher)(encDataOut core.ECCCipher,err error){
+	var err1 C.SGD_RV
 	var pucEncDataOut C.ECCCipher
-	err = C.SDFExchangeDigitEnvelopeBaseOnECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),C.SGD_UINT32(uiAlgID),&pucPublicKey,&pucEncDataIn,&pucEncDataOut)
-	publicKey :=ConvertToECCrefPublicKeyGo(pucPublicKey)
-	encDataIn := ConvertToECCCipherGo(pucEncDataIn)
-	encDataOut := ConvertToECCCipherGo(pucEncDataOut)
-	return publicKey,encDataIn,encDataOut,ToError(err)
+	pucPublicKey :=ConvertToECCrefPublicKeyC(publicKey)
+	pucEncDataIn := ConvertToECCCipherC(encDataIn)
+	err1 = C.SDFExchangeDigitEnvelopeBaseOnECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),C.SGD_UINT32(uiAlgID),&pucPublicKey,&pucEncDataIn,&pucEncDataOut)
+	encDataOut = ConvertToECCCipherGo(pucEncDataOut)
+	err = ToError(err1)
+	return encDataOut,err
 }
 //26.生成会话密钥并用密钥加密密钥加密输出
 func (c *Ctx)SDFGenerateKeyWithKEK(sessionHandle SessionHandleType,uiKeyBits uint,uiAlgID uint,uiKEKIndex uint )([]byte,uint,KeyHandleType,error){
@@ -1654,14 +1392,13 @@ func (c *Ctx)SDFGenerateKeyWithKEK(sessionHandle SessionHandleType,uiKeyBits uin
 	return p,uint(keyLength),KeyHandleType(phKeyHandle),ToError(err)
 }
 //27.导入会话密钥并用密钥加密密钥解密
-func (c *Ctx)SDFImportKeyWithKEK(sessionHandle SessionHandleType,uiAlgID uint,uiKEKIndex uint,uiKeyLength uint )([]byte,KeyHandleType,error){
-	var err C.SGD_RV
-	var pucKey C.SGD_UCHAR_PRT
+func (c *Ctx)SDFImportKeyWithKEK(sessionHandle SessionHandleType,uiAlgID uint,uiKEKIndex uint,key []byte,uiKeyLength uint )(keyHandle KeyHandleType,err error){
+	var err1 C.SGD_RV
 	var phKeyHandle C.SGD_HANDLE
-	err = C.SDFImportKeyWithKEK(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiAlgID),C.SGD_UINT32(uiKEKIndex),&pucKey,C.SGD_UINT32(uiKeyLength),&phKeyHandle)
-	p:= C.GoBytes(unsafe.Pointer(pucKey), C.int(uiKeyLength))
-	C.free(unsafe.Pointer(pucKey))
-	return p,KeyHandleType(phKeyHandle),ToError(err)
+	err1 = C.SDFImportKeyWithKEK(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiAlgID),C.SGD_UINT32(uiKEKIndex),CMessage(key),C.SGD_UINT32(uiKeyLength),&phKeyHandle)
+	keyHandle =KeyHandleType(phKeyHandle)
+	err = ToError(err1)
+	return keyHandle,err
 }
 //28.导入明文会话密钥
 func (c *Ctx)SDFImportKey(sessionHandle SessionHandleType,pucKey []byte,uiKeyLength uint)(keyHandle KeyHandleType,err error){
@@ -1681,35 +1418,29 @@ func (c *Ctx)SDFDestroyKey(sessionHandle SessionHandleType,hKeyHandle KeyHandleT
 }
 
 //30.外部公钥 ＲＳＡ 运算
-func (c *Ctx)SDFExternalPublicKeyOperation_RSA(sessionHandle SessionHandleType,uiInputLength uint)(core.RSArefPublicKey,[]byte,[]byte,error){
-	var err C.SGD_RV
-	var pucPublicKey C.RSArefPublicKey
-	var pucDataInput C.SGD_UCHAR_PRT
+func (c *Ctx)SDFExternalPublicKeyOperation_RSA(sessionHandle SessionHandleType,publicKey core.RSArefPublicKey,dataInput []byte, uiInputLength uint)(dataOutput []byte,err error){
+	var err1 C.SGD_RV
 	var pucDataOutput C.SGD_UCHAR_PRT
 	var puiOutputLength C.SGD_UINT32
-	err = C.SDFExternalPublicKeyOperation_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucPublicKey,&pucDataInput,C.SGD_UINT32(uiInputLength),&pucDataOutput,&puiOutputLength)
-	publicKey := ConvertToRSArefPublicKeyGo(pucPublicKey)
-	dataInput:= C.GoBytes(unsafe.Pointer(pucDataInput), C.int(uiInputLength))
-	C.free(unsafe.Pointer(pucDataInput))
-	dataOutput:= C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
-	C.free(unsafe.Pointer(pucDataOutput))
-	return publicKey,dataInput,dataOutput,ToError(err)
+	pucPublicKey := ConvertToRSArefPublicKeyC(publicKey)
+	err1 = C.SDFExternalPublicKeyOperation_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucPublicKey,CMessage(dataInput),C.SGD_UINT32(uiInputLength),&pucDataOutput,&puiOutputLength)
+	dataOutput= C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
+	//C.free(unsafe.Pointer(pucDataOutput))
+	err = ToError(err1)
+	return dataOutput,err
 }
 
 //31. 外部私钥ＲＳＡ运算
-func (c *Ctx)SDFExternalPrivateKeyOperation_RSA(sessionHandle SessionHandleType,uiInputLength uint)(core.RSArefPrivateKey,[]byte,[]byte,error){
-	var err C.SGD_RV
-	var pucPrivateKey C.RSArefPrivateKey
-	var pucDataInput C.SGD_UCHAR_PRT
+func (c *Ctx)SDFExternalPrivateKeyOperation_RSA(sessionHandle SessionHandleType,privateKey core.RSArefPrivateKey,dataInput []byte,uiInputLength uint)(dataOutput []byte,err error){
+	var err1 C.SGD_RV
 	var pucDataOutput C.SGD_UCHAR_PRT
 	var puiOutputLength C.SGD_UINT32
-	err = C.SDFExternalPrivateKeyOperation_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucPrivateKey,&pucDataInput,C.SGD_UINT32(uiInputLength),&pucDataOutput,&puiOutputLength)
-	privateKey :=ConvertToRSArefPrivateKeyGo(pucPrivateKey)
-	dataInput:= C.GoBytes(unsafe.Pointer(pucDataInput), C.int(uiInputLength))
-	C.free(unsafe.Pointer(pucDataInput))
-	dataOutput:= C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
-	C.free(unsafe.Pointer(pucDataOutput))
-	return privateKey,dataInput,dataOutput,ToError(err)
+	pucPrivateKey :=ConvertToRSArefPrivateKeyC(privateKey)
+	err1 = C.SDFExternalPrivateKeyOperation_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),&pucPrivateKey,CMessage(dataInput),C.SGD_UINT32(uiInputLength),&pucDataOutput,&puiOutputLength)
+	dataOutput= C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
+	//C.free(unsafe.Pointer(pucDataOutput))
+	err=ToError(err1)
+	return dataOutput,err
 }
 
 //32.内部公钥 ＲＳＡ 运算
@@ -1740,11 +1471,7 @@ func (c *Ctx)SDFInternalPrivateKeyOperation_RSA(sessionHandle SessionHandleType,
 //34. 外部密钥ＥＣＣ签名
 func (c *Ctx)SDFExternalSign_ECC(sessionHandle SessionHandleType,uiAlgID uint,privateKey core.ECCrefPrivateKey,pucData []byte,uiDataLength uint)(signature core.ECCSignature,err error) {
 	var err1 C.SGD_RV
-	var pucPrivateKey C.ECCrefPrivateKey
-	pucPrivateKey.bits = C.SGD_UINT32(privateKey.Bits)
-	for i:=0;i<len(privateKey.K);i++{
-		pucPrivateKey.K[i]=C.SGD_UCHAR(privateKey.K[i])
-	}
+	pucPrivateKey:=ConvertToECCrefPrivateKeyC(privateKey)
 	var pucSignature C.ECCSignature
 	err1 = C.SDFExternalSign_ECC(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(uiAlgID), &pucPrivateKey, CMessage(pucData), C.SGD_UINT32(uiDataLength), &pucSignature)
 	signature = ConvertToECCSignatureGo(pucSignature)
@@ -1753,17 +1480,13 @@ func (c *Ctx)SDFExternalSign_ECC(sessionHandle SessionHandleType,uiAlgID uint,pr
 }
 
 //35.外部密钥 ＥＣＣ验证
-func (c *Ctx)SDFExternalVerify_ECC(sessionHandle SessionHandleType,uiAlgID uint,uiInputLength uint)(core.ECCrefPublicKey,core.ECCSignature,[]byte,error){
-	var err C.SGD_RV
-	var pucPublicKey C.ECCrefPublicKey
-	var pucSignature C.ECCSignature
-	var pucDataInput C.SGD_UCHAR_PRT
-	err = C.SDFExternalVerify_ECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiAlgID),&pucPublicKey,&pucDataInput,C.SGD_UINT32(uiInputLength),&pucSignature)
-	publicKey := ConvertToECCrefPublicKeyGo(pucPublicKey)
-	signature := ConvertToECCSignatureGo(pucSignature)
-	input:= C.GoBytes(unsafe.Pointer(pucDataInput), C.int(uiInputLength))
-	C.free(unsafe.Pointer(pucDataInput))
-	return publicKey,signature,input,ToError(err)
+func (c *Ctx)SDFExternalVerify_ECC(sessionHandle SessionHandleType,uiAlgID uint,publicKey core.ECCrefPublicKey,inputData []byte,uiInputLength uint,signature core.ECCSignature)(err error){
+	var err1 C.SGD_RV
+	pucPublicKey :=ConvertToECCrefPublicKeyC(publicKey)
+	pucSignature:=ConvertToECCSignatureC(signature)
+	err1 = C.SDFExternalVerify_ECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiAlgID),&pucPublicKey,CMessage(inputData),C.SGD_UINT32(uiInputLength),&pucSignature)
+	err = ToError(err1)
+	return err
 }
 //36.内部密钥 ＥＣＣ签名
 func (c *Ctx)SDFInternalSign_ECC(sessionHandle SessionHandleType,uiISKIndex uint,pucData []byte,uiDataLength uint)(signature core.ECCSignature,err error){
@@ -1791,14 +1514,7 @@ func (c *Ctx)SDFInternalVerify_ECC(sessionHandle SessionHandleType,uiISKIndex ui
 //38.外部密钥 ＥＣＣ加密
 func (c *Ctx)SDFExternalEncrypt_ECC(sessionHandle SessionHandleType,uiAlgID uint,publicKey core.ECCrefPublicKey,data []byte,dataLength uint)(encData core.ECCCipher,err error){
 	var err1 C.SGD_RV
-	var pucPublicKey C.ECCrefPublicKey
-	pucPublicKey.bits=C.SGD_UINT32(publicKey.Bits)
-	for i:=0;i<len(publicKey.X);i++{
-		pucPublicKey.x[i]=C.SGD_UCHAR(publicKey.X[i])
-	}
-	for i:=0;i<len(publicKey.Y);i++{
-		pucPublicKey.y[i]=C.SGD_UCHAR(publicKey.Y[i])
-	}
+	pucPublicKey:=ConvertToECCrefPublicKeyC(publicKey)
 	var pucEncData C.ECCCipher
 	err1 = C.SDFExternalEncrypt_ECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiAlgID),&pucPublicKey,CMessage(data),C.SGD_UINT32(dataLength),&pucEncData)
 	encData = ConvertToECCCipherGo(pucEncData)
@@ -1808,25 +1524,8 @@ func (c *Ctx)SDFExternalEncrypt_ECC(sessionHandle SessionHandleType,uiAlgID uint
 //39.外部密钥 ＥＣＣ解密
 func (c *Ctx)SDFExternalDecrypt_ECC(sessionHandle SessionHandleType,uiAlgID uint,privateKey core.ECCrefPrivateKey,encData core.ECCCipher)(data []byte,dataLength uint,err error){
 	var err1 C.SGD_RV
-	var pucPrivateKey C.ECCrefPrivateKey
-	pucPrivateKey.bits=C.SGD_UINT32(privateKey.Bits)
-	for i:=0;i<len(privateKey.K);i++{
-		pucPrivateKey.K[i]=C.SGD_UCHAR(privateKey.K[i])
-	}
-	var pucEncData C.ECCCipher
-	for i:=0;i<len(encData.X);i++{
-		pucEncData.x[i]=C.SGD_UCHAR(encData.X[i])
-	}
-	for i:=0;i<len(encData.Y);i++{
-		pucEncData.y[i]=C.SGD_UCHAR(encData.Y[i])
-	}
-	for i:=0;i<len(encData.M);i++{
-		pucEncData.M[i]=C.SGD_UCHAR(encData.M[i])
-	}
-	pucEncData.L=C.SGD_UINT32(encData.L)
-	for i:=0;i<len(encData.C);i++{
-		pucEncData.C[i]=C.SGD_UCHAR(encData.C[i])
-	}
+	pucPrivateKey:=ConvertToECCrefPrivateKeyC(privateKey)
+	pucEncData:=ConvertToECCCipherC(encData)
 	var pucData C.SGD_UCHAR_PRT
 	var puiDataLength C.SGD_UINT32
 	err1 = C.SDFExternalDecrypt_ECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiAlgID), &pucPrivateKey,&pucEncData,&pucData,&puiDataLength)
@@ -1909,21 +1608,22 @@ func (c *Ctx)SDFCreateFile(sessionHandle SessionHandleType,fileName []byte,uiFil
 	return err
 }
 //47.读取文件
-func (c *Ctx)SDFReadFile(sessionHandle SessionHandleType,fileName []byte,uiOffset uint)(buffer []byte,readLength uint,err error){
+func (c *Ctx)SDFReadFile(sessionHandle SessionHandleType,fileName []byte,uiOffset uint,readLength uint)(buffer []byte,readLength1 uint,err error){
 	var err1 C.SGD_RV
 	var puiReadLength C.SGD_UINT32
 	var pucBuffer C.SGD_UCHAR_PRT
+	puiReadLength=C.SGD_UINT32(readLength)
 	err1 = C.SDFReadFile(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(fileName),C.SGD_UINT32(len(fileName)),C.SGD_UINT32(uiOffset),&puiReadLength,&pucBuffer)
 	buffer = C.GoBytes(unsafe.Pointer(pucBuffer), C.int(puiReadLength))
-	readLength = uint(puiReadLength)
+	readLength1 = uint(puiReadLength)
 	//C.free(unsafe.Pointer(pucBuffer))
 	err = ToError(err1)
-	return buffer,readLength,err
+	return buffer,readLength1,err
 }
 //48.写文件
-func (c *Ctx)SDFWriteFile(sessionHandle SessionHandleType,fileName []byte,uiOffset uint ,pucBuffer []byte)(err error){
+func (c *Ctx)SDFWriteFile(sessionHandle SessionHandleType,fileName []byte,uiOffset uint ,buffer []byte,bufferLength uint)(err error){
 	var err1 C.SGD_RV
-	err1 = C.SDFWriteFile(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(fileName),C.SGD_UINT32(len(fileName)),C.SGD_UINT32(uiOffset),C.SGD_UINT32(len(pucBuffer)),CMessage(pucBuffer))
+	err1 = C.SDFWriteFile(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(fileName),C.SGD_UINT32(len(fileName)),C.SGD_UINT32(uiOffset),C.SGD_UINT32(bufferLength),CMessage(buffer))
 	err = ToError(err1)
 	return err
 }
@@ -1981,29 +1681,27 @@ func (c *Ctx)SDFInternalDecrypt_ECC(sessionHandle SessionHandleType,uiISKIndex u
 }
 
 //53. EPK方式导出RSA密钥
-func (c *Ctx)SDFExportKeyWithEPK_RSA(sessionHandle SessionHandleType,hKeyHandle KeyHandleType)(publicKey core.RSArefPublicKey,key []byte,err error){
+func (c *Ctx)SDFExportKeyWithEPK_RSA(sessionHandle SessionHandleType,hKeyHandle KeyHandleType,publicKey core.RSArefPublicKey)(key []byte,err error){
 	var err1 C.SGD_RV
-	var pucPublicKey C.RSArefPublicKey
+	pucPublicKey := ConvertToRSArefPublicKeyC(publicKey)
 	var pucKey C.SGD_UCHAR_PRT
 	var puiKeyLength C.SGD_UINT32
 	err1 = C.SDFExportKeyWithEPK_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_HANDLE(hKeyHandle),&pucPublicKey,&pucKey,&puiKeyLength)
-	publicKey = ConvertToRSArefPublicKeyGo(pucPublicKey)
 	key = C.GoBytes(unsafe.Pointer(pucKey), C.int(puiKeyLength))
-	C.free(unsafe.Pointer(pucKey))
+	//C.free(unsafe.Pointer(pucKey))
 	err = ToError(err1)
-	return publicKey,key,err
+	return key,err
 }
 
 //54. EPK方式导出ECC密钥
-func (c *Ctx)SDFExportKeyWithEPK_ECC(sessionHandle SessionHandleType,hKeyHandle KeyHandleType,uiAlgID uint)(publicKey core.ECCrefPublicKey,key core.ECCCipher,err error){
+func (c *Ctx)SDFExportKeyWithEPK_ECC(sessionHandle SessionHandleType,hKeyHandle KeyHandleType,uiAlgID uint,publicKey core.ECCrefPublicKey)(key core.ECCCipher,err error){
 	var err1 C.SGD_RV
-	var pucPublicKey C.ECCrefPublicKey
 	var pucKey C.ECCCipher
+	pucPublicKey := ConvertToECCrefPublicKeyC(publicKey)
 	err1 = C.SDFExportKeyWithEPK_ECC(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_HANDLE(hKeyHandle),C.SGD_UINT32(uiAlgID),&pucPublicKey,&pucKey)
-	publicKey = ConvertToECCrefPublicKeyGo(pucPublicKey)
 	key =ConvertToECCCipherGo(pucKey)
 	err = ToError(err1)
-	return publicKey,key,err
+	return key,err
 }
 //55. EPK方式导出密钥
 func (c *Ctx)SDFExportKeyWithKEK(sessionHandle SessionHandleType,hKeyHandle KeyHandleType,uiAlgID uint,uiKEKIndex uint)(key []byte,err error){
@@ -2015,276 +1713,4 @@ func (c *Ctx)SDFExportKeyWithKEK(sessionHandle SessionHandleType,hKeyHandle KeyH
 	C.free(unsafe.Pointer(pucKey))
 	err = ToError(err1)
 	return key,err
-}
-//56. 导出SM9签名主公钥
-func (c *Ctx)SDFExportSignMasterPublicKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(publicKey core.SM9refSignMasterPublicKey,err error){
-	var err1 C.SGD_RV
-	var pPublicKey C.SM9refSignMasterPublicKey
-	err1 = C.SDFExportSignMasterPublicKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pPublicKey)
-	publicKey = ConvertToSM9refSignMasterPublicKeyGo(pPublicKey)
-	err = ToError(err1)
-	return publicKey,err
-}
-//57. 导出SM9加密主公钥
-func (c *Ctx)SDFExportEncMasterPublicKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(publicKey core.SM9refEncMasterPublicKey,err error){
-	var err1 C.SGD_RV
-	var pEncMasterPublicKey C.SM9refEncMasterPublicKey
-	err1 = C.SDFExportEncMasterPublicKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pEncMasterPublicKey)
-	publicKey = ConvertToSM9refEncMasterPublicKeyGo(pEncMasterPublicKey)
-	err = ToError(err1)
-	return publicKey,err
-}
-
-//58. 导出SM9签名主密钥对
-func (c *Ctx)SDFExportSignMasterKeyPairG_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(pairG []byte,err error){
-	var err1 C.SGD_RV
-	var pPairG C.SGD_UCHAR_PRT
-	var puiPairGLen C.SGD_UINT32
-	err1 = C.SDFExportSignMasterKeyPairG_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pPairG,&puiPairGLen)
-	pairG = C.GoBytes(unsafe.Pointer(pPairG), C.int(puiPairGLen))
-	C.free(unsafe.Pointer(pPairG))
-	err = ToError(err1)
-	return pairG,err
-}
-
-//59. 导出SM9加密主密钥对
-func (c *Ctx)SDFExportEncMasterKeyPairG_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(pairG []byte,err error){
-	var err1 C.SGD_RV
-	var pPairG C.SGD_UCHAR_PRT
-	var puiPairGLen C.SGD_UINT32
-	err1 = C.SDFExportEncMasterKeyPairG_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pPairG,&puiPairGLen)
-	pairG= C.GoBytes(unsafe.Pointer(pPairG), C.int(puiPairGLen))
-	C.free(unsafe.Pointer(pPairG))
-	err = ToError(err1)
-	return pairG,err
-}
-//60. 导入SM9使用者签名私钥
-func (c *Ctx)SDFImportUserSignPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(privateKey core.SM9refSignUserPrivateKey,err error){
-	var err1 C.SGD_RV
-	var pUserPrivateKey C.SM9refSignUserPrivateKey
-	err1 = C.SDFImportUserSignPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey)
-	privateKey =ConvertToSM9refSignUserPrivateKeyGo(pUserPrivateKey)
-	err = ToError(err1)
-	return privateKey,err
-}
-
-//61. 导入SM9使用者加密私钥
-func (c *Ctx)SDFImportUserEncPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(privateKey core.SM9refEncUserPrivateKey,err error){
-	var err1 C.SGD_RV
-	var pUserPrivateKey C.SM9refEncUserPrivateKey
-	err1 = C.SDFImportUserEncPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey)
-	privateKey = ConvertToSM9refEncUserPrivateKeyGo(pUserPrivateKey)
-	err = ToError(err1)
-	return privateKey,err
-}
-//62. 产生SM9使用者签名私钥
-func (c *Ctx)SDFGenerateSignUserPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint)(privateKey core.SM9refSignUserPrivateKey,err error){
-	var err1 C.SGD_RV
-	var hid C.SGD_UCHAR
-	var pucUserID C.SGD_UCHAR_PRT
-	var uiUserIDLen C.SGD_UINT32
-	var pUserPrivateKey C.SM9refSignUserPrivateKey
-	err1 = C.SDFGenerateSignUserPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pUserPrivateKey)
-	privateKey =ConvertToSM9refSignUserPrivateKeyGo(pUserPrivateKey)
-	err = ToError(err1)
-	return privateKey,err
-}
-
-//63. 产生SM9使用者加密私钥
-func (c *Ctx)SDFGenerateEncUserPrivateKey_SM9(sessionHandle SessionHandleType,uiKeyIndex uint,uiUserIDLen uint)(privateKey core.SM9refEncUserPrivateKey,userID []byte,err error){
-	var err1 C.SGD_RV
-	var hid C.SGD_UCHAR
-	var pucUserID C.SGD_UCHAR_PRT
-	var pUserPrivateKey C.SM9refEncUserPrivateKey
-	err1 = C.SDFGenerateEncUserPrivateKey_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),hid,&pucUserID,C.SGD_UINT32(uiUserIDLen),&pUserPrivateKey)
-	privateKey = ConvertToSM9refEncUserPrivateKeyGo(pUserPrivateKey)
-	userID = C.GoBytes(unsafe.Pointer(pucUserID), C.int(uiUserIDLen))
-	C.free(unsafe.Pointer(pucUserID))
-	err = ToError(err1)
-	return privateKey,userID,err
-}
-
-//64.SM9签名
-func (c *Ctx)SDFSign_SM9(sessionHandle SessionHandleType,uiKeyIndex uint,userPrivateKey core.SM9refSignUserPrivateKey,masterPublicKey core.SM9refSignMasterPublicKey,dataInput []byte,dataInputLen uint)(sm9Signature core.SM9Signature,err error){
-	var err1 C.SGD_RV
-	pUserPrivateKey:=ConvertToSM9refSignUserPrivateKeyC(userPrivateKey)
-	pMasterPublicKey:=ConvertToSM9refSignMasterPublicKeyC(masterPublicKey)
-	var pSignature C.SM9Signature
-	err1 = C.SDFSign_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pMasterPublicKey,CMessage(dataInput),C.SGD_UINT32(dataInputLen),&pSignature)
-	sm9Signature = ConvertToSM9SignatureGo(pSignature)
-	err = ToError(err1)
-	return sm9Signature,err
-}
-//65. SM9签名扩展方法
-func (c *Ctx)SDFSignEx_SM9(sessionHandle SessionHandleType,uiKeyIndex uint,userPrivateKey core.SM9refSignUserPrivateKey,signMasterPublicKey core.SM9refSignMasterPublicKey,pairG []byte,pairGLen uint,dataInput []byte,dataInputLen uint)(signature core.SM9Signature,err error){
-	var err1 C.SGD_RV
-	pUserPrivateKey:=ConvertToSM9refSignUserPrivateKeyC(userPrivateKey)
-	pMasterPublicKey:=ConvertToSM9refSignMasterPublicKeyC(signMasterPublicKey)
-	var pSignature C.SM9Signature
-	err1 = C.SDFSignEx_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pMasterPublicKey,CMessage(pairG),C.SGD_UINT32(pairGLen),CMessage(dataInput),C.SGD_UINT32(dataInputLen),&pSignature)
-	signature = ConvertToSM9SignatureGo(pSignature)
-	err = ToError(err1)
-	return signature,err
-}
-
-//66. SM9验证
-func (c *Ctx)SDFVerify_SM9(sessionHandle SessionHandleType,userId []byte,userIDLen uint,masterPublicKey core.SM9refSignMasterPublicKey,data []byte,dataInputLen uint,signature core.SM9Signature)(err error){
-	var err1 C.SGD_RV
-	var hid C.SGD_UCHAR
-	pMasterPublicKey:=ConvertToSM9refSignMasterPublicKeyC(masterPublicKey)
-	pSignature:=ConvertToSM9SignatureC(signature)
-	err1 = C.SDFVerify_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userId),C.SGD_UINT32(userIDLen),&pMasterPublicKey,CMessage(data),C.SGD_UINT32(dataInputLen),&pSignature)
-	err = ToError(err1)
-	return err
-}
-//67. SM9验证扩展方法
-func (c *Ctx)SDFVerifyEx_SM9(sessionHandle SessionHandleType,userId []byte,userIDLen uint,masterPublicKey core.SM9refSignMasterPublicKey,pairG []byte,pairGLen uint,data []byte,dataInputLen uint,signature core.SM9Signature)(err error){
-	var err1 C.SGD_RV
-	var hid C.SGD_UCHAR
-	pMasterPublicKey:=ConvertToSM9refSignMasterPublicKeyC(masterPublicKey)
-	pSignature:=ConvertToSM9SignatureC(signature)
-	err1 = C.SDFVerifyEx_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userId),C.SGD_UINT32(userIDLen),&pMasterPublicKey,CMessage(pairG),C.SGD_UINT32(pairGLen),CMessage(data),C.SGD_UINT32(dataInputLen),&pSignature)
-	err = ToError(err1)
-	return err
-}
-
-//68. SM9加密
-func (c *Ctx)SDFEncrypt_SM9(sessionHandle SessionHandleType,userID []byte,userIDLength uint,uiDataInputLen uint,publicKey core.SM9refEncMasterPublicKey,data []byte, dataLength uint)(cipher core.SM9Cipher,err error){
-	var err1 C.SGD_RV
-	var hid C.SGD_UCHAR
-	pEncMasterPublicKey := ConvertToSM9refEncMasterPublicKeyC(publicKey)
-	var pCipher C.SM9Cipher
-	err1 = C.SDFEncrypt_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userID),C.SGD_UINT32(userIDLength),&pEncMasterPublicKey,CMessage(data),C.SGD_UINT32(dataLength),&pCipher)
-	cipher = ConvertToSM9CipherGo(pCipher)
-	err = ToError(err1)
-	return cipher,err
-}
-
-//69. SM9加密扩展方法
-func (c *Ctx)SDFEncryptEx_SM9(sessionHandle SessionHandleType,userID []byte,userIDLength uint,uiDataInputLen uint,publicKey core.SM9refEncMasterPublicKey,pairG []byte,nPairGLen uint,data []byte, dataLength uint)(cipher core.SM9Cipher,err error){
-	var err1 C.SGD_RV
-	var hid C.SGD_UCHAR
-	pEncMasterPublicKey := ConvertToSM9refEncMasterPublicKeyC(publicKey)
-	var pCipher C.SM9Cipher
-	err1 = C.SDFEncryptEx_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userID),C.SGD_UINT32(userIDLength),&pEncMasterPublicKey,CMessage(pairG),C.SGD_UINT32(nPairGLen),CMessage(data),C.SGD_UINT32(dataLength),&pCipher)
-	cipher = ConvertToSM9CipherGo(pCipher)
-	err = ToError(err1)
-	return cipher,err
-}
-//70. SM9解密
-func (c *Ctx)SDFDecrypt_SM9(sessionHandle SessionHandleType,userID []byte,userIDLength uint,uiKeyIndex uint,privateKey core.SM9refEncUserPrivateKey,ciper core.SM9Cipher)(plainData []byte,err error){
-	var err1 C.SGD_RV
-	pUserPrivateKey := ConvertToSM9refEncUserPrivateKeyC(privateKey)
-	pCipher := ConvertToSM9CipherC(ciper)
-	var pucPlainData C.SGD_UCHAR_PRT
-	var uiPlainDataLength C.SGD_UINT32
-	err1 = C.SDFDecrypt_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(userID),C.SGD_UINT32(userIDLength),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pCipher,&pucPlainData,&uiPlainDataLength)
-    plainData = C.GoBytes(unsafe.Pointer(pucPlainData), C.int(uiPlainDataLength))
-	C.free(unsafe.Pointer(pucPlainData))
-    err = ToError(err1)
-	return plainData,err
-}
-//71. SM9密钥封装
-func (c *Ctx)SDFEncap_SM9(sessionHandle SessionHandleType,userId []byte,uiUserIDLen uint,publicKey core.SM9refEncMasterPublicKey,uiKeyLen uint,key []byte)(keyPackage core.SM9refKeyPackage,err error){
-	var err1 C.SGD_RV
-	var hid C.SGD_UCHAR
-	pEncMasterPublicKey:=ConvertToSM9refEncMasterPublicKeyC(publicKey)
-	var pKeyPackage C.SM9refKeyPackage
-	err1 = C.SDFEncap_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,CMessage(userId),C.SGD_UINT32(uiUserIDLen),&pEncMasterPublicKey,C.SGD_UINT32(uiKeyLen),CMessage(key),&pKeyPackage)
-	keyPackage =ConvertToSM9refKeyPackageGo(pKeyPackage)
-	err = ToError(err1)
-	return keyPackage,err
-}
-//72. SM9密钥解封
-func (c *Ctx)SDFDecap_SM9(sessionHandle SessionHandleType,uiUserIDLen uint,uiKeyIndex uint,uiKeyLen uint,userId []byte,userPrivateKey core.SM9refEncUserPrivateKey,sm9refKeyPackage core.SM9refKeyPackage)(key []byte,err error){
-	var err1 C.SGD_RV
-	pUserPrivateKey:=ConvertToSM9refEncUserPrivateKeyC(userPrivateKey)
-	pKeyPackage:=ConvertToSM9refKeyPackageC(sm9refKeyPackage)
-	var pucKey C.SGD_UCHAR_PRT
-	err1 = C.SDFDecap_SM9(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(userId),C.SGD_UINT32(uiUserIDLen),C.SGD_UINT32(uiKeyIndex),&pUserPrivateKey,&pKeyPackage,C.SGD_UINT32(uiKeyLen),&pucKey)
-	key= C.GoBytes(unsafe.Pointer(pucKey), C.int(uiKeyLen))
-	C.free(unsafe.Pointer(pucKey))
-	err = ToError(err1)
-	return key,err
-}
-
-
-func (c *Ctx)SDFGenerateAgreementDataWithSM9(sessionHandle SessionHandleType,uiResponseIDLength uint)([]byte,core.SM9refEncMasterPublicKey,core.SM9refEncMasterPublicKey,AgreementHandleType,error){
-	var err C.SGD_RV
-	var hid C.SGD_UCHAR
-	var pucResponseID C.SGD_UCHAR_PRT
-	var pPublicKey C.SM9refEncMasterPublicKey
-	var pucSponsorTmpPublicKey C.SM9refEncMasterPublicKey
-	var phAgreementHandle C.SGD_HANDLE
-	err = C.SDFGenerateAgreementDataWithSM9(c.libHandle,C.SGD_HANDLE(sessionHandle),hid,&pucResponseID,C.SGD_UINT32(uiResponseIDLength),&pPublicKey,&pucSponsorTmpPublicKey,&phAgreementHandle)
-	publicKey := ConvertToSM9refEncMasterPublicKeyGo(pPublicKey)
-	sponsorTmpPublicKey := ConvertToSM9refEncMasterPublicKeyGo(pucSponsorTmpPublicKey)
-	responseID:= C.GoBytes(unsafe.Pointer(pucResponseID), C.int(uiResponseIDLength))
-	C.free(unsafe.Pointer(pucResponseID))
-	return responseID,publicKey,sponsorTmpPublicKey,AgreementHandleType(phAgreementHandle),ToError(err)
-}
-
-
-func (c *Ctx)SDFGenerateAgreemetDataAndKeyWithSM9(sessionHandle SessionHandleType,uiKeyLen uint,uiResponseIDLen uint,uiSponsorIDLen uint,uiKeyIndex uint)([]byte,[]byte,core.SM9refEncUserPrivateKey,core.SM9refEncMasterPublicKey,core.SM9refEncMasterPublicKey,core.SM9refEncMasterPublicKey,[]byte,[]byte,KeyHandleType,error){
-	var err C.SGD_RV
-	var hid C.SGD_UCHAR
-	var pucResponseID C.SGD_UCHAR_PRT
-	var pucSponsorID C.SGD_UCHAR_PRT
-	var pucResponsePrivateKey C.SM9refEncUserPrivateKey
-	var pucPublicKey C.SM9refEncMasterPublicKey
-	var pucSponsorTmpPublicKey C.SM9refEncMasterPublicKey
-	var pucResponseTmpPublicKey C.SM9refEncMasterPublicKey
-	var pucHashSB C.SGD_UCHAR_PRT
-	var pucHashS2 C.SGD_UCHAR_PRT
-	var puiSBLen C.SGD_UINT32
-	var puiS2Len C.SGD_UINT32
-	var phKeyHandle C.SGD_HANDLE
-	err = C.SDFGenerateAgreemetDataAndKeyWithSM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyLen),hid,&pucResponseID,C.SGD_UINT32(uiResponseIDLen),&pucSponsorID,C.SGD_UINT32(uiSponsorIDLen),C.SGD_UINT32(uiKeyIndex),&pucResponsePrivateKey,&pucPublicKey,&pucSponsorTmpPublicKey,&pucResponseTmpPublicKey,&pucHashSB,&puiSBLen,&pucHashS2,&puiS2Len,&phKeyHandle)
-	privateKey := ConvertToSM9refEncUserPrivateKeyGo(pucResponsePrivateKey)
-	publicKey := ConvertToSM9refEncMasterPublicKeyGo(pucPublicKey)
-	sponsorTmpPublicKey := ConvertToSM9refEncMasterPublicKeyGo(pucSponsorTmpPublicKey)
-	responseTmpPublicKey := ConvertToSM9refEncMasterPublicKeyGo(pucResponseTmpPublicKey)
-	responseID:= C.GoBytes(unsafe.Pointer(pucResponseID), C.int(uiResponseIDLen))
-	C.free(unsafe.Pointer(pucResponseID))
-	sponsorID:= C.GoBytes(unsafe.Pointer(pucSponsorID), C.int(uiSponsorIDLen))
-	C.free(unsafe.Pointer(pucSponsorID))
-	hashSB:= C.GoBytes(unsafe.Pointer(pucHashSB), C.int(uiResponseIDLen))
-	C.free(unsafe.Pointer(pucHashSB))
-	hashS2:= C.GoBytes(unsafe.Pointer(pucHashS2), C.int(uiSponsorIDLen))
-	C.free(unsafe.Pointer(pucHashS2))
-	return responseID,sponsorID,privateKey,publicKey,sponsorTmpPublicKey,responseTmpPublicKey,hashSB,hashS2,KeyHandleType(phKeyHandle),ToError(err)
-}
-
-func (c *Ctx)SDFGenerateKeyWithSM9(sessionHandle SessionHandleType,uiKeyLen uint,uiSponsorIDLen uint,uiResponseIDLen uint,uiKeyIndex uint,uiSBLen uint,hAgreementHandle  AgreementHandleType)([]byte,[]byte,core.SM9refEncUserPrivateKey,core.SM9refEncMasterPublicKey,core.SM9refEncMasterPublicKey,[]byte,[]byte,KeyHandleType,error){
-	var err C.SGD_RV
-	var hid C.SGD_UCHAR
-	var pucSponsorID C.SGD_UCHAR_PRT
-	var pucResponseID C.SGD_UCHAR_PRT
-	var pucSponsorPrivateKey C.SM9refEncUserPrivateKey
-	var pucPublicKey C.SM9refEncMasterPublicKey
-	var pucResponseTmpPublicKey C.SM9refEncMasterPublicKey
-	var pucHashSB C.SGD_UCHAR_PRT
-	var pucHashSA C.SGD_UCHAR_PRT
-	var puiSALen C.SGD_UINT32
-	var phKeyHandle C.SGD_HANDLE
-	err = C.SDFGenerateKeyWithSM9(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyLen),hid,&pucSponsorID,C.SGD_UINT32(uiSponsorIDLen),&pucResponseID,C.SGD_UINT32(uiResponseIDLen),C.SGD_UINT32(uiKeyIndex),&pucSponsorPrivateKey,&pucPublicKey,&pucResponseTmpPublicKey,&pucHashSB,C.SGD_UINT32(uiSBLen),&pucHashSA,&puiSALen,C.SGD_HANDLE(hAgreementHandle),&phKeyHandle)
-	privateKey:=ConvertToSM9refEncUserPrivateKeyGo(pucSponsorPrivateKey)
-	publicKey := ConvertToSM9refEncMasterPublicKeyGo(pucPublicKey)
-	responseTmpPublicKey := ConvertToSM9refEncMasterPublicKeyGo(pucResponseTmpPublicKey)
-	sponsorID:= C.GoBytes(unsafe.Pointer(pucSponsorID), C.int(uiSponsorIDLen))
-	C.free(unsafe.Pointer(pucSponsorID))
-	responseID:= C.GoBytes(unsafe.Pointer(pucResponseID), C.int(uiResponseIDLen))
-	C.free(unsafe.Pointer(pucResponseID))
-	hashSB:= C.GoBytes(unsafe.Pointer(pucHashSB), C.int(uiSBLen))
-	C.free(unsafe.Pointer(pucHashSB))
-	hashSA:= C.GoBytes(unsafe.Pointer(pucHashSA), C.int(puiSALen))
-	C.free(unsafe.Pointer(pucHashSA))
-	return sponsorID,responseID,privateKey,publicKey,responseTmpPublicKey,hashSB,hashSA,KeyHandleType(phKeyHandle),ToError(err)
-}
-
-func (c *Ctx)SDFGenerateKeyVerifySM9(sessionHandle SessionHandleType,uiS2Len uint,uiSALen uint,hashS2 []byte,hashSA []byte)(err error){
-	var err1 C.SGD_RV
-	err1 = C.SDFGenerateKeyVerifySM9(c.libHandle,C.SGD_HANDLE(sessionHandle),CMessage(hashS2),C.SGD_UINT32(uiS2Len),CMessage(hashSA),C.SGD_UINT32(uiSALen))
-	err = ToError(err1)
-	return err
 }
