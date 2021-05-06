@@ -1,3 +1,3 @@
-module github.com/yzwskyspace/sdf
+module github.com/Hyperledger-TWGC/sdf
 
 go 1.15
