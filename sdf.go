@@ -828,8 +828,8 @@ SGD_RV SDFExportKeyWithKEK(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_H
 import "C"
 import (
 	"fmt"
-	"github.com/yzwskyspace/sdf/core"
-	"github.com/yzwskyspace/sdf/util"
+	"github.com/Hyperledger-TWGC/sdf/core"
+	"github.com/Hyperledger-TWGC/sdf/util"
 	"os"
 	"strings"
 	"time"

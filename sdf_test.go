@@ -2,8 +2,8 @@ package sdf
 
 import (
 	"fmt"
-	"github.com/yzwskyspace/sdf/core"
-	"github.com/yzwskyspace/sdf/util"
+	"github.com/Hyperledger-TWGC/sdf/core"
+	"github.com/Hyperledger-TWGC/sdf/util"
 	"os"
 	"runtime"
 	"testing"
