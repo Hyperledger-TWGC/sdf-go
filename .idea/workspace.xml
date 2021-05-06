@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="35200626-a9ea-4559-8f2c-07a8645df115" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/azure-pipelines.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/util/log.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sdf.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TEST.md" beforeDir="false" afterPath="$PROJECT_DIR$/TEST.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sansec/swsds.h" beforeDir="false" afterPath="$PROJECT_DIR$/sansec/swsds.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sdf.go" beforeDir="false" afterPath="$PROJECT_DIR$/sdf.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connect.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hsm.conf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/sdf_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/sdf_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swsds.ini" beforeDir="false" afterPath="$PROJECT_DIR$/swsds.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swsds.log" beforeDir="false" afterPath="$PROJECT_DIR$/swsds.log" afterDir="false" />
@@ -65,7 +64,18 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
-  <component name="RunManager" selected="Go Test.TestBasicFunc in github.com/yzwskyspace/sdf">
+  <component name="RunManager" selected="Go Test.TestECCAgreement in github.com/yzwskyspace/sdf">
+    <configuration name="TestBasicFunc in github.com/yzwskyspace/sdf (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="sdf" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/yzwskyspace/sdf" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestBasicFunc\E$" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestBasicFunc in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="sdf" />
       <working_directory value="$PROJECT_DIR$" />
@@ -75,6 +85,17 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <pattern value="^\QTestBasicFunc\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestECCAgreement in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="sdf" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/yzwskyspace/sdf" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <pattern value="^\QTestECCAgreement\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestExtECCEnc in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -88,7 +109,7 @@
       <pattern value="^\QTestExtECCEnc\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestExtRSAOpt in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestTransEnvelop in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="sdf" />
       <working_directory value="$PROJECT_DIR$" />
       <framework value="gotest" />
@@ -96,38 +117,16 @@
       <package value="github.com/yzwskyspace/sdf" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestExtRSAOpt\E$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestGenerateECCFunc in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="sdf" />
-      <working_directory value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/yzwskyspace/sdf" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestGenerateECCFunc\E$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestIntRSAOps in github.com/yzwskyspace/sdf" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="sdf" />
-      <working_directory value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/yzwskyspace/sdf" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestIntRSAOps\E$" />
+      <pattern value="^\QTestTransEnvelop\E$" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestECCAgreement in github.com/yzwskyspace/sdf" />
+        <item itemvalue="Go Test.TestTransEnvelop in github.com/yzwskyspace/sdf" />
+        <item itemvalue="Go Test.TestBasicFunc in github.com/yzwskyspace/sdf (1)" />
         <item itemvalue="Go Test.TestBasicFunc in github.com/yzwskyspace/sdf" />
         <item itemvalue="Go Test.TestExtECCEnc in github.com/yzwskyspace/sdf" />
-        <item itemvalue="Go Test.TestIntRSAOps in github.com/yzwskyspace/sdf" />
-        <item itemvalue="Go Test.TestExtRSAOpt in github.com/yzwskyspace/sdf" />
-        <item itemvalue="Go Test.TestGenerateECCFunc in github.com/yzwskyspace/sdf" />
       </list>
     </recent_temporary>
   </component>
@@ -137,6 +136,16 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.md" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>

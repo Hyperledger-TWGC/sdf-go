@@ -311,23 +311,26 @@ func TestTransEnvelop(t *testing.T) {
 			fmt.Println("close session error: ",err)
 		}
 	}()
+
+	var keyIndexSrc  uint =1
     var keyIndexDest uint = 1
 	fmt.Println("===SDFGenerateKeyWithIPK_RSA===")
-	keySrc,keySrcLength,keySrcHandle,err := c.SDFGenerateKeyWithIPK_RSA(s,keyIndexDest,128)
+	keySrc,keySrcLength,keySrcHandle,err := c.SDFGenerateKeyWithIPK_RSA(s,keyIndexSrc,128)
 	if err != nil {
 		fmt.Println("Generate RSA IPK Key error",err)
 	}
 	fmt.Printf("keySrc %x keySrcLength %d keySrcHandle %x \n",keySrc,keySrcLength,keySrcHandle)
 
 
-	//fmt.Println("===SDFExportEncPublicKey_RSA===")
-	//publicKey,err:=c.SDFExportEncPublicKey_RSA(s,keyIndexDest)
-	//if err != nil{
-	//	fmt.Println("Export Encrypt PublicKey error: ",err)
-	//}
-	//
+	fmt.Println("===SDFExportEncPublicKey_RSA===")
+	publicKey,err:=c.SDFExportEncPublicKey_RSA(s,keyIndexDest)
+	if err != nil{
+		fmt.Println("Export Encrypt PublicKey error: ",err)
+	}
+	fmt.Println(publicKey.Bits)
+
 	//fmt.Println("===SDFExchangeDigitEnvelopeBaseOnRSA===")
-	//keyDest,outDestKeyLen,err:=c.SDFExchangeDigitEnvelopeBaseOnRSA(s,keyIndexDest,publicKey,keySrc,keySrcLength)
+	//_,_,err=c.SDFExchangeDigitEnvelopeBaseOnRSA(s,keyIndexDest,publicKey,keySrc,keySrcLength)
 	//if err != nil{
 	//	fmt.Println("Exchange Digit Envelope Base On RSA error: ",err)
 	//}
@@ -450,8 +453,8 @@ func TestTransEnvelopECC(t *testing.T) {
 	if err!= nil{
 		fmt.Println("DestroyKey error: ",err)
 	}
-
 }
+
 func TestECCAgreement(t *testing.T) {
 	c:=New(libPath())
 	d,err :=c.SDFOpenDevice()
@@ -475,15 +478,22 @@ func TestECCAgreement(t *testing.T) {
 		}
 	}()
 
-	var keyIndexSrc uint = 1
+	var keyIndexSrc uint=1
+	fmt.Println("===SDFGenerateKeyWithIPK_ECC===")
+	_,_,err = c.SDFGenerateKeyWithIPK_ECC(s,keyIndexSrc,128)
+	//pucKeySrc,keySrc,err := c.SDFGenerateKeyWithIPK_ECC(s,keyIndexSrc,128)
+	if err != nil {
+		fmt.Println("Generate ECC IPK Key error",err)
+	}
+
 	fmt.Println("===SDFGenerateAgreementDataWithECC===")
 	srcID:=make([]byte,16)
 	for i:=0;i<16;i++{
 		srcID[i]=0x01
 	}
 	var srcIDLength uint=16
-	//eccSrcPubKey,eccSrcTmpPubKey,agreementHandle,err := c.SDFGenerateAgreementDataWithECC(s,keyIndexSrc,128,srcID,srcIDLength)
-	eccSrcPubKey,eccSrcTmpPubKey,_,err := c.SDFGenerateAgreementDataWithECC(s,keyIndexSrc,128,srcID,srcIDLength)
+	//_,_,_,err = c.SDFGenerateAgreementDataWithECC(s,keyIndexSrc,128,srcID,srcIDLength)
+	eccSrcPubKey,eccSrcTmpPubKey,agreementHandle,err := c.SDFGenerateAgreementDataWithECC(s,keyIndexSrc,128,srcID,srcIDLength)
 	if err!= nil{
 		fmt.Println("Generate Agreement Data With ECC  error: ",err)
 		fmt.Println("===SDFReleasePrivateKeyAccessRight===")
@@ -492,6 +502,8 @@ func TestECCAgreement(t *testing.T) {
 			fmt.Println("Release privateKey access right error: ",err)
 		}
 	}
+	fmt.Println(agreementHandle)
+
 
 	var keyIndexDest uint = 1
 	fmt.Println("===SDFGenerateAgreementDataAndKeyWithECC===")
@@ -500,8 +512,8 @@ func TestECCAgreement(t *testing.T) {
 		destID[i]=0x01
 	}
 	var destIDLength uint=16
-	_,_,_,err=c.SDFGenerateAgreementDataAndKeyWithECC(s,keyIndexDest,128,destID,destIDLength,srcID,srcIDLength,eccSrcPubKey,eccSrcTmpPubKey)
-	//	eccDestPubKey,eccDestTmpPubKey,destKeyHandle,err:=c.SDFGenerateAgreementDataAndKeyWithECC(s,keyIndexDest,256,destID,destIDLength,srcID,srcIDLength,eccSrcPubKey,eccSrcTmpPubKey)
+	eccDestPubKey,eccDestTmpPubKey,destKeyHandle,err:=c.SDFGenerateAgreementDataAndKeyWithECC(s,keyIndexDest,128,destID,destIDLength,srcID,srcIDLength,eccSrcPubKey,eccSrcTmpPubKey)
+	//_,_,_,err=c.SDFGenerateAgreementDataAndKeyWithECC(s,keyIndexDest,128,destID,destIDLength,srcID,srcIDLength,eccSrcPubKey,eccSrcTmpPubKey)
 	if err!= nil{
 		fmt.Println("Generate Agreement Data And Key With ECC  error: ",err)
 		fmt.Println("===SDFReleasePrivateKeyAccessRight===")
@@ -515,56 +527,56 @@ func TestECCAgreement(t *testing.T) {
 			fmt.Println("Release privateKey access right error: ",err)
 		}
 	}
-	//
-	//fmt.Println("===SDFGenerateKeyWithECC===")
-	//srcKeyHandle,err :=c.SDFGenerateKeyWithECC(s,destID,destIDLength,eccDestPubKey,eccDestTmpPubKey,agreementHandle)
-	//if err!= nil{
-	//	fmt.Println("Generate Agreement Data With ECC  error: ",err)
-	//	fmt.Println("===SDFReleasePrivateKeyAccessRight===")
-	//	err = c.SDFReleasePrivateKeyAccessRight(s,keyIndexSrc)
-	//	if err != nil{
-	//		fmt.Println("Release privateKey access right error: ",err)
-	//	}
-	//	fmt.Println("===SDFReleasePrivateKeyAccessRight===")
-	//	err = c.SDFReleasePrivateKeyAccessRight(s,keyIndexDest)
-	//	if err != nil{
-	//		fmt.Println("Release privateKey access right error: ",err)
-	//	}
-	//}
-	//
-	//fmt.Println("===SDFGenerateRandom===")
-	//randomData,err := c.SDFGenerateRandom(s,128)
-	//if err!= nil{
-	//	fmt.Println("Generate Random num  error: ",err)
-	//}
-	//
-	//fmt.Println("===SDFEncrypt===")
-	//iv :=[]byte{ 0xd0,0x4e ,0x51 ,0xcd ,0xb1 ,0x3c ,0x4a ,0xda ,0x34 ,0x72 ,0x44 ,0xc3 ,0x53 ,0x29 ,0x06 ,0x24 }
-	//encData,encDataLength,err :=c.SDFEncrypt(s,srcKeyHandle,core.SGD_SM1_ECB,iv,randomData,128)
-	//if err!= nil{
-	//	fmt.Println("Encrypt Data error: ",err)
-	//}
-	//
-	//fmt.Println("===SDFDecrypt===")
-	//data,dataLength,err := c.SDFDecrypt(s,destKeyHandle,core.SGD_SM1_ECB,iv,encData,encDataLength)
-	//if err!= nil{
-	//	fmt.Println("Decrypt Data error: ",err)
-	//}
-	//fmt.Printf("data %x dataLength %x \n",data,dataLength)
-	//
-	//fmt.Println("===SDFDestroyKey===")
-	//err = c.SDFDestroyKey(s,srcKeyHandle)
-	//if err!= nil{
-	//	fmt.Println("DestroyKey error: ",err)
-	//}
-	//fmt.Println("===SDFDestroyKey===")
-	//err = c.SDFDestroyKey(s,destKeyHandle)
-	//if err!= nil{
-	//	fmt.Println("DestroyKey error: ",err)
-	//}
-	//
 
+	fmt.Println("===SDFGenerateKeyWithECC===")
+	srcKeyHandle,err :=c.SDFGenerateKeyWithECC(s,destID,destIDLength,eccDestPubKey,eccDestTmpPubKey,agreementHandle)
+	if err!= nil{
+		fmt.Println("Generate Agreement Data With ECC  error: ",err)
+		fmt.Println("===SDFReleasePrivateKeyAccessRight===")
+		err = c.SDFReleasePrivateKeyAccessRight(s,keyIndexSrc)
+		if err != nil{
+			fmt.Println("Release privateKey access right error: ",err)
+		}
+		fmt.Println("===SDFReleasePrivateKeyAccessRight===")
+		err = c.SDFReleasePrivateKeyAccessRight(s,keyIndexDest)
+		if err != nil{
+			fmt.Println("Release privateKey access right error: ",err)
+		}
+	}
+
+	fmt.Println("===SDFGenerateRandom===")
+	randomData,err := c.SDFGenerateRandom(s,128)
+	if err!= nil{
+		fmt.Println("Generate Random num  error: ",err)
+	}
+
+	fmt.Println("===SDFEncrypt===")
+	iv :=[]byte{ 0xd0,0x4e ,0x51 ,0xcd ,0xb1 ,0x3c ,0x4a ,0xda ,0x34 ,0x72 ,0x44 ,0xc3 ,0x53 ,0x29 ,0x06 ,0x24 }
+	encData,encDataLength,err :=c.SDFEncrypt(s,srcKeyHandle,core.SGD_SM1_ECB,iv,randomData,128)
+	if err!= nil{
+		fmt.Println("Encrypt Data error: ",err)
+	}
+
+	fmt.Println("===SDFDecrypt===")
+	data,dataLength,err := c.SDFDecrypt(s,destKeyHandle,core.SGD_SM1_ECB,iv,encData,encDataLength)
+	if err!= nil{
+		fmt.Println("Decrypt Data error: ",err)
+	}
+	fmt.Printf("data %x dataLength %x \n",data,dataLength)
+
+	fmt.Println("===SDFDestroyKey===")
+	err = c.SDFDestroyKey(s,srcKeyHandle)
+	if err!= nil{
+		fmt.Println("DestroyKey error: ",err)
+	}
+	fmt.Println("===SDFDestroyKey===")
+	err = c.SDFDestroyKey(s,destKeyHandle)
+	if err!= nil{
+		fmt.Println("DestroyKey error: ",err)
+	}
 }
+
+
 func TestExportECCPuk(t *testing.T) {
 	c:=New(libPath())
 	d,err :=c.SDFOpenDevice()
