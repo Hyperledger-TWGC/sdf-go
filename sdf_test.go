@@ -125,8 +125,6 @@ func TestGenRSAKeyPair(t *testing.T) {
 	fmt.Println("private Key Pexp 0",[]byte(private.Pexp[0]))
 	fmt.Println("private Key Pexp 1",[]byte(private.Pexp[1]))
 	fmt.Println("private Key Coef",[]byte(private.Coef))
-
-
 }
 
 func TestExportRSAPuk(t *testing.T)  {
