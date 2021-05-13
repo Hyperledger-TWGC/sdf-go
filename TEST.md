@@ -23,9 +23,9 @@
 | 19 |SDF_GenerateKeyWithIPK_ECC  | yes | 
 | 20 |SDF_GenerateKeyWithEPK_ECC  | yes | 
 | 21 |SDF_ImportKeyWithISK_ECC  | yes |  
-| 22 |SDF_GenerateAgreementDataWithECC  | no | 
-| 23 |SDF_GenerateKeyWithECC  | no | 
-| 24 |SDF_GenerateAgreementDataAndKeyWithECC  | no | 
+| 22 |SDF_GenerateAgreementDataWithECC  | yes | 有堆栈异常
+| 23 |SDF_GenerateKeyWithECC  | yes | 
+| 24 |SDF_GenerateAgreementDataAndKeyWithECC  | yes | 有堆栈异常
 | 26 |SDF_ExchangeDigitEnvelopeBaseOnECC  | yes | 
 | 27 |SDF_ImportKeyWithKEK  | no |  
 | 28 |SDF_ImportKey  | yes |

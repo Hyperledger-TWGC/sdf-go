@@ -828,8 +828,8 @@ SGD_RV SDFExportKeyWithKEK(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_H
 import "C"
 import (
 	"fmt"
-	"github.com/Hyperledger-TWGC/sdf/core"
-	"github.com/Hyperledger-TWGC/sdf/util"
+	"github.com/Hyperledger-TWGC/sdf-go/core"
+	"github.com/Hyperledger-TWGC/sdf-go/util"
 	"os"
 	"strings"
 	"time"
@@ -1230,6 +1230,7 @@ func (c *Ctx)SDFImportKeyWithISK_RSA(sessionHandle SessionHandleType,uiKeyBits u
 	var phKeyHandle C.SGD_HANDLE
 	err1 = C.SDFImportKeyWithISK_RSA(c.libHandle,C.SGD_HANDLE(sessionHandle),C.SGD_UINT32(uiKeyBits),CMessage(key),C.SGD_UINT32(uiKeyLength),&phKeyHandle)
 	err = ToError(err1)
+	keyHandle=KeyHandleType(phKeyHandle)
 	return keyHandle,err
 }
 //15.基于 ＲＳＡ 算法的数字信封转换

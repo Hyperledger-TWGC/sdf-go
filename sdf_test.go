@@ -1,9 +1,10 @@
 package sdf
 
 import (
+	"bytes"
 	"fmt"
-	"github.com/Hyperledger-TWGC/sdf/core"
-	"github.com/Hyperledger-TWGC/sdf/util"
+	"github.com/Hyperledger-TWGC/sdf-go/core"
+	"github.com/Hyperledger-TWGC/sdf-go/util"
 	"os"
 	"runtime"
 	"testing"
@@ -281,15 +282,10 @@ func TestIntRSAOps(t *testing.T)  {
 		fmt.Println("InternalPrivateKey RSA error: ",err)
 	}
 	fmt.Printf("outputData: %x \n",outputData)
-
-
-
-
 }
 
 
-
-func TestTransEnvelop(t *testing.T) {
+func TestTransEnvelopRSA(t *testing.T) {
 	c:=New(libPath())
 	d,err :=c.SDFOpenDevice()
 	if err != nil{
@@ -315,12 +311,11 @@ func TestTransEnvelop(t *testing.T) {
 	var keyIndexSrc  uint =1
     var keyIndexDest uint = 1
 	fmt.Println("===SDFGenerateKeyWithIPK_RSA===")
-	keySrc,keySrcLength,keySrcHandle,err := c.SDFGenerateKeyWithIPK_RSA(s,keyIndexSrc,128)
+	keySrc,keySrcLength,_,err := c.SDFGenerateKeyWithIPK_RSA(s,keyIndexSrc,128)
 	if err != nil {
 		fmt.Println("Generate RSA IPK Key error",err)
 	}
-	fmt.Printf("keySrc %x keySrcLength %d keySrcHandle %x \n",keySrc,keySrcLength,keySrcHandle)
-
+	//fmt.Printf("keySrc %x keySrcLength %d keySrcHandle %x \n",keySrc,keySrcLength,keySrcHandle)
 
 	fmt.Println("===SDFExportEncPublicKey_RSA===")
 	publicKey,err:=c.SDFExportEncPublicKey_RSA(s,keyIndexDest)
@@ -329,20 +324,20 @@ func TestTransEnvelop(t *testing.T) {
 	}
 	fmt.Println(publicKey.Bits)
 
-	//fmt.Println("===SDFExchangeDigitEnvelopeBaseOnRSA===")
-	//_,_,err=c.SDFExchangeDigitEnvelopeBaseOnRSA(s,keyIndexDest,publicKey,keySrc,keySrcLength)
-	//if err != nil{
-	//	fmt.Println("Exchange Digit Envelope Base On RSA error: ",err)
-	//}
-	//fmt.Println("keyDest",keyDest)
-	//fmt.Println("outDestKeyLen",outDestKeyLen)
+	fmt.Println("===SDFExchangeDigitEnvelopeBaseOnRSA===")
+	_,_,err=c.SDFExchangeDigitEnvelopeBaseOnRSA(s,keyIndexDest,publicKey,keySrc,keySrcLength)
+	//keyDest,outDestKeyLen,err:=c.SDFExchangeDigitEnvelopeBaseOnRSA(s,keyIndexDest,publicKey,keySrc,keySrcLength)
+	if err != nil{
+		fmt.Println("Exchange Digit Envelope Base On RSA error: ",err)
+	}
+	//fmt.Println(keyDest,outDestKeyLen)
 
 	//fmt.Println("===SDFImportKeyWithISK_RSA===")
-	//keyDestHandle,err:=c.SDFImportKeyWithISK_RSA(s,keyIndexDest,keyDest,outDestKeyLen)
+	//_,err=c.SDFImportKeyWithISK_RSA(s,keyIndexDest,keyDest,outDestKeyLen)
+	////keyDestHandle,err:=c.SDFImportKeyWithISK_RSA(s,keyIndexDest,keyDest,outDestKeyLen)
 	//if err != nil{
 	//	fmt.Println("ImportKey With ISK RSA error: ",err)
 	//}
-	//fmt.Println(keyDestHandle)
 
 	//fmt.Println("===SDFGenerateRandom===")
 	//randomData,err:=c.SDFGenerateRandom(s,1024)
@@ -479,20 +474,12 @@ func TestECCAgreement(t *testing.T) {
 	}()
 
 	var keyIndexSrc uint=1
-	fmt.Println("===SDFGenerateKeyWithIPK_ECC===")
-	_,_,err = c.SDFGenerateKeyWithIPK_ECC(s,keyIndexSrc,128)
-	//pucKeySrc,keySrc,err := c.SDFGenerateKeyWithIPK_ECC(s,keyIndexSrc,128)
-	if err != nil {
-		fmt.Println("Generate ECC IPK Key error",err)
-	}
-
 	fmt.Println("===SDFGenerateAgreementDataWithECC===")
 	srcID:=make([]byte,16)
 	for i:=0;i<16;i++{
 		srcID[i]=0x01
 	}
 	var srcIDLength uint=16
-	//_,_,_,err = c.SDFGenerateAgreementDataWithECC(s,keyIndexSrc,128,srcID,srcIDLength)
 	eccSrcPubKey,eccSrcTmpPubKey,agreementHandle,err := c.SDFGenerateAgreementDataWithECC(s,keyIndexSrc,128,srcID,srcIDLength)
 	if err!= nil{
 		fmt.Println("Generate Agreement Data With ECC  error: ",err)
@@ -502,8 +489,6 @@ func TestECCAgreement(t *testing.T) {
 			fmt.Println("Release privateKey access right error: ",err)
 		}
 	}
-	fmt.Println(agreementHandle)
-
 
 	var keyIndexDest uint = 1
 	fmt.Println("===SDFGenerateAgreementDataAndKeyWithECC===")
@@ -513,7 +498,6 @@ func TestECCAgreement(t *testing.T) {
 	}
 	var destIDLength uint=16
 	eccDestPubKey,eccDestTmpPubKey,destKeyHandle,err:=c.SDFGenerateAgreementDataAndKeyWithECC(s,keyIndexDest,128,destID,destIDLength,srcID,srcIDLength,eccSrcPubKey,eccSrcTmpPubKey)
-	//_,_,_,err=c.SDFGenerateAgreementDataAndKeyWithECC(s,keyIndexDest,128,destID,destIDLength,srcID,srcIDLength,eccSrcPubKey,eccSrcTmpPubKey)
 	if err!= nil{
 		fmt.Println("Generate Agreement Data And Key With ECC  error: ",err)
 		fmt.Println("===SDFReleasePrivateKeyAccessRight===")
@@ -549,7 +533,7 @@ func TestECCAgreement(t *testing.T) {
 	if err!= nil{
 		fmt.Println("Generate Random num  error: ",err)
 	}
-
+	fmt.Printf("randomData %x randomDataLength %x \n",randomData,128)
 	fmt.Println("===SDFEncrypt===")
 	iv :=[]byte{ 0xd0,0x4e ,0x51 ,0xcd ,0xb1 ,0x3c ,0x4a ,0xda ,0x34 ,0x72 ,0x44 ,0xc3 ,0x53 ,0x29 ,0x06 ,0x24 }
 	encData,encDataLength,err :=c.SDFEncrypt(s,srcKeyHandle,core.SGD_SM1_ECB,iv,randomData,128)
@@ -564,6 +548,9 @@ func TestECCAgreement(t *testing.T) {
 	}
 	fmt.Printf("data %x dataLength %x \n",data,dataLength)
 
+	if(bytes.Compare(randomData,data)==0){
+		fmt.Println("Decrypt the data succeed!")
+	}
 	fmt.Println("===SDFDestroyKey===")
 	err = c.SDFDestroyKey(s,srcKeyHandle)
 	if err!= nil{
