@@ -63,5 +63,3 @@ var StrErrors = map[uint]string{
 	0x01021013: "SWR_PARAMENT_ERR",
 	0x01020020: "SWR_KEYTYPEERR",
 }
-
-
