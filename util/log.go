@@ -6,45 +6,45 @@ import (
 	"runtime"
 )
 
-
 var LOGPATHNAME string
-func InitLogFile(LogPath,fileName string){
-	if runtime.GOOS=="windows"{
-		if path:=os.Getenv("LOGPATH");path==""{
-			os.Setenv("LOGPATH",LogPath)
-			LOGPATHNAME=LogPath+"\\"+fileName
-		}else{
+
+func InitLogFile(LogPath, fileName string) {
+	if runtime.GOOS == "windows" {
+		if path := os.Getenv("LOGPATH"); path == "" {
+			os.Setenv("LOGPATH", LogPath)
+			LOGPATHNAME = LogPath + "\\" + fileName
+		} else {
 			LogPath = path
 		}
-	}else {
-		if path:=os.Getenv("LOGPATH");path==""{
-			os.Setenv("LOGPATH",LogPath)
-			LOGPATHNAME=LogPath+"/"+fileName
-		}else{
+	} else {
+		if path := os.Getenv("LOGPATH"); path == "" {
+			os.Setenv("LOGPATH", LogPath)
+			LOGPATHNAME = LogPath + "/" + fileName
+		} else {
 			LogPath = path
 		}
 	}
 
 	if !IsExist(LogPath) {
-		err:=CreateDir(LogPath)
-		if err == nil{
-			if !IsExist(LOGPATHNAME){
+		err := CreateDir(LogPath)
+		if err == nil {
+			if !IsExist(LOGPATHNAME) {
 				f, err := os.OpenFile(LOGPATHNAME, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 				if err == nil {
-					_,err:=f.WriteString("init log file\n")
-					if err!= nil{
+					_, err := f.WriteString("init log file\n")
+					if err != nil {
 						log.Println("init log file failed!")
 					}
 				}
 				defer f.Close()
 			}
 		}
-	}else{
-		if !IsExist(LOGPATHNAME){
+	} else {
+		if !IsExist(LOGPATHNAME) {
 			f, err := os.OpenFile(LOGPATHNAME, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 			if err == nil {
-				_,err:=f.WriteString("init log file\n")
-				if err!= nil{
+				_, err := f.WriteString("init log file\n")
+				if err != nil {
 					log.Println("init log file failed!")
 				}
 			}
@@ -53,16 +53,15 @@ func InitLogFile(LogPath,fileName string){
 	}
 }
 
-
 func Log(msg string) error {
 	f, err := os.OpenFile(LOGPATHNAME, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil{
-		log.Fatalln("open log file failed!",err)
+	if err != nil {
+		log.Fatalln("open log file failed!", err)
 		return err
 	}
 	defer f.Close()
-	_,err=f.WriteString(msg)
-	if err!= nil{
+	_, err = f.WriteString(msg)
+	if err != nil {
 		log.Println("write log file failed!")
 	}
 	return err
