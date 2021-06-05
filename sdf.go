@@ -1067,11 +1067,7 @@ func (c *Ctx) SDFOpenDevice() (deviceHandle DeviceHandleType, err error) {
 	err1 = C.SDFOpenDevice(c.libHandle, &dH)
 	err = ToError(err1)
 	deviceHandle = DeviceHandleType(dH)
-	if err == nil {
-		return deviceHandle, err
-	} else {
-		return nil, err
-	}
+	return deviceHandle, err
 }
 
 //func (c *Ctx)SDFOpenDevice(deviceHandle  DeviceHandleType) (deviceHandle2 DeviceHandleType,err error){
