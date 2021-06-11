@@ -1067,13 +1067,7 @@ func (c *Ctx) SDFOpenDevice() (deviceHandle DeviceHandleType, err error) {
 	err1 = C.SDFOpenDevice(c.libHandle, &dH)
 	err = ToError(err1)
 	deviceHandle = DeviceHandleType(dH)
-	if err == nil {
-		a := fmt.Sprintf("0x%x", deviceHandle)
-		util.Log("open device: " + a + " <" + time.Now().String() + ">\n")
-		return deviceHandle, err
-	} else {
-		return nil, err
-	}
+	return deviceHandle, err
 }
 
 //func (c *Ctx)SDFOpenDevice(deviceHandle  DeviceHandleType) (deviceHandle2 DeviceHandleType,err error){
@@ -1096,12 +1090,7 @@ func (c *Ctx) SDFOpenDevice() (deviceHandle DeviceHandleType, err error) {
 func (c *Ctx) SDFCloseDevice(deviceHandle DeviceHandleType) (err error) {
 	var err1 C.SGD_RV
 	err1 = C.SDFCloseDevice(c.libHandle, C.SGD_HANDLE(deviceHandle))
-	err = ToError(err1)
-	if err == nil {
-		a := fmt.Sprintf("0x%x", deviceHandle)
-		util.Log("close device: " + a + " <" + time.Now().String() + ">\n\n")
-	}
-	return err
+	return ToError(err1)
 }
 
 //3.创建会话
@@ -1110,27 +1099,14 @@ func (c *Ctx) SDFOpenSession(deviceHandle DeviceHandleType) (sessionHandle Sessi
 	var s C.SGD_HANDLE
 	err1 = C.SDFOpenSession(c.libHandle, C.SGD_HANDLE(deviceHandle), &s)
 	sessionHandle = SessionHandleType(s)
-	err = ToError(err1)
-	if err == nil {
-		a := fmt.Sprintf("0x%x", sessionHandle)
-		util.Log("open session: " + a + " <" + time.Now().String() + ">\n")
-		return sessionHandle, err
-	} else {
-		return nil, err
-	}
-
+	return sessionHandle, ToError(err1)
 }
 
 //4.关闭会话
 func (c *Ctx) SDFCloseSession(sessionHandle SessionHandleType) (err error) {
 	var err1 C.SGD_RV
 	err1 = C.SDFCloseSession(c.libHandle, C.SGD_HANDLE(sessionHandle))
-	err = ToError(err1)
-	if err == nil {
-		a := fmt.Sprintf("0x%x", sessionHandle)
-		util.Log("close session: " + a + " <" + time.Now().String() + ">\n")
-	}
-	return err
+	return ToError(err1)
 }
 
 //5.获取设备信息
