@@ -1019,17 +1019,13 @@ func New(libPath string) *Ctx {
 	return c
 }
 
-type Error uint
-
-func (e Error) Error() string {
-	return fmt.Sprintf("sdf: 0x%X:%s", uint(e), core.StrErrors[uint(e)])
-}
-
 func ToError(e C.SGD_RV) error {
 	if e == C.SDR_OK {
 		return nil
 	}
-	return Error(e)
+	err_code := uint(e)
+	str := fmt.Sprintf("sdf: 0x%X:%s", err_code, core.StrErrors[err_code])
+	return fmt.Errorf(str)
 }
 
 func deepCopy(src []byte) (dst []byte) {
