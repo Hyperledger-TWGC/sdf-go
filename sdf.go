@@ -391,7 +391,7 @@ SGD_RV SDFGenerateKeyWithECC (struct LibHandle * h,SGD_HANDLE hSessionHandle, SG
 	return (*fptr)(hSessionHandle,pucResponseID,uiResponseIDLength,pucResponsePublicKey,pucResponseTmpPublicKey,hAgreementHandle,phKeyHandle);
 #else
 	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_GenerateKeyWithECC");
-	return (*fptr)(hSessionHandle,*pucResponseID,uiResponseIDLength,pucResponsePublicKey,pucResponseTmpPublicKey,hAgreementHandle,phKeyHandle);
+	return (*fptr)(hSessionHandle,pucResponseID,uiResponseIDLength,pucResponsePublicKey,pucResponseTmpPublicKey,hAgreementHandle,phKeyHandle);
 #endif
 }
 //24. 产生协商数据并计算会话密钥
@@ -830,11 +830,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
 	"unsafe"
-
 	"github.com/Hyperledger-TWGC/sdf-go/core"
-	"github.com/Hyperledger-TWGC/sdf-go/util"
 )
 
 func ConvertToDeviceInfoGo(deviceInfo1 C.DEVICEINFO) (deviceInfo core.DeviceInfo) {
@@ -1036,6 +1033,15 @@ func deepCopy(src []byte) (dst []byte) {
 	return
 }
 
+func (c *Ctx) Destroy() {
+	if c == nil || c.libHandle == nil {
+		return
+	}
+	C.Destroy(c.libHandle)
+	c.libHandle = nil
+}
+
+
 type Ctx struct {
 	libHandle *C.struct_LibHandle
 }
@@ -1066,22 +1072,6 @@ func (c *Ctx) SDFOpenDevice() (deviceHandle DeviceHandleType, err error) {
 	return deviceHandle, err
 }
 
-//func (c *Ctx)SDFOpenDevice(deviceHandle  DeviceHandleType) (deviceHandle2 DeviceHandleType,err error){
-//    var err1 C.SGD_RV
-//    var dH =C.SGD_HANDLE(deviceHandle)
-//	err1 = C.SDFOpenDevice(c.libHandle,&dH)
-//	err = ToError(err1)
-//	deviceHandle2 = DeviceHandleType(dH)
-//	if err == nil{
-//		a:=fmt.Sprintf("0x%x",deviceHandle2)
-//		util.Log("open device: "+a+" <"+time.Now().String()+">\n")
-//		return deviceHandle2,err
-//	}else {
-//		return nil,err
-//	}
-//
-//
-//}
 //2.关闭设备
 func (c *Ctx) SDFCloseDevice(deviceHandle DeviceHandleType) (err error) {
 	var err1 C.SGD_RV
@@ -1122,7 +1112,7 @@ func (c *Ctx) SDFGenerateRandom(sessionHandle SessionHandleType, length uint) (r
 	err1 = C.SDFGenerateRandom(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(length), &random)
 	err = ToError(err1)
 	randomData = C.GoBytes(unsafe.Pointer(random), C.int(length))
-	//C.free(unsafe.Pointer(random))
+	C.free(unsafe.Pointer(random))
 	return randomData, err
 }
 
@@ -1183,7 +1173,7 @@ func (c *Ctx) SDFGenerateKeyWithIPK_RSA(sessionHandle SessionHandleType, uiIPKIn
 	var phKeyHandle C.SGD_HANDLE
 	err1 = C.SDFGenerateKeyWithIPK_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(uiIPKIndex), C.SGD_UINT32(uiKeyBits), &pucKey, &length, &phKeyHandle)
 	key = C.GoBytes(unsafe.Pointer(pucKey), C.int(length))
-	//C.free(unsafe.Pointer(pucKey))
+	C.free(unsafe.Pointer(pucKey))
 	keyLength = uint(length)
 	keyHandle = KeyHandleType(phKeyHandle)
 	err = ToError(err1)
@@ -1200,7 +1190,7 @@ func (c *Ctx) SDFGenerateKeyWithEPK_RSA(sessionHandle SessionHandleType, uiKeyBi
 	err1 = C.SDFGenerateKeyWithEPK_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(uiKeyBits), &pubKey, &pucKey, &puiKeyLength, &phKeyHandle)
 	key = C.GoBytes(unsafe.Pointer(pucKey), C.int(puiKeyLength))
 	keyLength = uint(puiKeyLength)
-	//C.free(unsafe.Pointer(pucKey))
+	C.free(unsafe.Pointer(pucKey))
 	keyHandle = KeyHandleType(phKeyHandle)
 	err = ToError(err1)
 	return key, keyLength, keyHandle, err
@@ -1224,7 +1214,7 @@ func (c *Ctx) SDFExchangeDigitEnvelopeBaseOnRSA(sessionHandle SessionHandleType,
 	pucPublicKey := ConvertToRSArefPublicKeyC(publicKey)
 	err1 = C.SDFExchangeDigitEnvelopeBaseOnRSA(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(keyIndex), &pucPublicKey, CMessage(deInput), C.SGD_UINT32(deLength), &pucDEOutput, &puiDELength)
 	deOutput = C.GoBytes(unsafe.Pointer(pucDEOutput), C.int(puiDELength))
-	//C.free(unsafe.Pointer(pucDEOutput))
+	C.free(unsafe.Pointer(pucDEOutput))
 	deOutputLength = uint(puiDELength)
 	err = ToError(err1)
 	return deOutput, deOutputLength, err
@@ -1279,7 +1269,6 @@ func (c *Ctx) SDFGenerateKeyWithEPK_ECC(sessionHandle SessionHandleType, uiKeyBi
 	var err1 C.SGD_RV
 	var pucPublicKey C.ECCrefPublicKey
 	pucPublicKey.bits = C.SGD_UINT32(publicKey.Bits)
-
 	for i := 0; i < len(publicKey.X); i++ {
 		pucPublicKey.x[i] = C.SGD_UCHAR(publicKey.Y[i])
 	}
@@ -1335,23 +1324,8 @@ func (c *Ctx) SDFGenerateKeyWithECC(sessionHandle SessionHandleType, responseID 
 //24.产生协商数据并计算会话密钥
 func (c *Ctx) SDFGenerateAgreementDataAndKeyWithECC(sessionHandle SessionHandleType, uiISKIndex uint, uiKeyBits uint, responseID []byte, responseIDLength uint, sponsorID []byte, sponsorIDLength uint, sponsorPublicKey core.ECCrefPublicKey, sponsorTmpPublicKey core.ECCrefPublicKey) (responsePublicKey core.ECCrefPublicKey, responseTmpPublicKey core.ECCrefPublicKey, keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
-
-	//fmt.Println("eccSrcPubKey bits",sponsorPublicKey.Bits)
-	//fmt.Println("eccSrcPubKey X",[]byte(sponsorPublicKey.X))
-	//fmt.Println("eccSrcPubKey Y",[]byte(sponsorPublicKey.Y))
-	//fmt.Println("eccSrcTmpPubKey bits",sponsorTmpPublicKey.Bits)
-	//fmt.Println("eccSrcTmpPubKey X",[]byte(sponsorTmpPublicKey.X))
-	//fmt.Println("eccSrcTmpPubKey Y",[]byte(sponsorTmpPublicKey.Y))
 	pucSponsorPublicKey := ConvertToECCrefPublicKeyC(sponsorPublicKey)
 	pucSponsorTmpPublicKey := ConvertToECCrefPublicKeyC(sponsorTmpPublicKey)
-	//sponsorPublicKey1 :=ConvertToECCrefPublicKeyGo(pucSponsorPublicKey)
-	//sponsorTmpPublicKey1 :=ConvertToECCrefPublicKeyGo(pucSponsorTmpPublicKey)
-	//fmt.Println("eccSrcPubKey bits",sponsorPublicKey1.Bits)
-	//fmt.Println("eccSrcPubKey X",[]byte(sponsorPublicKey1.X))
-	//fmt.Println("eccSrcPubKey Y",[]byte(sponsorPublicKey1.Y))
-	//fmt.Println("eccSrcTmpPubKey bits",sponsorTmpPublicKey1.Bits)
-	//fmt.Println("eccSrcTmpPubKey X",[]byte(sponsorTmpPublicKey1.X))
-	//fmt.Println("eccSrcTmpPubKey Y",[]byte(sponsorTmpPublicKey1.Y))
 	var pucResponsePublicKey C.ECCrefPublicKey
 	var pucResponseTmpPublicKey C.ECCrefPublicKey
 	var phKeyHandle C.SGD_HANDLE
@@ -1423,7 +1397,7 @@ func (c *Ctx) SDFExternalPublicKeyOperation_RSA(sessionHandle SessionHandleType,
 	pucPublicKey := ConvertToRSArefPublicKeyC(publicKey)
 	err1 = C.SDFExternalPublicKeyOperation_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), &pucPublicKey, CMessage(dataInput), C.SGD_UINT32(uiInputLength), &pucDataOutput, &puiOutputLength)
 	dataOutput = C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
-	//C.free(unsafe.Pointer(pucDataOutput))
+	C.free(unsafe.Pointer(pucDataOutput))
 	err = ToError(err1)
 	return dataOutput, err
 }
@@ -1436,7 +1410,7 @@ func (c *Ctx) SDFExternalPrivateKeyOperation_RSA(sessionHandle SessionHandleType
 	pucPrivateKey := ConvertToRSArefPrivateKeyC(privateKey)
 	err1 = C.SDFExternalPrivateKeyOperation_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), &pucPrivateKey, CMessage(dataInput), C.SGD_UINT32(uiInputLength), &pucDataOutput, &puiOutputLength)
 	dataOutput = C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
-	//C.free(unsafe.Pointer(pucDataOutput))
+	C.free(unsafe.Pointer(pucDataOutput))
 	err = ToError(err1)
 	return dataOutput, err
 }
@@ -1449,7 +1423,7 @@ func (c *Ctx) SDFInternalPublicKeyOperation_RSA(sessionHandle SessionHandleType,
 	err1 = C.SDFInternalPublicKeyOperation_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(uiKeyIndex), CMessage(pucDataInput), C.SGD_UINT32(uiInputLength), &pucDataOutput, &puiOutputLength)
 	dataOutput = C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
 	err = ToError(err1)
-	//C.free(unsafe.Pointer(pucDataOutput))
+	C.free(unsafe.Pointer(pucDataOutput))
 	return dataOutput, err
 }
 
@@ -1461,7 +1435,7 @@ func (c *Ctx) SDFInternalPrivateKeyOperation_RSA(sessionHandle SessionHandleType
 	err1 = C.SDFInternalPrivateKeyOperation_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(uiKeyIndex), CMessage(inData), C.SGD_UINT32(uiInputLength), &pucDataOutput, &puiOutputLength)
 	dataOutput1 := C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
 	dataOutput = deepCopy(dataOutput1)
-	//C.free(unsafe.Pointer(pucDataOutput))
+	C.free(unsafe.Pointer(pucDataOutput))
 	err = ToError(err1)
 	return dataOutput, err
 }
@@ -1533,7 +1507,7 @@ func (c *Ctx) SDFExternalDecrypt_ECC(sessionHandle SessionHandleType, uiAlgID ui
 	err1 = C.SDFExternalDecrypt_ECC(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(uiAlgID), &pucPrivateKey, &pucEncData, &pucData, &puiDataLength)
 	data = C.GoBytes(unsafe.Pointer(pucData), C.int(puiDataLength))
 	dataLength = uint(puiDataLength)
-	//C.free(unsafe.Pointer(pucData))
+	C.free(unsafe.Pointer(pucData))
 	err = ToError(err1)
 	return data, dataLength, err
 }
@@ -1547,7 +1521,7 @@ func (c *Ctx) SDFEncrypt(sessionHandle SessionHandleType, keyHandle KeyHandleTyp
 	encData = C.GoBytes(unsafe.Pointer(pucEncData), C.int(puiEncDataLength))
 	encDataLength = uint(puiEncDataLength)
 	err = ToError(err1)
-	//C.free(unsafe.Pointer(pucEncData))
+	C.free(unsafe.Pointer(pucEncData))
 	return encData, uint(puiEncDataLength), err
 }
 
@@ -1559,7 +1533,7 @@ func (c *Ctx) SDFDecrypt(sessionHandle SessionHandleType, hKeyHandle KeyHandleTy
 	err1 = C.SDFDecrypt(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_HANDLE(hKeyHandle), C.SGD_UINT32(uiAlgID), CMessage(iv), CMessage(encData), C.SGD_UINT32(encDataLength), &pucData, &puiDataLength)
 	data = C.GoBytes(unsafe.Pointer(pucData), C.int(puiDataLength))
 	dataLength = uint(puiDataLength)
-	//C.free(unsafe.Pointer(pucData))
+	C.free(unsafe.Pointer(pucData))
 	err = ToError(err1)
 	return data, dataLength, err
 }
@@ -1572,7 +1546,7 @@ func (c *Ctx) SDFCalculateMAC(sessionHandle SessionHandleType, hKeyHandle KeyHan
 	err1 = C.SDFCalculateMAC(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_HANDLE(hKeyHandle), C.SGD_UINT32(uiAlgID), CMessage(iv), CMessage(data), C.SGD_UINT32(dataLength), &pucMAC, &puiMACLength)
 	mac = C.GoBytes(unsafe.Pointer(pucMAC), C.int(puiMACLength))
 	macLength = uint(puiMACLength)
-	//C.free(unsafe.Pointer(pucMAC))
+	C.free(unsafe.Pointer(pucMAC))
 	err = ToError(err1)
 	return mac, macLength, err
 }
@@ -1603,7 +1577,7 @@ func (c *Ctx) SDFHashFinal(sessionHandle SessionHandleType) (hash []byte, hashLe
 	err1 = C.SDFHashFinal(c.libHandle, C.SGD_HANDLE(sessionHandle), &pucData, &puiHashLength)
 	hash = C.GoBytes(unsafe.Pointer(pucData), C.int(puiHashLength))
 	hashLength = uint(puiHashLength)
-	//C.free(unsafe.Pointer(pucData))
+	C.free(unsafe.Pointer(pucData))
 	err = ToError(err1)
 	return hash, hashLength, err
 }
@@ -1625,7 +1599,7 @@ func (c *Ctx) SDFReadFile(sessionHandle SessionHandleType, fileName []byte, uiOf
 	err1 = C.SDFReadFile(c.libHandle, C.SGD_HANDLE(sessionHandle), CMessage(fileName), C.SGD_UINT32(len(fileName)), C.SGD_UINT32(uiOffset), &puiReadLength, &pucBuffer)
 	buffer = C.GoBytes(unsafe.Pointer(pucBuffer), C.int(puiReadLength))
 	readLength1 = uint(puiReadLength)
-	//C.free(unsafe.Pointer(pucBuffer))
+	C.free(unsafe.Pointer(pucBuffer))
 	err = ToError(err1)
 	return buffer, readLength1, err
 }
@@ -1686,9 +1660,8 @@ func (c *Ctx) SDFInternalDecrypt_ECC(sessionHandle SessionHandleType, uiISKIndex
 	var pucData C.SGD_UCHAR_PRT
 	var puiDataLength C.SGD_UINT32
 	err1 = C.SDFInternalDecrypt_ECC(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(uiISKIndex), C.SGD_UINT32(uiAlgID), &pucEncData, &pucData, &puiDataLength)
-	//encData :=ConvertToECCCipherGo(pucEncData)
 	data = C.GoBytes(unsafe.Pointer(pucData), C.int(puiDataLength))
-	//C.free(unsafe.Pointer(pucData))
+	C.free(unsafe.Pointer(pucData))
 	dataLength = uint(puiDataLength)
 	err = ToError(err1)
 	return data, dataLength, err
@@ -1702,7 +1675,7 @@ func (c *Ctx) SDFExportKeyWithEPK_RSA(sessionHandle SessionHandleType, hKeyHandl
 	var puiKeyLength C.SGD_UINT32
 	err1 = C.SDFExportKeyWithEPK_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_HANDLE(hKeyHandle), &pucPublicKey, &pucKey, &puiKeyLength)
 	key = C.GoBytes(unsafe.Pointer(pucKey), C.int(puiKeyLength))
-	//C.free(unsafe.Pointer(pucKey))
+	C.free(unsafe.Pointer(pucKey))
 	err = ToError(err1)
 	return key, err
 }
