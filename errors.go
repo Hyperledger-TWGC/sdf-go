@@ -1,7 +1,7 @@
-package core
+package sdf
 
 /*
-#include<../sansec/swsds.h>
+#include<./sansec/swsds.h>
 */
 import "C"
 

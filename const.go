@@ -1,4 +1,4 @@
-package core
+package sdf
 
 const (
 	SDR_OK   = 0x00000000
