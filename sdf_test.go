@@ -502,29 +502,8 @@ func TestEncryptFunc(t *testing.T) {
 }
 
 func TestSDFMAC(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 	fmt.Println("===SDFGenerateRandom===")
 	var length uint = 16
 	randomNum, err := c.SDFGenerateRandom(s, length)

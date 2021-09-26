@@ -8,35 +8,15 @@ import (
 
 // 测试产生RSA密钥
 func TestGenRSAKeyPair(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		t.Fatal("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			t.Fatal("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		t.Fatal("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	fmt.Println("===SDFGenerateKeyPair_RSA===")
 	var public RSArefPublicKey
 	var private RSArefPrivateKey
-	public, private, err = c.SDFGenerateKeyPair_RSA(s, 512)
+	public, private, err := c.SDFGenerateKeyPair_RSA(s, 512)
 	if err != nil {
-		fmt.Println("generateKeyPair rsa error: ", err)
+		t.Fatal("generateKeyPair rsa error: ", err)
 	}
 	fmt.Println("Public Key Bits", public.Bits)
 	fmt.Println("Public Key M", []byte(public.M))
@@ -53,32 +33,15 @@ func TestGenRSAKeyPair(t *testing.T) {
 }
 
 func TestExportRSAPuk(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	fmt.Println("===SDFExportSignPublicKey_RSA===")
 	var signPublicKey RSArefPublicKey
-	signPublicKey, err = c.SDFExportSignPublicKey_RSA(s, 1)
+	signPublicKey, err := c.SDFExportSignPublicKey_RSA(s, 1)
+	if err != nil {
+		t.Fatal(err)
+	}
 	fmt.Println("SignPublicKey Key Bits", signPublicKey.Bits)
 	fmt.Println("SignPublicKey Key M", []byte(signPublicKey.M))
 	fmt.Println("SignPublicKey Key E", []byte(signPublicKey.E))
@@ -86,47 +49,29 @@ func TestExportRSAPuk(t *testing.T) {
 	fmt.Println("===SDFExportEncPublicKey_RSA===")
 	var encPublicKey RSArefPublicKey
 	encPublicKey, err = c.SDFExportEncPublicKey_RSA(s, 1)
+	if err != nil {
+		t.Fatal(err)
+	}
 	fmt.Println("EncPublicKey Key Bits", encPublicKey.Bits)
 	fmt.Println("EncPublicKey Key M", []byte(encPublicKey.M))
 	fmt.Println("EncPublicKey Key E", []byte(encPublicKey.E))
 }
 
 func TestExtRSAOpt(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	fmt.Println("===SDFGenerateKeyPair_RSA===")
 	publicKey, privateKey, err := c.SDFGenerateKeyPair_RSA(s, 1024)
 	if err != nil {
-		fmt.Println("generateKeyPair rsa error: ", err)
+		t.Fatal("generateKeyPair rsa error: ", err)
 	}
 
 	//产生随机加密数据
 	fmt.Println("===SDFGenerateRandom===")
 	randomData, err := c.SDFGenerateRandom(s, publicKey.Bits/8)
 	if err != nil {
-		fmt.Println("generate random encrypt data error: ", err)
+		t.Fatal("generate random encrypt data error: ", err)
 	}
 	fmt.Printf("random encrypt data: %x \n", randomData)
 
@@ -147,29 +92,8 @@ func TestExtRSAOpt(t *testing.T) {
 }
 
 func TestIntRSAOps(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	var keyIndex uint = 1
 	fmt.Println("===SDFExportSignPublicKey_RSA===")
@@ -206,28 +130,8 @@ func TestIntRSAOps(t *testing.T) {
 }
 
 func TestTransEnvelopRSA(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	var keyIndexSrc uint = 1
 	var keyIndexDest uint = 1
@@ -248,7 +152,7 @@ func TestTransEnvelopRSA(t *testing.T) {
 
 	keyDest, outDestKeyLen, err := c.SDFExchangeDigitEnvelopeBaseOnRSA(s, keyIndexDest, publicKey, keySrc, keySrcLength)
 	if err != nil {
-		fmt.Println("Exchange Digit Envelope Base On RSA error: ", err)
+		t.Fatal("Exchange Digit Envelope Base On RSA error: ", err)
 	}
 	fmt.Println(keyDest, outDestKeyLen)
 
@@ -262,20 +166,20 @@ func TestTransEnvelopRSA(t *testing.T) {
 	var dataLength uint = 16
 	randomData, err := c.SDFGenerateRandom(s, dataLength)
 	if err != nil {
-		fmt.Println("Generate random data error: ", err)
+		t.Fatal("Generate random data error: ", err)
 	}
 
 	fmt.Println("===SDFEncrypt===")
 	iv := []byte{0xd0, 0x4e, 0x51, 0xcd, 0xb1, 0x3c, 0x4a, 0xda, 0x34, 0x72, 0x44, 0xc3, 0x53, 0x29, 0x06, 0x24}
 	encData, encDataLength, err := c.SDFEncrypt(s, keySrcHandle, SGD_SMS4_ECB, iv, randomData, 1024)
 	if err != nil {
-		fmt.Println("Encrypt Data error: ", err)
+		t.Fatal("Encrypt Data error: ", err)
 	}
 
 	fmt.Println("===SDFDecrypt===")
 	data, dataLength, err := c.SDFDecrypt(s, keyDestHandle, SGD_SMS4_ECB, iv, encData, encDataLength)
 	if err != nil {
-		fmt.Println("Decrypt Data error: ", err)
+		t.Fatal("Decrypt Data error: ", err)
 	}
 	if bytes.Compare(randomData, data) == 0 {
 		fmt.Println("Decrypt the data succeed!")
@@ -283,10 +187,10 @@ func TestTransEnvelopRSA(t *testing.T) {
 
 	err = c.SDFDestroyKey(s, keySrcHandle)
 	if err != nil {
-		fmt.Println("DestroyKey error: ", err)
+		t.Fatal("DestroyKey error: ", err)
 	}
 	err = c.SDFDestroyKey(s, keyDestHandle)
 	if err != nil {
-		fmt.Println("DestroyKey error: ", err)
+		t.Fatal("DestroyKey error: ", err)
 	}
 }
