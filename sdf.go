@@ -1060,7 +1060,7 @@ func CMessage(data []byte) (dataPtr C.SGD_UCHAR_PRT) {
 	return dataPtr
 }
 
-//1.打开设备
+// SDFOpenDevice 1.打开设备
 func (c *Ctx) SDFOpenDevice() (deviceHandle DeviceHandleType, err error) {
 	var err1 C.SGD_RV
 	var dH C.SGD_HANDLE
@@ -1070,14 +1070,14 @@ func (c *Ctx) SDFOpenDevice() (deviceHandle DeviceHandleType, err error) {
 	return deviceHandle, err
 }
 
-//2.关闭设备
+// SDFCloseDevice 2.关闭设备
 func (c *Ctx) SDFCloseDevice(deviceHandle DeviceHandleType) (err error) {
 	var err1 C.SGD_RV
 	err1 = C.SDFCloseDevice(c.libHandle, C.SGD_HANDLE(deviceHandle))
 	return ToError(err1)
 }
 
-//3.创建会话
+// SDFOpenSession 3.创建会话
 func (c *Ctx) SDFOpenSession(deviceHandle DeviceHandleType) (sessionHandle SessionHandleType, err error) {
 	var err1 C.SGD_RV
 	var s C.SGD_HANDLE
@@ -1086,14 +1086,14 @@ func (c *Ctx) SDFOpenSession(deviceHandle DeviceHandleType) (sessionHandle Sessi
 	return sessionHandle, ToError(err1)
 }
 
-//4.关闭会话
+// SDFCloseSession 4.关闭会话
 func (c *Ctx) SDFCloseSession(sessionHandle SessionHandleType) (err error) {
 	var err1 C.SGD_RV
 	err1 = C.SDFCloseSession(c.libHandle, C.SGD_HANDLE(sessionHandle))
 	return ToError(err1)
 }
 
-//5.获取设备信息
+// SDFGetDeviceInfo 5.获取设备信息
 func (c *Ctx) SDFGetDeviceInfo(sessionHandle SessionHandleType) (deviceInfo DeviceInfo, err error) {
 	var deviceInfo1 C.DEVICEINFO
 	var err1 C.SGD_RV
@@ -1103,7 +1103,7 @@ func (c *Ctx) SDFGetDeviceInfo(sessionHandle SessionHandleType) (deviceInfo Devi
 	return deviceInfo, err
 }
 
-//6.产生随机数
+// SDFGenerateRandom 6.产生随机数
 func (c *Ctx) SDFGenerateRandom(sessionHandle SessionHandleType, length uint) (randomData []byte, err error) {
 	var err1 C.SGD_RV
 	var random C.SGD_UCHAR_PRT
@@ -1114,7 +1114,7 @@ func (c *Ctx) SDFGenerateRandom(sessionHandle SessionHandleType, length uint) (r
 	return randomData, err
 }
 
-//7.获取私钥使用权限
+// SDFGetPrivateKeyAccessRight 7.获取私钥使用权限
 func (c *Ctx) SDFGetPrivateKeyAccessRight(sessionHandle SessionHandleType, keyIndex uint, password []byte, pwdLength uint) (err error) {
 	var err1 C.SGD_RV
 	err1 = C.SDFGetPrivateKeyAccessRight(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(keyIndex), CMessage(password), C.SGD_UINT32(pwdLength))
@@ -1122,7 +1122,7 @@ func (c *Ctx) SDFGetPrivateKeyAccessRight(sessionHandle SessionHandleType, keyIn
 	return err
 }
 
-//8.释放私钥使用权限
+// SDFReleasePrivateKeyAccessRight 8.释放私钥使用权限
 func (c *Ctx) SDFReleasePrivateKeyAccessRight(sessionHandle SessionHandleType, keyIndex uint) (err error) {
 	var err1 C.SGD_RV
 	err1 = C.SDFReleasePrivateKeyAccessRight(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(keyIndex))
@@ -1130,7 +1130,7 @@ func (c *Ctx) SDFReleasePrivateKeyAccessRight(sessionHandle SessionHandleType, k
 	return err
 }
 
-//9.导出 RSA 签名公钥
+// SDFExportSignPublicKey_RSA 9.导出 RSA 签名公钥
 func (c *Ctx) SDFExportSignPublicKey_RSA(sessionHandle SessionHandleType, keyIndex uint) (publicKey RSArefPublicKey, err error) {
 	var err1 C.SGD_RV
 	var pucPublicKey C.RSArefPublicKey
@@ -1140,7 +1140,7 @@ func (c *Ctx) SDFExportSignPublicKey_RSA(sessionHandle SessionHandleType, keyInd
 	return publicKey, err
 }
 
-//10.导出 RSA 加密公钥
+// SDFExportEncPublicKey_RSA 10.导出 RSA 加密公钥
 func (c *Ctx) SDFExportEncPublicKey_RSA(sessionHandle SessionHandleType, keyIndex uint) (publicKey RSArefPublicKey, err error) {
 	var err1 C.SGD_RV
 	var pucPublicKey C.RSArefPublicKey
@@ -1150,7 +1150,7 @@ func (c *Ctx) SDFExportEncPublicKey_RSA(sessionHandle SessionHandleType, keyInde
 	return publicKey, err
 }
 
-//11.产生 RSA 非对称密钥对并输出
+// SDFGenerateKeyPair_RSA 11.产生 RSA 非对称密钥对并输出
 func (c *Ctx) SDFGenerateKeyPair_RSA(sessionHandle SessionHandleType, uiKeyBits uint) (publicKey RSArefPublicKey, privateKey RSArefPrivateKey, err error) {
 
 	var err1 C.SGD_RV
@@ -1163,7 +1163,7 @@ func (c *Ctx) SDFGenerateKeyPair_RSA(sessionHandle SessionHandleType, uiKeyBits 
 	return publicKey, privateKey, err
 }
 
-//12.生成会话密钥并用内部 RSA 公钥加密输出
+// SDFGenerateKeyWithIPK_RSA 12.生成会话密钥并用内部 RSA 公钥加密输出
 func (c *Ctx) SDFGenerateKeyWithIPK_RSA(sessionHandle SessionHandleType, uiIPKIndex uint, uiKeyBits uint) (key []byte, keyLength uint, keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	var pucKey C.SGD_UCHAR_PRT
@@ -1178,7 +1178,7 @@ func (c *Ctx) SDFGenerateKeyWithIPK_RSA(sessionHandle SessionHandleType, uiIPKIn
 	return key, keyLength, keyHandle, err
 }
 
-//13.生成会话密钥并用外部 RSA 公钥加密输出
+// SDFGenerateKeyWithEPK_RSA 13.生成会话密钥并用外部 RSA 公钥加密输出
 func (c *Ctx) SDFGenerateKeyWithEPK_RSA(sessionHandle SessionHandleType, uiKeyBits uint, publicKey RSArefPublicKey) (key []byte, keyLength uint, keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	var pucKey C.SGD_UCHAR_PRT
@@ -1194,7 +1194,7 @@ func (c *Ctx) SDFGenerateKeyWithEPK_RSA(sessionHandle SessionHandleType, uiKeyBi
 	return key, keyLength, keyHandle, err
 }
 
-//14.导入会话密钥并用内部 RSA 私钥解密
+// SDFImportKeyWithISK_RSA 14.导入会话密钥并用内部 RSA 私钥解密
 func (c *Ctx) SDFImportKeyWithISK_RSA(sessionHandle SessionHandleType, uiKeyBits uint, key []byte, uiKeyLength uint) (keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	var phKeyHandle C.SGD_HANDLE
@@ -1204,7 +1204,7 @@ func (c *Ctx) SDFImportKeyWithISK_RSA(sessionHandle SessionHandleType, uiKeyBits
 	return keyHandle, err
 }
 
-//15.基于 RSA 算法的数字信封转换
+// SDFExchangeDigitEnvelopeBaseOnRSA 15.基于 RSA 算法的数字信封转换
 func (c *Ctx) SDFExchangeDigitEnvelopeBaseOnRSA(sessionHandle SessionHandleType, keyIndex uint, publicKey RSArefPublicKey, deInput []byte, deLength uint) (deOutput []byte, deOutputLength uint, err error) {
 	var err1 C.SGD_RV
 	var pucDEOutput C.SGD_UCHAR_PRT
@@ -1218,7 +1218,7 @@ func (c *Ctx) SDFExchangeDigitEnvelopeBaseOnRSA(sessionHandle SessionHandleType,
 	return deOutput, deOutputLength, err
 }
 
-//16.导出 ECC签名公钥
+// SDFExportSignPublicKey_ECC 16.导出 ECC签名公钥
 func (c *Ctx) SDFExportSignPublicKey_ECC(sessionHandle SessionHandleType, uiKeyIndex uint) (publicKey ECCrefPublicKey, err error) {
 	var err1 C.SGD_RV
 	var pucPublicKey C.ECCrefPublicKey
@@ -1228,7 +1228,7 @@ func (c *Ctx) SDFExportSignPublicKey_ECC(sessionHandle SessionHandleType, uiKeyI
 	return publicKey, err
 }
 
-//17.导出 ECC加密公钥
+// SDFExportEncPublicKey_ECC 17.导出 ECC加密公钥
 func (c *Ctx) SDFExportEncPublicKey_ECC(sessionHandle SessionHandleType, uiKeyIndex uint) (publicKey ECCrefPublicKey, err error) {
 	var err1 C.SGD_RV
 	var pucPublicKey C.ECCrefPublicKey
@@ -1238,7 +1238,7 @@ func (c *Ctx) SDFExportEncPublicKey_ECC(sessionHandle SessionHandleType, uiKeyIn
 	return publicKey, err
 }
 
-//18.产生 ECC非对称密钥对并输出
+// SDFGenerateKeyPair_ECC 18.产生 ECC非对称密钥对并输出
 func (c *Ctx) SDFGenerateKeyPair_ECC(sessionHandle SessionHandleType, uiAlgID uint, uiKeyBits uint) (publicKey ECCrefPublicKey, privateKey ECCrefPrivateKey, err error) {
 	var err1 C.SGD_RV
 	var pucPublicKey C.ECCrefPublicKey
@@ -1250,7 +1250,7 @@ func (c *Ctx) SDFGenerateKeyPair_ECC(sessionHandle SessionHandleType, uiAlgID ui
 	return publicKey, privateKey, err
 }
 
-//19.生成会话密钥并用内部 ECC公钥加密输出
+// SDFGenerateKeyWithIPK_ECC 19.生成会话密钥并用内部 ECC公钥加密输出
 func (c *Ctx) SDFGenerateKeyWithIPK_ECC(sessionHandle SessionHandleType, uiIPKIndex uint, uiKeyBits uint) (key ECCCipher, keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	var pucKey C.ECCCipher
@@ -1262,7 +1262,7 @@ func (c *Ctx) SDFGenerateKeyWithIPK_ECC(sessionHandle SessionHandleType, uiIPKIn
 	return key, keyHandle, err
 }
 
-//20.生成会话密钥并用外部 ECC公钥加密输出
+// SDFGenerateKeyWithEPK_ECC 20.生成会话密钥并用外部 ECC公钥加密输出
 func (c *Ctx) SDFGenerateKeyWithEPK_ECC(sessionHandle SessionHandleType, uiKeyBits uint, uiAlgID uint, publicKey ECCrefPublicKey) (key ECCCipher, keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	var pucPublicKey C.ECCrefPublicKey
@@ -1282,7 +1282,7 @@ func (c *Ctx) SDFGenerateKeyWithEPK_ECC(sessionHandle SessionHandleType, uiKeyBi
 	return key, keyHandle, err
 }
 
-//21.导入会话密钥并用内部 ECC私钥解密
+// SDFImportKeyWithISK_ECC 21.导入会话密钥并用内部 ECC私钥解密
 func (c *Ctx) SDFImportKeyWithISK_ECC(sessionHandle SessionHandleType, uiISKIndex uint, key ECCCipher) (keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	var phKeyHandle C.SGD_HANDLE
@@ -1293,7 +1293,7 @@ func (c *Ctx) SDFImportKeyWithISK_ECC(sessionHandle SessionHandleType, uiISKInde
 	return keyHandle, err
 }
 
-//22.生成密钥协商参数并输出
+// SDFGenerateAgreementDataWithECC 22.生成密钥协商参数并输出
 func (c *Ctx) SDFGenerateAgreementDataWithECC(sessionHandle SessionHandleType, uiISKIndex uint, uiKeyBits uint, sponsorID []byte, sponsorIDLength uint) (sponsorPublicKey ECCrefPublicKey, sponsorTmpPublicKey ECCrefPublicKey, agreementHandle AgreementHandleType, err error) {
 	var err1 C.SGD_RV
 	var pucSponsorPublicKey C.ECCrefPublicKey
@@ -1307,7 +1307,7 @@ func (c *Ctx) SDFGenerateAgreementDataWithECC(sessionHandle SessionHandleType, u
 	return sponsorPublicKey, sponsorTmpPublicKey, agreementHandle, err
 }
 
-//23.计算会话密钥
+// SDFGenerateKeyWithECC 23.计算会话密钥
 func (c *Ctx) SDFGenerateKeyWithECC(sessionHandle SessionHandleType, responseID []byte, responseIDLength uint, responsePublicKey ECCrefPublicKey, responseTmpPublicKey ECCrefPublicKey, hAgreementHandle AgreementHandleType) (keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	pucResponsePublicKey := ConvertToECCrefPublicKeyC(responsePublicKey)
@@ -1319,7 +1319,7 @@ func (c *Ctx) SDFGenerateKeyWithECC(sessionHandle SessionHandleType, responseID 
 	return keyHandle, err
 }
 
-//24.产生协商数据并计算会话密钥
+// SDFGenerateAgreementDataAndKeyWithECC 24.产生协商数据并计算会话密钥
 func (c *Ctx) SDFGenerateAgreementDataAndKeyWithECC(sessionHandle SessionHandleType, uiISKIndex uint, uiKeyBits uint, responseID []byte, responseIDLength uint, sponsorID []byte, sponsorIDLength uint, sponsorPublicKey ECCrefPublicKey, sponsorTmpPublicKey ECCrefPublicKey) (responsePublicKey ECCrefPublicKey, responseTmpPublicKey ECCrefPublicKey, keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	pucSponsorPublicKey := ConvertToECCrefPublicKeyC(sponsorPublicKey)
@@ -1335,7 +1335,7 @@ func (c *Ctx) SDFGenerateAgreementDataAndKeyWithECC(sessionHandle SessionHandleT
 	return responsePublicKey, responseTmpPublicKey, keyHandle, err
 }
 
-//25.基于 ECC算法的数字信封转换
+// SDFExchangeDigitEnvelopeBaseOnECC 25.基于 ECC算法的数字信封转换
 func (c *Ctx) SDFExchangeDigitEnvelopeBaseOnECC(sessionHandle SessionHandleType, uiKeyIndex uint, uiAlgID uint, publicKey ECCrefPublicKey, encDataIn ECCCipher) (encDataOut ECCCipher, err error) {
 	var err1 C.SGD_RV
 	var pucEncDataOut C.ECCCipher
@@ -1347,7 +1347,7 @@ func (c *Ctx) SDFExchangeDigitEnvelopeBaseOnECC(sessionHandle SessionHandleType,
 	return encDataOut, err
 }
 
-//26.生成会话密钥并用密钥加密密钥加密输出
+// SDFGenerateKeyWithKEK 26.生成会话密钥并用密钥加密密钥加密输出
 func (c *Ctx) SDFGenerateKeyWithKEK(sessionHandle SessionHandleType, uiKeyBits uint, uiAlgID uint, uiKEKIndex uint) ([]byte, uint, KeyHandleType, error) {
 	var err C.SGD_RV
 	var pucKey C.SGD_UCHAR_PRT
@@ -1359,7 +1359,7 @@ func (c *Ctx) SDFGenerateKeyWithKEK(sessionHandle SessionHandleType, uiKeyBits u
 	return p, uint(keyLength), KeyHandleType(phKeyHandle), ToError(err)
 }
 
-//27.导入会话密钥并用密钥加密密钥解密
+// SDFImportKeyWithKEK 27.导入会话密钥并用密钥加密密钥解密
 func (c *Ctx) SDFImportKeyWithKEK(sessionHandle SessionHandleType, uiAlgID uint, uiKEKIndex uint, key []byte, uiKeyLength uint) (keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	var phKeyHandle C.SGD_HANDLE
@@ -1369,7 +1369,7 @@ func (c *Ctx) SDFImportKeyWithKEK(sessionHandle SessionHandleType, uiAlgID uint,
 	return keyHandle, err
 }
 
-//28.导入明文会话密钥
+// SDFImportKey 28.导入明文会话密钥
 func (c *Ctx) SDFImportKey(sessionHandle SessionHandleType, pucKey []byte, uiKeyLength uint) (keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	var phKeyHandle C.SGD_HANDLE
@@ -1379,7 +1379,7 @@ func (c *Ctx) SDFImportKey(sessionHandle SessionHandleType, pucKey []byte, uiKey
 	return keyHandle, err
 }
 
-//29.销毁会话密钥
+// SDFDestroyKey 29.销毁会话密钥
 func (c *Ctx) SDFDestroyKey(sessionHandle SessionHandleType, hKeyHandle KeyHandleType) (err error) {
 	var err1 C.SGD_RV
 	err1 = C.SDFDestroyKey(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_HANDLE(hKeyHandle))
@@ -1387,58 +1387,7 @@ func (c *Ctx) SDFDestroyKey(sessionHandle SessionHandleType, hKeyHandle KeyHandl
 	return err
 }
 
-//30.外部公钥 RSA 运算
-func (c *Ctx) SDFExternalPublicKeyOperation_RSA(sessionHandle SessionHandleType, publicKey RSArefPublicKey, dataInput []byte, uiInputLength uint) (dataOutput []byte, err error) {
-	var err1 C.SGD_RV
-	var pucDataOutput C.SGD_UCHAR_PRT
-	var puiOutputLength C.SGD_UINT32
-	pucPublicKey := ConvertToRSArefPublicKeyC(publicKey)
-	err1 = C.SDFExternalPublicKeyOperation_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), &pucPublicKey, CMessage(dataInput), C.SGD_UINT32(uiInputLength), &pucDataOutput, &puiOutputLength)
-	dataOutput = C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
-	C.free(unsafe.Pointer(pucDataOutput))
-	err = ToError(err1)
-	return dataOutput, err
-}
-
-//31. 外部私钥RSA运算
-func (c *Ctx) SDFExternalPrivateKeyOperation_RSA(sessionHandle SessionHandleType, privateKey RSArefPrivateKey, dataInput []byte, uiInputLength uint) (dataOutput []byte, err error) {
-	var err1 C.SGD_RV
-	var pucDataOutput C.SGD_UCHAR_PRT
-	var puiOutputLength C.SGD_UINT32
-	pucPrivateKey := ConvertToRSArefPrivateKeyC(privateKey)
-	err1 = C.SDFExternalPrivateKeyOperation_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), &pucPrivateKey, CMessage(dataInput), C.SGD_UINT32(uiInputLength), &pucDataOutput, &puiOutputLength)
-	dataOutput = C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
-	C.free(unsafe.Pointer(pucDataOutput))
-	err = ToError(err1)
-	return dataOutput, err
-}
-
-//32.内部公钥 RSA 运算
-func (c *Ctx) SDFInternalPublicKeyOperation_RSA(sessionHandle SessionHandleType, uiKeyIndex uint, pucDataInput []byte, uiInputLength uint) (dataOutput []byte, err error) {
-	var err1 C.SGD_RV
-	var pucDataOutput C.SGD_UCHAR_PRT
-	var puiOutputLength C.SGD_UINT32
-	err1 = C.SDFInternalPublicKeyOperation_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(uiKeyIndex), CMessage(pucDataInput), C.SGD_UINT32(uiInputLength), &pucDataOutput, &puiOutputLength)
-	dataOutput = C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
-	err = ToError(err1)
-	C.free(unsafe.Pointer(pucDataOutput))
-	return dataOutput, err
-}
-
-//33.外部私钥 RSA 运算
-func (c *Ctx) SDFInternalPrivateKeyOperation_RSA(sessionHandle SessionHandleType, uiKeyIndex uint, inData []byte, uiInputLength uint) (dataOutput []byte, err error) {
-	var err1 C.SGD_RV
-	var pucDataOutput C.SGD_UCHAR_PRT
-	var puiOutputLength C.SGD_UINT32
-	err1 = C.SDFInternalPrivateKeyOperation_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_UINT32(uiKeyIndex), CMessage(inData), C.SGD_UINT32(uiInputLength), &pucDataOutput, &puiOutputLength)
-	dataOutput1 := C.GoBytes(unsafe.Pointer(pucDataOutput), C.int(puiOutputLength))
-	dataOutput = deepCopy(dataOutput1)
-	C.free(unsafe.Pointer(pucDataOutput))
-	err = ToError(err1)
-	return dataOutput, err
-}
-
-//34. 外部密钥ECC签名
+// SDFExternalSign_ECC 34. 外部密钥ECC签名
 func (c *Ctx) SDFExternalSign_ECC(sessionHandle SessionHandleType, uiAlgID uint, privateKey ECCrefPrivateKey, pucData []byte, uiDataLength uint) (signature ECCSignature, err error) {
 	var err1 C.SGD_RV
 	pucPrivateKey := ConvertToECCrefPrivateKeyC(privateKey)
@@ -1449,7 +1398,7 @@ func (c *Ctx) SDFExternalSign_ECC(sessionHandle SessionHandleType, uiAlgID uint,
 	return signature, err
 }
 
-//35.外部密钥 ECC验证
+// SDFExternalVerify_ECC 35.外部密钥 ECC验证
 func (c *Ctx) SDFExternalVerify_ECC(sessionHandle SessionHandleType, uiAlgID uint, publicKey ECCrefPublicKey, inputData []byte, uiInputLength uint, signature ECCSignature) (err error) {
 	var err1 C.SGD_RV
 	pucPublicKey := ConvertToECCrefPublicKeyC(publicKey)
@@ -1459,7 +1408,7 @@ func (c *Ctx) SDFExternalVerify_ECC(sessionHandle SessionHandleType, uiAlgID uin
 	return err
 }
 
-//36.内部密钥 ECC签名
+// SDFInternalSign_ECC 36.内部密钥 ECC签名
 func (c *Ctx) SDFInternalSign_ECC(sessionHandle SessionHandleType, uiISKIndex uint, pucData []byte, uiDataLength uint) (signature ECCSignature, err error) {
 	var err1 C.SGD_RV
 	var pucSignature C.ECCSignature
@@ -1469,7 +1418,7 @@ func (c *Ctx) SDFInternalSign_ECC(sessionHandle SessionHandleType, uiISKIndex ui
 	return signature, err
 }
 
-//37.内部密钥 ECC验证
+// SDFInternalVerify_ECC 37.内部密钥 ECC验证
 func (c *Ctx) SDFInternalVerify_ECC(sessionHandle SessionHandleType, uiISKIndex uint, pucData []byte, uiDataLength uint, signature ECCSignature) (err error) {
 	var err1 C.SGD_RV
 	var pucSignature C.ECCSignature
@@ -1484,7 +1433,7 @@ func (c *Ctx) SDFInternalVerify_ECC(sessionHandle SessionHandleType, uiISKIndex 
 	return err
 }
 
-//38.外部密钥 ECC加密
+// SDFExternalEncrypt_ECC 38.外部密钥 ECC加密
 func (c *Ctx) SDFExternalEncrypt_ECC(sessionHandle SessionHandleType, uiAlgID uint, publicKey ECCrefPublicKey, data []byte, dataLength uint) (encData ECCCipher, err error) {
 	var err1 C.SGD_RV
 	pucPublicKey := ConvertToECCrefPublicKeyC(publicKey)
@@ -1495,7 +1444,7 @@ func (c *Ctx) SDFExternalEncrypt_ECC(sessionHandle SessionHandleType, uiAlgID ui
 	return encData, err
 }
 
-//39.外部密钥 ECC解密
+// SDFExternalDecrypt_ECC 39.外部密钥 ECC解密
 func (c *Ctx) SDFExternalDecrypt_ECC(sessionHandle SessionHandleType, uiAlgID uint, privateKey ECCrefPrivateKey, encData ECCCipher) (data []byte, dataLength uint, err error) {
 	var err1 C.SGD_RV
 	pucPrivateKey := ConvertToECCrefPrivateKeyC(privateKey)
@@ -1510,7 +1459,7 @@ func (c *Ctx) SDFExternalDecrypt_ECC(sessionHandle SessionHandleType, uiAlgID ui
 	return data, dataLength, err
 }
 
-//40.对称加密
+// SDFEncrypt 40.对称加密
 func (c *Ctx) SDFEncrypt(sessionHandle SessionHandleType, keyHandle KeyHandleType, algID uint, iv []byte, data []byte, dataLength uint) (encData []byte, encDataLength uint, err error) {
 	var err1 C.SGD_RV
 	var pucEncData C.SGD_UCHAR_PRT
@@ -1523,7 +1472,7 @@ func (c *Ctx) SDFEncrypt(sessionHandle SessionHandleType, keyHandle KeyHandleTyp
 	return encData, uint(puiEncDataLength), err
 }
 
-//41.对称解密
+// SDFDecrypt 41.对称解密
 func (c *Ctx) SDFDecrypt(sessionHandle SessionHandleType, hKeyHandle KeyHandleType, uiAlgID uint, iv []byte, encData []byte, encDataLength uint) (data []byte, dataLength uint, err error) {
 	var err1 C.SGD_RV
 	var pucData C.SGD_UCHAR_PRT
@@ -1536,7 +1485,7 @@ func (c *Ctx) SDFDecrypt(sessionHandle SessionHandleType, hKeyHandle KeyHandleTy
 	return data, dataLength, err
 }
 
-//42.计算 ＭＡＣ
+// SDFCalculateMAC 42.计算 MAC
 func (c *Ctx) SDFCalculateMAC(sessionHandle SessionHandleType, hKeyHandle KeyHandleType, uiAlgID uint, iv []byte, data []byte, dataLength uint) (mac []byte, macLength uint, err error) {
 	var err1 C.SGD_RV
 	var pucMAC C.SGD_UCHAR_PRT
@@ -1549,7 +1498,7 @@ func (c *Ctx) SDFCalculateMAC(sessionHandle SessionHandleType, hKeyHandle KeyHan
 	return mac, macLength, err
 }
 
-//43.杂凑运算初始化
+// SDFHashInit 43.杂凑运算初始化
 func (c *Ctx) SDFHashInit(sessionHandle SessionHandleType, uiAlgID uint, pucID []byte, uiIDLength uint) (publicKey ECCrefPublicKey, err error) {
 	var err1 C.SGD_RV
 	var pucPublicKey C.ECCrefPublicKey
@@ -1559,7 +1508,7 @@ func (c *Ctx) SDFHashInit(sessionHandle SessionHandleType, uiAlgID uint, pucID [
 	return publicKey, err
 }
 
-//44.多包杂凑运算
+// SDFHashUpdate 44.多包杂凑运算
 func (c *Ctx) SDFHashUpdate(sessionHandle SessionHandleType, pucData []byte, uiDataLength uint) (err error) {
 	var err1 C.SGD_RV
 	err1 = C.SDFHashUpdate(c.libHandle, C.SGD_HANDLE(sessionHandle), CMessage(pucData), C.SGD_UINT32(uiDataLength))
@@ -1567,7 +1516,7 @@ func (c *Ctx) SDFHashUpdate(sessionHandle SessionHandleType, pucData []byte, uiD
 	return err
 }
 
-//45.杂凑运算结束
+// SDFHashFinal 45.杂凑运算结束
 func (c *Ctx) SDFHashFinal(sessionHandle SessionHandleType) (hash []byte, hashLength uint, err error) {
 	var err1 C.SGD_RV
 	var pucData C.SGD_UCHAR_PRT
@@ -1580,45 +1529,7 @@ func (c *Ctx) SDFHashFinal(sessionHandle SessionHandleType) (hash []byte, hashLe
 	return hash, hashLength, err
 }
 
-//46.创建文件
-func (c *Ctx) SDFCreateFile(sessionHandle SessionHandleType, fileName []byte, uiFileSize uint) (err error) {
-	var err1 C.SGD_RV
-	err1 = C.SDFCreateFile(c.libHandle, C.SGD_HANDLE(sessionHandle), CMessage(fileName), C.SGD_UINT32(len(fileName)), C.SGD_UINT32(uiFileSize))
-	err = ToError(err1)
-	return err
-}
-
-//47.读取文件
-func (c *Ctx) SDFReadFile(sessionHandle SessionHandleType, fileName []byte, uiOffset uint, readLength uint) (buffer []byte, readLength1 uint, err error) {
-	var err1 C.SGD_RV
-	var puiReadLength C.SGD_UINT32
-	var pucBuffer C.SGD_UCHAR_PRT
-	puiReadLength = C.SGD_UINT32(readLength)
-	err1 = C.SDFReadFile(c.libHandle, C.SGD_HANDLE(sessionHandle), CMessage(fileName), C.SGD_UINT32(len(fileName)), C.SGD_UINT32(uiOffset), &puiReadLength, &pucBuffer)
-	buffer = C.GoBytes(unsafe.Pointer(pucBuffer), C.int(puiReadLength))
-	readLength1 = uint(puiReadLength)
-	C.free(unsafe.Pointer(pucBuffer))
-	err = ToError(err1)
-	return buffer, readLength1, err
-}
-
-//48.写文件
-func (c *Ctx) SDFWriteFile(sessionHandle SessionHandleType, fileName []byte, uiOffset uint, buffer []byte, bufferLength uint) (err error) {
-	var err1 C.SGD_RV
-	err1 = C.SDFWriteFile(c.libHandle, C.SGD_HANDLE(sessionHandle), CMessage(fileName), C.SGD_UINT32(len(fileName)), C.SGD_UINT32(uiOffset), C.SGD_UINT32(bufferLength), CMessage(buffer))
-	err = ToError(err1)
-	return err
-}
-
-//49.删除文件
-func (c *Ctx) SDFDeleteFile(sessionHandle SessionHandleType, fileName []byte) (err error) {
-	var err1 C.SGD_RV
-	err1 = C.SDFDeleteFile(c.libHandle, C.SGD_HANDLE(sessionHandle), CMessage(fileName), C.SGD_UINT32(len(fileName)))
-	err = ToError(err1)
-	return err
-}
-
-//50.
+// SDFGetSymmKeyHandle 50.
 func (c *Ctx) SDFGetSymmKeyHandle(sessionHandle SessionHandleType, uiKeyIndex uint) (keyHandle KeyHandleType, err error) {
 	var err1 C.SGD_RV
 	var phKeyHandle C.SGD_HANDLE
@@ -1628,7 +1539,7 @@ func (c *Ctx) SDFGetSymmKeyHandle(sessionHandle SessionHandleType, uiKeyIndex ui
 	return keyHandle, err
 }
 
-//51. ECC方式的加密
+// SDFInternalEncrypt_ECC 51. ECC方式的加密
 func (c *Ctx) SDFInternalEncrypt_ECC(sessionHandle SessionHandleType, uiISKIndex uint, uiAlgID uint, pucData []byte, uiDataLength uint) (encData ECCCipher, err error) {
 	var err1 C.SGD_RV
 	var pucEncData C.ECCCipher
@@ -1638,7 +1549,7 @@ func (c *Ctx) SDFInternalEncrypt_ECC(sessionHandle SessionHandleType, uiISKIndex
 	return encData, err
 }
 
-//52. ECC方式的解密
+// SDFInternalDecrypt_ECC 52. ECC方式的解密
 func (c *Ctx) SDFInternalDecrypt_ECC(sessionHandle SessionHandleType, uiISKIndex uint, uiAlgID uint, encData ECCCipher) (data []byte, dataLength uint, err error) {
 	var err1 C.SGD_RV
 	var pucEncData C.ECCCipher
@@ -1665,20 +1576,7 @@ func (c *Ctx) SDFInternalDecrypt_ECC(sessionHandle SessionHandleType, uiISKIndex
 	return data, dataLength, err
 }
 
-//53. EPK方式导出RSA密钥
-func (c *Ctx) SDFExportKeyWithEPK_RSA(sessionHandle SessionHandleType, hKeyHandle KeyHandleType, publicKey RSArefPublicKey) (key []byte, err error) {
-	var err1 C.SGD_RV
-	pucPublicKey := ConvertToRSArefPublicKeyC(publicKey)
-	var pucKey C.SGD_UCHAR_PRT
-	var puiKeyLength C.SGD_UINT32
-	err1 = C.SDFExportKeyWithEPK_RSA(c.libHandle, C.SGD_HANDLE(sessionHandle), C.SGD_HANDLE(hKeyHandle), &pucPublicKey, &pucKey, &puiKeyLength)
-	key = C.GoBytes(unsafe.Pointer(pucKey), C.int(puiKeyLength))
-	C.free(unsafe.Pointer(pucKey))
-	err = ToError(err1)
-	return key, err
-}
-
-//54. EPK方式导出ECC密钥
+// SDFExportKeyWithEPK_ECC 54. EPK方式导出ECC密钥
 func (c *Ctx) SDFExportKeyWithEPK_ECC(sessionHandle SessionHandleType, hKeyHandle KeyHandleType, uiAlgID uint, publicKey ECCrefPublicKey) (key ECCCipher, err error) {
 	var err1 C.SGD_RV
 	var pucKey C.ECCCipher
@@ -1689,7 +1587,7 @@ func (c *Ctx) SDFExportKeyWithEPK_ECC(sessionHandle SessionHandleType, hKeyHandl
 	return key, err
 }
 
-//55. EPK方式导出密钥
+// SDFExportKeyWithKEK 55. EPK方式导出密钥
 func (c *Ctx) SDFExportKeyWithKEK(sessionHandle SessionHandleType, hKeyHandle KeyHandleType, uiAlgID uint, uiKEKIndex uint) (key []byte, err error) {
 	var err1 C.SGD_RV
 	var pucKey C.SGD_UCHAR_PRT
