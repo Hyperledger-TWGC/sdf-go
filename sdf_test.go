@@ -16,42 +16,49 @@ func libPath() string {
 		return wd + "/sansec/Linux/64/libswsds.so"
 	}
 }
+func Connect(t *testing.T) (c *Ctx, deviceHandle DeviceHandleType, sessionHandle SessionHandleType) {
+	c = New(libPath())
+	d, err := c.SDFOpenDevice()
+	if err != nil {
+		t.Fatal("open device error: ", err)
+	}
+
+	sessionHandle, err = c.SDFOpenSession(d)
+	if err != nil {
+		t.Fatal("open session error: ", err)
+	}
+	return
+}
+func Release(t *testing.T, c *Ctx, deviceHandle DeviceHandleType, sessionHandle SessionHandleType) {
+	fmt.Println("defer func: Close Session...")
+	err := c.SDFCloseSession(sessionHandle)
+	if err != nil {
+		t.Fatal("close session error: ", err)
+	}
+
+	fmt.Println("defer func: Close Device...")
+	err = c.SDFCloseDevice(deviceHandle)
+	if err != nil {
+		t.Fatal("close device error: ", err)
+	}
+	c.Destroy()
+}
 
 // 基础函数测试
 func TestBasicFunc(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		t.Error("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			t.Error("close device error: ", err)
-		}
-		c.Destroy()
-	}()
 
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		t.Error("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			t.Error("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	randomNum, err := c.SDFGenerateRandom(s, 16)
 	if err != nil {
-		t.Error("generate random error: ", err)
+		t.Fatal("generate random error: ", err)
 	}
 	fmt.Println("random: ", randomNum)
 	var info DeviceInfo
 	info, err = c.SDFGetDeviceInfo(s)
 	if err != nil {
-		t.Error("get device information error: ", err)
+		t.Fatal("get device information error: ", err)
 	}
 	fmt.Println("deviceInfo IssuerName: ", info.IssuerName)
 	fmt.Println("deviceInfo DeviceName: ", info.DeviceName)
@@ -64,397 +71,72 @@ func TestBasicFunc(t *testing.T) {
 	fmt.Println("deviceInfo BufferSize: ", info.BufferSize)
 }
 
-// 测试产生RSA密钥
-func TestGenRSAKeyPair(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
-
-	fmt.Println("===SDFGenerateKeyPair_RSA===")
-	var public RSArefPublicKey
-	var private RSArefPrivateKey
-	public, private, err = c.SDFGenerateKeyPair_RSA(s, 512)
-	if err != nil {
-		fmt.Println("generateKeyPair rsa error: ", err)
-	}
-	fmt.Println("Public Key Bits", public.Bits)
-	fmt.Println("Public Key M", []byte(public.M))
-	fmt.Println("Public Key E", []byte(public.E))
-	fmt.Println("private Key Bits", private.Bits)
-	fmt.Println("private Key M", []byte(private.M))
-	fmt.Println("private Key E", []byte(private.E))
-	fmt.Println("private Key D", []byte(private.D))
-	fmt.Println("private Key Prime 0", []byte(private.Prime[0]))
-	fmt.Println("private Key Prime 1", []byte(private.Prime[1]))
-	fmt.Println("private Key Pexp 0", []byte(private.Pexp[0]))
-	fmt.Println("private Key Pexp 1", []byte(private.Pexp[1]))
-	fmt.Println("private Key Coef", []byte(private.Coef))
-}
-
-func TestExportRSAPuk(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
-
-	fmt.Println("===SDFExportSignPublicKey_RSA===")
-	var signPublicKey RSArefPublicKey
-	signPublicKey, err = c.SDFExportSignPublicKey_RSA(s, 1)
-	fmt.Println("SignPublicKey Key Bits", signPublicKey.Bits)
-	fmt.Println("SignPublicKey Key M", []byte(signPublicKey.M))
-	fmt.Println("SignPublicKey Key E", []byte(signPublicKey.E))
-
-	fmt.Println("===SDFExportEncPublicKey_RSA===")
-	var encPublicKey RSArefPublicKey
-	encPublicKey, err = c.SDFExportEncPublicKey_RSA(s, 1)
-	fmt.Println("EncPublicKey Key Bits", encPublicKey.Bits)
-	fmt.Println("EncPublicKey Key M", []byte(encPublicKey.M))
-	fmt.Println("EncPublicKey Key E", []byte(encPublicKey.E))
-}
-
-func TestExtRSAOpt(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
-
-	fmt.Println("===SDFGenerateKeyPair_RSA===")
-	publicKey, privateKey, err := c.SDFGenerateKeyPair_RSA(s, 1024)
-	if err != nil {
-		fmt.Println("generateKeyPair rsa error: ", err)
-	}
-
-	//产生随机加密数据
-	fmt.Println("===SDFGenerateRandom===")
-	randomData, err := c.SDFGenerateRandom(s, publicKey.Bits/8)
-	if err != nil {
-		fmt.Println("generate random encrypt data error: ", err)
-	}
-	fmt.Printf("random encrypt data: %x \n", randomData)
-
-	fmt.Println("===SDFExternalPublicKeyOperation_RSA===")
-	tmpData, err := c.SDFExternalPublicKeyOperation_RSA(s, publicKey, randomData, uint(len(randomData)))
-	if err != nil {
-		fmt.Println("ExternalPublicKeyOperation RSA error: ", err)
-	}
-	fmt.Printf("tmpData: %x \n", tmpData)
-
-	fmt.Println("===SDFExternalPrivateKeyOperation_RSA===")
-	outputData, err := c.SDFExternalPrivateKeyOperation_RSA(s, privateKey, tmpData, uint(len(tmpData)))
-	if err != nil {
-		fmt.Println("ExternalPublicKeyOperation RSA error: ", err)
-	}
-	fmt.Printf("outputData: %x \n", outputData)
-
-}
-
-func TestIntRSAOps(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
-
-	var keyIndex uint = 1
-	fmt.Println("===SDFExportSignPublicKey_RSA===")
-	signPublicKey, err := c.SDFExportSignPublicKey_RSA(s, keyIndex)
-	if err != nil {
-		fmt.Println("export sign publicKey RSA error: ", err)
-	}
-	fmt.Println(signPublicKey)
-
-	fmt.Println("===SDFExportEncPublicKey_RSA===")
-	encPublicKey, err := c.SDFExportEncPublicKey_RSA(s, keyIndex)
-	if err != nil {
-		fmt.Println("export encrypt publicKey RSA error: ", err)
-	}
-	randomData, err := c.SDFGenerateRandom(s, encPublicKey.Bits/8)
-	if err != nil {
-		fmt.Println("generate random encrypt data error: ", err)
-	}
-	fmt.Printf("random encrypt data: %x \n", randomData)
-
-	fmt.Println("===SDFInternalPublicKeyOperation_RSA===")
-	tmpData, err := c.SDFInternalPublicKeyOperation_RSA(s, keyIndex, randomData, (uint)(len(randomData)))
-	if err != nil {
-		fmt.Println("InternalPublicKey RSA error: ", err)
-	}
-	fmt.Println("tmpData ", tmpData)
-
-	fmt.Println("===SDFInternalPrivateKeyOperation_RSA===")
-	outputData, err := c.SDFInternalPrivateKeyOperation_RSA(s, keyIndex, tmpData, uint(len(tmpData)))
-	if err != nil {
-		fmt.Println("InternalPrivateKey RSA error: ", err)
-	}
-	fmt.Printf("outputData: %x \n", outputData)
-}
-
-func TestTransEnvelopRSA(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
-
-	var keyIndexSrc uint = 1
-	var keyIndexDest uint = 1
-	fmt.Println("===SDFGenerateKeyWithIPK_RSA===")
-	keySrc, keySrcLength, keyDestHandle, err := c.SDFGenerateKeyWithIPK_RSA(s, keyIndexSrc, 128)
-	if err != nil {
-		fmt.Println("Generate RSA IPK Key error", err)
-	}
-
-	fmt.Println("===SDFExportEncPublicKey_RSA===")
-	publicKey, err := c.SDFExportEncPublicKey_RSA(s, keyIndexDest)
-	if err != nil {
-		fmt.Println("Export Encrypt PublicKey error: ", err)
-	}
-	fmt.Println(publicKey.Bits)
-
-	fmt.Println("===SDFExchangeDigitEnvelopeBaseOnRSA===")
-
-	keyDest,outDestKeyLen,err:=c.SDFExchangeDigitEnvelopeBaseOnRSA(s,keyIndexDest,publicKey,keySrc,keySrcLength)
-	if err != nil {
-		fmt.Println("Exchange Digit Envelope Base On RSA error: ", err)
-	}
-	fmt.Println(keyDest,outDestKeyLen)
-
-	fmt.Println("===SDFImportKeyWithISK_RSA===")
-	keySrcHandle,err:=c.SDFImportKeyWithISK_RSA(s,keyIndexDest,keyDest,outDestKeyLen)
-	if err != nil{
-		fmt.Println("ImportKey With ISK RSA error: ",err)
-	}
-
-	fmt.Println("===SDFGenerateRandom===")
-	var dataLength uint = 16
-	randomData,err:=c.SDFGenerateRandom(s,dataLength)
-	if err != nil{
-		fmt.Println("Generate random data error: ",err)
-	}
-
-	fmt.Println("===SDFEncrypt===")
-	iv :=[]byte{ 0xd0,0x4e ,0x51 ,0xcd ,0xb1 ,0x3c ,0x4a ,0xda ,0x34 ,0x72 ,0x44 ,0xc3 ,0x53 ,0x29 ,0x06 ,0x24 }
-	encData,encDataLength,err :=c.SDFEncrypt(s,keySrcHandle, SGD_SMS4_ECB,iv,randomData,1024)
-	if err!= nil{
-		fmt.Println("Encrypt Data error: ",err)
-	}
-
-	fmt.Println("===SDFDecrypt===")
-	data,dataLength,err := c.SDFDecrypt(s,keyDestHandle, SGD_SMS4_ECB,iv,encData,encDataLength)
-	if err!= nil{
-		fmt.Println("Decrypt Data error: ",err)
-	}
-	if(bytes.Compare(randomData,data)==0){
-		fmt.Println("Decrypt the data succeed!")
-	}
-
-	err = c.SDFDestroyKey(s,keySrcHandle)
-	if err!= nil{
-		fmt.Println("DestroyKey error: ",err)
-	}
-	err = c.SDFDestroyKey(s,keyDestHandle)
-	if err!= nil{
-		fmt.Println("DestroyKey error: ",err)
-	}
-}
-
 func TestTransEnvelopECC(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 	var keyIndexSrc uint = 1
 	fmt.Println("===SDFGenerateKeyWithIPK_ECC===")
 	pucKeySrc, keySrc, err := c.SDFGenerateKeyWithIPK_ECC(s, keyIndexSrc, 128)
 	if err != nil {
-		fmt.Println("Generate ECC IPK Key error", err)
+		t.Fatal("Generate ECC IPK Key error", err)
 	}
 
 	fmt.Println("===SDFExportEncPublicKey_ECC===")
 	pubKey, err := c.SDFExportEncPublicKey_ECC(s, keyIndexSrc)
 	if err != nil {
-		fmt.Println("Export EncPublicKey error: ", err)
+		t.Fatal("Export EncPublicKey error: ", err)
 	}
 
 	fmt.Println("===SDFExchangeDigitEnvelopeBaseOnECC===")
 	pucKeyDest, err := c.SDFExchangeDigitEnvelopeBaseOnECC(s, keyIndexSrc, SGD_SM2_3, pubKey, pucKeySrc)
 	if err != nil {
-		fmt.Println("Exchange Digit Envelope Base On ECC error: ", err)
+		t.Fatal("Exchange Digit Envelope Base On ECC error: ", err)
 	}
 
 	fmt.Println("===SDFImportKeyWithISK_ECC===")
 	keyDest, err := c.SDFImportKeyWithISK_ECC(s, 1, pucKeyDest)
 	if err != nil {
-		fmt.Println("Import Key With ISK ECC error: ", err)
+		t.Fatal("Import Key With ISK ECC error: ", err)
 	}
 
 	fmt.Println("===SDFGenerateRandom===")
 	var dataLength uint = 16
 	randomData, err := c.SDFGenerateRandom(s, dataLength)
 	if err != nil {
-		fmt.Println("Generate Random Number error: ", err)
+		t.Fatal("Generate Random Number error: ", err)
 	}
 	fmt.Printf("data %x dataLength %d \n", randomData, len(randomData))
 	fmt.Println("===SDFEncrypt===")
 	iv := []byte{0xd0, 0x4e, 0x51, 0xcd, 0xb1, 0x3c, 0x4a, 0xda, 0x34, 0x72, 0x44, 0xc3, 0x53, 0x29, 0x06, 0x24}
 	encData, encDataLength, err := c.SDFEncrypt(s, keySrc, SGD_SM1_ECB, iv, randomData, 1024)
 	if err != nil {
-		fmt.Println("Encrypt Data error: ", err)
+		t.Fatal("Encrypt Data error: ", err)
 	}
 
 	fmt.Println("===SDFDecrypt===")
 	data, dataLength, err := c.SDFDecrypt(s, keyDest, SGD_SM1_ECB, iv, encData, encDataLength)
 	if err != nil {
-		fmt.Println("Decrypt Data error: ", err)
+		t.Fatal("Decrypt Data error: ", err)
 	}
-	if(bytes.Compare(randomData,data)==0){
+	if bytes.Compare(randomData, data) == 0 {
 		fmt.Println("Decrypt the data succeed!")
 	}
 
 	fmt.Println("===SDFDestroyKey===")
 	err = c.SDFDestroyKey(s, keySrc)
 	if err != nil {
-		fmt.Println("DestroyKey error: ", err)
+		t.Fatal("DestroyKey error: ", err)
 	}
 	fmt.Println("===SDFDestroyKey===")
 	err = c.SDFDestroyKey(s, keyDest)
 	if err != nil {
-		fmt.Println("DestroyKey error: ", err)
+		t.Fatal("DestroyKey error: ", err)
 	}
 }
 
 func TestECCAgreement(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	var keyIndexSrc uint = 1
 	fmt.Println("===SDFGenerateAgreementDataWithECC===")
@@ -547,32 +229,12 @@ func TestECCAgreement(t *testing.T) {
 }
 
 func TestExportECCPuk(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	fmt.Println("===SDFExportSignPublicKey_ECC===")
 	var signPublicKey ECCrefPublicKey
-	signPublicKey, err = c.SDFExportSignPublicKey_ECC(s, 1)
+	signPublicKey, err := c.SDFExportSignPublicKey_ECC(s, 1)
 	if err != nil {
 		fmt.Println("export sign publickey pair error: ", err)
 	}
@@ -593,32 +255,11 @@ func TestExportECCPuk(t *testing.T) {
 }
 
 func TestHashFunc(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	data := []byte{0x61, 0x62, 0x63}
-	_, err = c.SDFHashInit(s, SGD_SM3, nil, 0)
+	_, err := c.SDFHashInit(s, SGD_SM3, nil, 0)
 	if err != nil {
 		fmt.Println("Hash init error: ", err)
 	}
@@ -635,28 +276,8 @@ func TestHashFunc(t *testing.T) {
 }
 
 func TestReleasePrivateKeyAccessRight(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	key, keyHandle, err := c.SDFGenerateKeyWithIPK_ECC(s, 1, 256)
 	if err != nil {
@@ -679,33 +300,12 @@ func TestReleasePrivateKeyAccessRight(t *testing.T) {
 }
 
 func TestIntECCSign(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	var publicKey ECCrefPublicKey
 	var privateKey ECCrefPrivateKey
-	publicKey, privateKey, err = c.SDFGenerateKeyPair_ECC(s, SGD_SM2_3, 256)
+	publicKey, privateKey, err := c.SDFGenerateKeyPair_ECC(s, SGD_SM2_3, 256)
 	fmt.Println("===SDFGenerateKeyPair_ECC===")
 	fmt.Println("Public Key Bits", publicKey.Bits)
 	fmt.Println("Public Key X", []byte(publicKey.X))
@@ -731,33 +331,12 @@ func TestIntECCSign(t *testing.T) {
 }
 
 func TestIntECCEnc(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	var publicKey ECCrefPublicKey
 	var privateKey ECCrefPrivateKey
-	publicKey, privateKey, err = c.SDFGenerateKeyPair_ECC(s, SGD_SM2_3, 256)
+	publicKey, privateKey, err := c.SDFGenerateKeyPair_ECC(s, SGD_SM2_3, 256)
 	fmt.Println("===SDFGenerateKeyPair_ECC===")
 	fmt.Println("Public Key Bits", publicKey.Bits)
 	fmt.Println("Public Key X", []byte(publicKey.X))
@@ -783,33 +362,12 @@ func TestIntECCEnc(t *testing.T) {
 }
 
 func TestExtECCSign(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	var publicKey ECCrefPublicKey
 	var privateKey ECCrefPrivateKey
-	publicKey, privateKey, err = c.SDFGenerateKeyPair_ECC(s, SGD_SM2_1, 256)
+	publicKey, privateKey, err := c.SDFGenerateKeyPair_ECC(s, SGD_SM2_1, 256)
 	fmt.Println("===SDFGenerateKeyPair_ECC===")
 	fmt.Println("Public Key Bits", publicKey.Bits)
 	fmt.Println("Public Key X", []byte(publicKey.X))
@@ -838,33 +396,12 @@ func TestExtECCSign(t *testing.T) {
 }
 
 func TestExtECCEnc(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	var publicKey ECCrefPublicKey
 	var privateKey ECCrefPrivateKey
-	publicKey, privateKey, err = c.SDFGenerateKeyPair_ECC(s, SGD_SM2_2, 256)
+	publicKey, privateKey, err := c.SDFGenerateKeyPair_ECC(s, SGD_SM2_2, 256)
 	fmt.Println("===SDFGenerateKeyPair_ECC===")
 	fmt.Println("Public Key Bits", publicKey.Bits)
 	fmt.Println("Public Key X", []byte(publicKey.X))
@@ -888,29 +425,8 @@ func TestExtECCEnc(t *testing.T) {
 }
 
 func TestGenerateECCFunc(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	fmt.Println("===SDFGenerateKeyWithIPK_ECC===")
 	key, keyHandle, err := c.SDFGenerateKeyWithIPK_ECC(s, 1, 256)
@@ -947,29 +463,8 @@ func TestGenerateECCFunc(t *testing.T) {
 }
 
 func TestEncryptFunc(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err := c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
+	c, d, s := Connect(t)
+	defer Release(t, c, d, s)
 
 	var length uint = 32
 	randomNum, err := c.SDFGenerateRandom(s, length)
@@ -1057,64 +552,4 @@ func TestSDFMAC(t *testing.T) {
 	if err != nil {
 		fmt.Println("Destroy key error: ", err)
 	}
-}
-
-func TestFilesFunc(t *testing.T) {
-	c := New(libPath())
-	d, err := c.SDFOpenDevice()
-	if err != nil {
-		fmt.Println("open device error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseDevice(d)
-		if err != nil {
-			fmt.Println("close device error: ", err)
-		}
-		c.Destroy()
-	}()
-	s, err := c.SDFOpenSession(d)
-	if err != nil {
-		fmt.Println("open session error: ", err)
-	}
-	defer func() {
-		err = c.SDFCloseSession(s)
-		if err != nil {
-			fmt.Println("close session error: ", err)
-		}
-	}()
-
-	fmt.Println("===SDFGenerateRandom===")
-	var dataLength uint = 32
-	randomNum, err := c.SDFGenerateRandom(s, dataLength)
-	if err != nil {
-		fmt.Println("generate random error: ", err)
-	}
-	fmt.Printf("randomNum: %x randomNumLength: %d \n", randomNum, dataLength)
-
-	fmt.Println("===SDFCreateFile===")
-	err = c.SDFCreateFile(s, []byte("test"), 64)
-	if err != nil {
-		fmt.Println("create file error: ", err)
-	}
-
-	fmt.Println("===SDFWriteFile===")
-	err = c.SDFWriteFile(s, []byte("test"), 0, randomNum, 32)
-	if err != nil {
-		fmt.Println("write file error: ", err)
-	}
-
-	fmt.Println("===SDFReadFile===")
-	var readLength int = len(randomNum)
-	readbuffer, readLength1, err := c.SDFReadFile(s, []byte("test"), 0, uint(readLength))
-	if err != nil {
-		fmt.Println("read file error: ", err)
-	}
-	fmt.Printf("readbuffer: %x readLength: %d \n", readbuffer, readLength1)
-
-	fmt.Println("===SDFDeleteFile===")
-	err = c.SDFDeleteFile(s, []byte("test"))
-	if err != nil {
-		fmt.Println("delete file error: ", err)
-	}
-
 }
