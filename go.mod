@@ -1,3 +1,3 @@
-module github.com/Hyperledger-TWGC/sdf-go
+module github.com/Hyperledger-TWGC/sdf
 
 go 1.15

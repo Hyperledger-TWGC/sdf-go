@@ -7,9 +7,6 @@ jobs:
   build:
     env:
       GO111MODULE: on
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

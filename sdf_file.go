@@ -1,5 +1,111 @@
 package sdf
 
+/*
+#cgo windows CFLAGS: -DPACKED_STRUCTURES
+#cgo linux LDFLAGS: -ldl
+#cgo darwin LDFLAGS: -ldl
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sansec/swsds.h>
+
+typedef unsigned char*    SGD_UCHAR_PRT;
+
+#ifdef _WIN32
+#include<windows.h>
+// duplicated LibHandle section
+struct LibHandle {
+	HMODULE handle;
+};
+
+struct LibHandle *New(const char *iLibrary)
+{
+	struct LibHandle *h = calloc(1,sizeof(struct LibHandle));
+	h->handle = LoadLibrary(iLibrary);
+	if (h->handle == NULL) {
+		free(h);
+		return NULL;
+	}
+
+	return h;
+}
+
+void Destroy(struct LibHandle *h)
+{
+	if(!h){
+		return ;
+	}
+    if (h->handle == NULL) {
+		return;
+	}
+	free(h);
+
+}
+
+#else
+#include <dlfcn.h>
+
+struct LibHandle {
+	void *handle;
+};
+
+#endif
+//46. 创建文件
+SGD_RV SDFCreateFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 );
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_CreateFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
+#else
+
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_CreateFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
+
+#endif
+}
+//47. 读取文件
+SGD_RV SDFReadFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR_PRT *pucBuffer)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 *,SGD_UCHAR *);
+	*pucBuffer = calloc(*puiReadLength, sizeof(SGD_UCHAR));
+	if (*pucBuffer == NULL) {
+		return SGD_FALSE;
+	}
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ReadFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ReadFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
+#endif
+}
+//48. 写文件
+SGD_RV SDFWriteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR_PRT pucBuffer)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 ,SGD_UCHAR *);
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_WriteFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_WriteFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
+#endif
+}
+//49. 删除文件
+SGD_RV SDFDeleteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen)
+{
+    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 );
+#ifdef _WIN32
+	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_DeleteFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
+#else
+	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_DeleteFile");
+	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
+#endif
+}
+*/
 import "C"
 import "unsafe"
 

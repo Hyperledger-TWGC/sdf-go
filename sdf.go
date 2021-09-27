@@ -1,17 +1,14 @@
-/*
-Copyright Hyperledger-TWGC All Rights Reserved.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-                 http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-
-*/
+// Package sdf
+//Copyright Hyperledger All Rights Reserved.
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+//                 http://www.apache.org/licenses/LICENSE-2.0
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
 package sdf
 
 /*
@@ -466,70 +463,7 @@ SGD_RV SDFDestroyKey(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_HANDLE 
 	return (*fptr)(hSessionHandle,  hKeyHandle);
 #endif
 }
-//30. 外部公钥RSA运算
-SGD_RV SDFExternalPublicKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, RSArefPublicKey *pucPublicKey,SGD_UCHAR_PRT pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , RSArefPublicKey *,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  *);
-	*pucDataOutput = calloc(*puiOutputLength, sizeof(SGD_UCHAR));
-	if (*pucDataOutput == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExternalPublicKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  pucPublicKey, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExternalPublicKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  pucPublicKey, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
-#endif
-}
-//31. 外部私钥RSA运算
-SGD_RV SDFExternalPrivateKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, RSArefPrivateKey *pucPrivateKey,SGD_UCHAR_PRT pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , RSArefPrivateKey *,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  *);
-	*pucDataOutput = calloc(*puiOutputLength, sizeof(SGD_UCHAR));
-	if (*pucDataOutput == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExternalPrivateKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  pucPrivateKey, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExternalPrivateKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  pucPrivateKey, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
-#endif
-}
-//32. 内部公钥RSA运算
-SGD_RV SDFInternalPublicKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR_PRT pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  *);
-    *pucDataOutput = calloc(*puiOutputLength, sizeof(SGD_UCHAR));
-	if (*pucDataOutput == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_InternalPublicKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_InternalPublicKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, pucDataInput,  uiInputLength, *pucDataOutput,  puiOutputLength);
-#endif
-}
-//33. 内部私RSA运算
-SGD_RV SDFInternalPrivateKeyOperation_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UCHAR_PRT pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR_PRT *pucDataOutput,SGD_UINT32  *puiOutputLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  ,SGD_UCHAR *,SGD_UINT32  *);
-    *pucDataOutput = calloc(*puiOutputLength, sizeof(SGD_UCHAR));
-	if (*pucDataOutput == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_InternalPrivateKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, pucDataInput,uiInputLength,*pucDataOutput,puiOutputLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_InternalPrivateKeyOperation_RSA");
-	return (*fptr)(hSessionHandle,  uiKeyIndex, pucDataInput,uiInputLength,*pucDataOutput,puiOutputLength);
-#endif
-}
+
 //34. 外部密钥ECC签名
 SGD_RV SDFExternalSign_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPrivateKey *pucPrivateKey,SGD_UCHAR_PRT pucData,SGD_UINT32  uiDataLength,ECCSignature *pucSignature)
 {
@@ -694,60 +628,8 @@ SGD_RV SDFHashFinal(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT
 	return (*fptr)(hSessionHandle, *pucHash,  puiHashLength);
 #endif
 }
-//46. 创建文件
-SGD_RV SDFCreateFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 );
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_CreateFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
-#else
 
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_CreateFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiFileSize);
 
-#endif
-}
-//47. 读取文件
-SGD_RV SDFReadFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR_PRT *pucBuffer)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 *,SGD_UCHAR *);
-	*pucBuffer = calloc(*puiReadLength, sizeof(SGD_UCHAR));
-	if (*pucBuffer == NULL) {
-		return SGD_FALSE;
-	}
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ReadFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ReadFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, puiReadLength, *pucBuffer);
-#endif
-}
-//48. 写文件
-SGD_RV SDFWriteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR_PRT pucBuffer)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 ,SGD_UINT32 ,SGD_UINT32 ,SGD_UCHAR *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_WriteFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_WriteFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen, uiOffset, uiWriteLength, pucBuffer);
-#endif
-}
-//49. 删除文件
-SGD_RV SDFDeleteFile(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD_UCHAR_PRT pucFileName,SGD_UINT32 uiNameLen)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE ,SGD_UCHAR *,SGD_UINT32 );
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_DeleteFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_DeleteFile");
-	return (*fptr)(hSessionHandle, pucFileName, uiNameLen);
-#endif
-}
 //50. 获取对称句柄
 SGD_RV SDFGetSymmKeyHandle(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SGD_HANDLE *phKeyHandle)
 {
@@ -788,18 +670,7 @@ SGD_RV SDFInternalDecrypt_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle,SGD
 	return (*fptr)(hSessionHandle,  uiISKIndex, uiAlgID, pucEncData, *pucData,  puiDataLength);
 #endif
 }
-//53. EPK方式导出RSA密钥
-SGD_RV SDFExportKeyWithEPK_RSA(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, RSArefPublicKey *pucPublicKey, SGD_UCHAR_PRT *pucKey, SGD_UINT32 *puiKeyLength)
-{
-    typedef SGD_RV (*FPTR)(SGD_HANDLE , SGD_HANDLE , RSArefPublicKey *, SGD_UCHAR *, SGD_UINT32 *);
-#ifdef _WIN32
-	FPTR fptr = (FPTR)GetProcAddress(h->handle, "SDF_ExportKeyWithEPK_RSA");
-	return (*fptr)(hSessionHandle,  hKeyHandle,  pucPublicKey,  *pucKey,  puiKeyLength);
-#else
-	FPTR fptr = (FPTR)dlsym(h->handle, "SDF_ExportKeyWithEPK_RSA");
-	return (*fptr)(hSessionHandle,  hKeyHandle,  pucPublicKey,  *pucKey,  puiKeyLength);
-#endif
-}
+
 //54. EPK方式导出ECC密钥
 SGD_RV SDFExportKeyWithEPK_ECC(struct LibHandle * h,SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UINT32 uiAlgID, ECCrefPublicKey *pucPublicKey, ECCCipher *pucKey)
 {
